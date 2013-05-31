@@ -39,7 +39,7 @@ Todo:
           define('SECONDS_PER_DAY', 86400);
 
           //
-          $past = date("Y-m-d\TH:i:sP", time() - 60 * SECONDS_PER_DAY);
+          $past = date("Y-m-d\TH:i:sP", time() - .25 * SECONDS_PER_DAY);
           $now = date("Y-m-d\TH:i:sP", time());
 
           //grab streamIds from xively
@@ -80,6 +80,7 @@ Todo:
           //used to satisfy the quirks of Xively API
           $intervals = array(21600 => 0, 43200 => 30, 86400 => 60, 432000 => 300, 1209600 => 900,
                              2678400 => 1800, 7776000 => 10800, 15552000 => 21600, 31536000 => 43200);
+
           $data = $plot_data;
 
           //set by user
@@ -223,9 +224,13 @@ Todo:
       }
 
       function render_page(svg_id) {
+
+        var units = $('#units').val();
+        var duration = $('#duration').val();
+        var seconds = convert_time[units] * duration;
+        console.log(seconds);
         //called on page load -- sets params based on clients computer
         //and calls helper functions to render data
-        var key = 'N8ATwDUEURXCVHytooImg1TuwhvJRC5Tg38kovOqnAWEyC1e';
         var height = $(window).height();
         var width = $(window).width();
 
@@ -256,25 +261,30 @@ Todo:
 
         populate_graph(svg_id);
 
+
         //When the feed, duration, or units change, update the graph
         $('#feed').change(function() {
-          var streamId = $(this).val().toString();
-          //send jquery post request
-          $.post('getPower.php', {'streamId': streamId}, function(data, textStatus, jqXHR) {
-            var data = JSON.parse(data);
-            console.log(data);
-
-            //data attached to window object to act as global vars
-            window.data_ids = data.data_ids;
-            window.times = data.times;
-            window.data = data.data;
-            console.log(streamId);
-            prepare_data();
-            populate_graph(streamId);
-          })
+          update_graph();
         });
       }
 
+      function update_graph() {
+        var streamId = $('#feed').val().toString();
+        var duration = $('#duration').val().toString() + $('#units').val().toString();
+        console.log(streamId, duration);
+        //send jquery post request
+        $.post('getPower.php', {'streamId': streamId, 'duration': duration}, function(data) {
+          console.log(data);
+          var data = JSON.parse(data);
+          //data attached to window object to act as global vars
+          window.data_ids = data.data_ids;
+          window.times = data.times;
+          window.data = data.data;
+          console.log(streamId);
+          prepare_data();
+          populate_graph(streamId);
+        });
+      }
       //format conversion -- perhaps could be done server side
       function prepare_data() {
         for(var stream in window.data) {
@@ -286,24 +296,16 @@ Todo:
 
 
       $('#duration').change(function() {
-        var units = $('#units').val();
-        var duration = $(this).val();
-        var seconds = convert_time[units] * duration;
-        console.log(seconds);
-        var feed = $('#feed').val().toString();
-        render_page(feed);
+        update_graph();
       });
 
       $('#units').change(function() {
-        var units = $(this).val();
-        var duration = $('#duration').val();
-        var seconds = convert_time[units] * duration;
-        console.log(seconds);
-        var feed = $('#feed').val().toString();
-        render_page(feed);
+        update_graph();
       });
 
       $(document).ready(function() {
+        $('#units').val("hours");
+        $('#duration').val("6");
         prepare_data();
         render_page('PTOTAL');
       });
