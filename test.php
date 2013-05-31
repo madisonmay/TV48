@@ -140,6 +140,10 @@ Todo:
           margin-bottom: 50px;
       }
 
+      .nv-axislabel {
+          font-size: 20px;
+      }
+
     </style>
 
   </head>
@@ -185,16 +189,17 @@ Todo:
         $('#inner_chart').html('');
         $('#inner_chart').append('<svg id="id'+svg_id+'"></svg>');
         nv.addGraph(function() {
-          var chart = nv.models.lineWithFocusChart();
+          var chart = nv.models.lineWithFocusChart().margin({left: 80, bottom: 50})
+                        .tooltipContent(function(key, y, e, graph) { return '<h3>' + e + ' watts</h3>' })
 
           chart.xAxis
-              .axisLabel('')
+              .axisLabel('Time')
               .tickFormat(function(d) {
                 return d3.time.format("%H:%M")(new Date(d));
                });
 
           chart.x2Axis
-              .axisLabel('Time')
+              .axisLabel('')
               .tickFormat(function(d) {
                 return d3.time.format("%b %d")(new Date(d));
                });
