@@ -29,6 +29,8 @@ Todo:
           error_reporting(E_ALL);
           ini_set('display_errors', 1);
 
+          //config file won't be included for some reason
+          //pass is included by hand
           $username = 'thinkcore';
           $password = 'K5FBNbt34BAYCZ4W';
           $database = 'thinkcore_drupal';
@@ -36,10 +38,11 @@ Todo:
 
           define('SECONDS_PER_DAY', 86400);
 
-          //Only two weeks of data is available;
-          $past = date("Y-m-d\TH:i:sP", time() - 1 * SECONDS_PER_DAY);
+          //
+          $past = date("Y-m-d\TH:i:sP", time() - 60 * SECONDS_PER_DAY);
           $now = date("Y-m-d\TH:i:sP", time());
 
+          //grab streamIds from xively
           $url = 'http://api.xively.com/v2/feeds/120903.json?key=';
           $key = '-fU3XguRNz7lJxJ-sdR8KcvYqKuSAKxhc2YwREp6TjAzZz0g';
           $request = $url . $key;
@@ -74,25 +77,54 @@ Todo:
             }
           }
 
+          //used to satisfy the quirks of Xively API
+          $intervals = array(21600 => 0, 43200 => 30, 86400 => 60, 432000 => 300, 1209600 => 900,
+                             2678400 => 1800, 7776000 => 10800, 15552000 => 21600, 31536000 => 43200);
           $data = $plot_data;
+
+          //set by user
+          $duration = '6hours';
+
+          //convert time from human readable format to seconds
+          $seconds = strtotime($duration) - time();
+
+          $delta = '';
+
+          foreach ($intervals as $time => $delta_time) {
+            if ($seconds/100.0 <= $delta_time) {
+              if ($seconds <= $time) {
+                $delta = '&interval=' . $delta_time;
+                break;
+              }
+            }
+          }
+
+          if ($seconds < 21600) {
+            $delta = '&interval=0';
+          }
+
           //send request to server
           $datapoints = array();
           $times = array();
           $raw_url = 'http://api.xively.com/v2/feeds/120903/datastreams/';
-          $url =  $raw_url . $data->id . '.json?start=' . $past . '&end=' . $now . 'limit=1000&key=';
+          $url =  $raw_url . $data->id . '.json?start=' . $past . '&duration=' . $seconds . 'seconds&key=';
           $key = '-fU3XguRNz7lJxJ-sdR8KcvYqKuSAKxhc2YwREp6TjAzZz0g';
-          $request = $url . $key;
+
+          //combine strings and make request
+          $request = $url . $key . $delta;
           $curl = curl_init();
           curl_setopt($curl, CURLOPT_URL, $request);
           curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
           $obj_resp = json_decode(curl_exec($curl));
 
+          //push to arrays containing datapoints and time values
           foreach ($obj_resp->datapoints as $point) {
               array_push($datapoints, $point->value);
               $date = strtotime($point->at);
               array_push($times, $date*1000);
           }
 
+          //save in json format for use client side
           echo '<script> window.data["' . $data->id . '"] = ' . json_encode($datapoints) . '</script>';
           echo '<script> window.times["' . $data->id . '"] = ' . json_encode($times) . '</script>';
           echo "<script> window.data_ids = " . json_encode($data_ids) . "</script>";
@@ -110,6 +142,8 @@ Todo:
     </style>
 
   </head>
+
+  <!-- minimal html -->
   <body>
     <a href='home.php' id='home'><img src='images/home.png' class='home-button'></a>
     <div class="full-width px100 center-text dark-text min-width">
@@ -125,10 +159,26 @@ Todo:
     <div id="edit">
       <select id='feed'>
       </select>
+      <input id='duration' type='number' class='small-width'>
+      <select id='units'>
+        <option value="seconds">seconds</option>
+        <option value="minutes">minutes</option>
+        <option value="hours">hours</option>
+        <option value="days">days</option>
+        <option value="weeks">weeks</option>
+        <option value="months">months</option>
+        <option value="years">years</option>
+      </select>
+    </div>
+
     <script>
 
+      var convert_time = {'seconds': 1, 'minutes': 60, 'hours': 3600, 'days': 86400,
+          'weeks': 604800, 'months': 86400*30, 'years': 365*86400}
+
       function next_chart(svg_id) {
-        console.log(window.data[svg_id].length)
+
+        //nvd3 magic -- see nvd3 docs for details
         console.log(window.data[svg_id]);
         svg_id = svg_id.toString();
         $('#inner_chart').html('');
@@ -166,17 +216,21 @@ Todo:
         });
       }
 
+      //simple wrapper for plotting
       function populate_graph(svg_id) {
         var time = new Date().getTime() / 1000;
         next_chart(svg_id);
       }
 
       function render_page(svg_id) {
+        //called on page load -- sets params based on clients computer
+        //and calls helper functions to render data
         var key = 'N8ATwDUEURXCVHytooImg1TuwhvJRC5Tg38kovOqnAWEyC1e';
         var height = $(window).height();
         var width = $(window).width();
 
-        $('#inner_chart').css('height', height*.7);
+        //avoid flickerign
+        $('#inner_chart').css('height', height*.6);
         $('#inner_chart').css('width', width - 65);
         $('#inner_chart').css('display', 'block');
 
@@ -209,6 +263,8 @@ Todo:
           $.post('getPower.php', {'streamId': streamId}, function(data, textStatus, jqXHR) {
             var data = JSON.parse(data);
             console.log(data);
+
+            //data attached to window object to act as global vars
             window.data_ids = data.data_ids;
             window.times = data.times;
             window.data = data.data;
@@ -219,6 +275,7 @@ Todo:
         });
       }
 
+      //format conversion -- perhaps could be done server side
       function prepare_data() {
         for(var stream in window.data) {
           for (var i = 0; i < 100; i++) {
@@ -227,13 +284,34 @@ Todo:
         }
       }
 
+
+      $('#duration').change(function() {
+        var units = $('#units').val();
+        var duration = $(this).val();
+        var seconds = convert_time[units] * duration;
+        console.log(seconds);
+        var feed = $('#feed').val().toString();
+        render_page(feed);
+      });
+
+      $('#units').change(function() {
+        var units = $(this).val();
+        var duration = $('#duration').val();
+        var seconds = convert_time[units] * duration;
+        console.log(seconds);
+        var feed = $('#feed').val().toString();
+        render_page(feed);
+      });
+
       $(document).ready(function() {
         prepare_data();
         render_page('PTOTAL');
       });
 
+      //dynamic plot resizing
       $(window).resize(function() {
-        render_page($('#feed').val().toString());
+        var feed = $('#feed').val().toString();
+        render_page(feed);
       })
 
     </script>
