@@ -41,6 +41,8 @@ Todo:
 
           // - 7200 is to account for 2 hour difference of time in Belgium to standard time
           // Should be made much more general
+
+          //1/4 of a day = 6 hours
           $past = date("Y-m-d\TH:i:sP", time() - .25 * SECONDS_PER_DAY - 7200);
           $now = date("Y-m-d\TH:i:sP", time());
 
@@ -150,6 +152,12 @@ Todo:
           font-size: 20px;
       }
 
+      #loading {
+        width: 25px;
+        display: block;
+        display: none;
+      }
+
     </style>
 
   </head>
@@ -184,6 +192,9 @@ Todo:
         <!-- Option years currently causes problems -- too large of date range -->
         <!-- <option value="years">years</option> -->
       </select>
+      <div class='text-center'>
+        <img id='loading' class='centered' src="images/load.gif">
+      </div>
     </div>
 
     <script>
@@ -236,18 +247,28 @@ Todo:
       function populate_graph(svg_id) {
 
         //for live updating -- only happens when duration of window is < 10 minutes
-        window.new_time = window.times[svg_id][window.data_length - 1];
+        window.new_time = window.times[svg_id][0];
+        window.new_point = window.data[svg_id][0];
 
         //do not update chart if new information is not present
         if (window.last_time === undefined) {
           next_chart(svg_id);
         }
 
-        else if (new_time != window.last_time) {
+        else if (window.last_point === undefined) {
+          next_chart(svg_id);
+        }
+
+        else if (window.new_time != window.last_time) {
+          next_chart(svg_id);
+        }
+
+        else if (window.new_point != window.lastPoint) {
           next_chart(svg_id);
         }
 
         window.last_time = window.new_time;
+        window.last_point = window.new_point;
       }
 
       function render_page(svg_id) {
@@ -287,6 +308,8 @@ Todo:
 
       function update_graph() {
 
+        $('#loading').css('display', 'block');
+
         //as indicated, called when graph state must be updated
         //variables from sliders and inputs are pulled
         var feed = $('#feed').val();
@@ -298,7 +321,7 @@ Todo:
         if (duration_in_seconds > timeDiff) {
           var delta = Math.ceil(window.timeDiff / convert_time[units]);
           $('#duration').val(delta);
-          console.log("Only " + duration + " of data are available.")
+          console.log("Only " + duration + " units of data are available.")
         }
 
         //Live mode -- updates every 5 seconds and refreshes the graph
@@ -313,7 +336,6 @@ Todo:
         console.log({'streamId': streamId, 'duration': duration});
         //send jquery post request
         $.post('getPower.php', {'streamId': streamId, 'duration': duration}, function(data) {
-          console.log(data);
           var data = JSON.parse(data);
           //data attached to window object to act as global vars
           window.data_ids = data.data_ids;
@@ -326,6 +348,7 @@ Todo:
 
           //graph is populated and rerendered
           populate_graph(streamId);
+          $('#loading').css('display', 'none');
         });
       }
 

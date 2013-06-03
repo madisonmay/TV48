@@ -15,6 +15,8 @@
 
   $duration = $_POST['duration'];
   $temp = strtotime($duration) - time();
+
+
   $past = date("Y-m-d\TH:i:sP", time() - $temp - 7200);
   $now = date("Y-m-d\TH:i:sP", time());
 
