@@ -1,16 +1,15 @@
-/** {
-    border: 2px black solid;
-}*/
+/**  {
 
+border:  2px black solid;
+
+}
+
+*/
 html {
-/*    background-image: url(../images/mochaGrunge/mochaGrunge.png);
-    background-repeat: repeat;*/
     background-color: #eeeeee;
 }
 
 body {
-/*    background-image: url(../images/mochaGrunge/mochaGrunge.png);
-    background-repeat: repeat;*/
     background-color: #eeeeee;
     font-family: 'Lato', sans-serif;
     padding: 25px;
@@ -22,7 +21,7 @@ body {
 
 .large-text {
     font-size: 50px;
-    margin-bottom:-5px;
+    margin-bottom: -5px;
     cursor: pointer;
     cursor: hand;
 }
@@ -88,28 +87,28 @@ body {
 
 #light {
     background-image: url('images/small-light.png');
-    background-position:50% 50%;
-    background-repeat:no-repeat;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
 }
 
 #power {
     background-image: url('images/electricity.png');
-    background-position:50% 50%;
-    background-repeat:no-repeat;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
 }
 
 #heat {
     background-image: url('images/heat-small.png');
-    background-position:50% 50%;
-    background-repeat:no-repeat;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
 }
 
-.fade_line{
-    display:block;
-    border:none;
-    color:white;
-    height:2px;
-    background:black;
+.fade_line {
+    display: block;
+    border: none;
+    color: white;
+    height: 2px;
+    background: black;
     background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 1000, from(#333), to(#fff));
     margin-left: 5%;
     margin-right: 5%;
@@ -118,15 +117,16 @@ body {
 .opaque {
     display: block;
     position: absolute;
-    margin-left:-1px;
-    margin-top:-1px;
-    width:202px;
-    height:202px;
-    background-color:#000000;
-    opacity:0;
-    -moz-opacity:0;
+    margin-left: -1px;
+    margin-top: -1px;
+    width: 202px;
+    height: 202px;
+    background-color: #000000;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
     filter: alpha(opacity=0);
-    border-radius:150px;
+    opacity: 0;
+    -moz-opacity: 0;
+    border-radius: 150px;
     z-index: 2;
     text-align: center;
     color: #eeeeee;
@@ -150,16 +150,22 @@ body {
 }
 
 .op50 {
-    opacity:.5;
-    -moz-opacity:.5;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    filter: alpha(opacity=50);
+    opacity: .5;
+    -moz-opacity: .5;
 }
 
 .op25 {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
+    filter: alpha(opacity=25);
     opacity: .25;
     -moz-opacity: .25;
 }
 
 .op75 {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)";
+    filter: alpha(opacity=75);
     opacity: .75;
     -moz-opacity: .75;
 }
@@ -169,10 +175,6 @@ body {
     margin-top: -10px;
     font-size: 20px;
     margin-top: 15px;
-}
-
-#slider {
-
 }
 
 .amount {
@@ -193,10 +195,10 @@ body {
 }
 
 @font-face {
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Lato Light'), local('Lato-Light'), url('lato.woff') format('woff');
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Lato Light'), local('Lato-Light'), url('lato.woff') format('woff');
 }
 
 .top_group {
@@ -215,6 +217,7 @@ body {
     margin-left: 5px;
     margin-right: 5px;
 }
+
 .toggle-sort {
     margin-top: 20px;
 }

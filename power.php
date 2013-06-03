@@ -3,332 +3,349 @@
 <!--
 Todo:
 -Add security measure to prevent unwanted users from accessing feed
--Try to fix weird issues with png export time scale (might need to contact Xively about that)
+-Fix issues with date ranges that are too long to be displayed using test.php as a guide
+-Fix timeline so that the proper type of date display is used depending on the duration
 -->
 <html>
-	<head>
-	   <title>TV48 - Power</title>
-	    <script src="scripts/jquery.min.js"></script>
-	    <script src="scripts/bootstrap.min.js"></script>
-	    <script src="scripts/jquery-ui.min.js"></script>
-	    <link rel="stylesheet" href="stylesheets/bootstrap-combined.min.css">
-	    <link rel="stylesheet" href="stylesheets/jquery-ui.css">
-	    <link rel="stylesheet" href="style.css">
-	    <!--[if lt IE 9]>
-	        <style>
+  <head>
+     <title>TV48 - Power</title>
+      <script src="scripts/jquery.min.js"></script>
+      <script src="scripts/bootstrap.min.js"></script>
+      <script src="scripts/jquery-ui.min.js"></script>
+      <link rel="stylesheet" type='text/css' href="stylesheets/bootstrap-combined.min.css">
+      <link rel="stylesheet" type='text/css' href="stylesheets/jquery-ui.css">
+      <link rel='stylesheet' type='text/css' href='stylesheets/nv.d3.css'>
+      <link rel="stylesheet" type='text/css' href="style.css">
+      <link rel="stylesheet" type='text/css' href="plot.css">
+      <script src="http://d3js.org/d3.v2.js"></script>
+      <script src="nv.d3.js"></script>
+      <script>
+          window.data = {};
+          window.times = {};
+      </script>
 
-	            .hide-this {
-	                display: none;
-	            }
+      <?
+          session_start();
 
-	        </style>
-	    <![endif]-->
-		<style>
+          error_reporting(E_ALL);
+          ini_set('display_errors', 1);
 
-			html {
-				background-color: #eeeeee;
-			}
+          //config file won't be included for some reason
+          //pass is included by hand
+          $username = 'thinkcore';
+          $password = 'K5FBNbt34BAYCZ4W';
+          $database = 'thinkcore_drupal';
+          $server = 'localhost';
 
-			body {
-				background-color: #eeeeee;
-			    font-family: 'Lato', sans-serif;
-			    padding: 25px;
-			}
+          define('SECONDS_PER_DAY', 86400);
 
-			.fade_line{
-			    display:block;
-			    border:none;
-			    color:white;
-			    height:2px;
-			    background:black;
-			    background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 1000, from(#333), to(#fff));
-			    margin-left: 5%;
-			    margin-right: 5%;
-			}
+          // - 7200 is to account for 2 hour difference of time in Belgium to standard time
+          // Should be made much more general
+          $past = date("Y-m-d\TH:i:sP", time() - .25 * SECONDS_PER_DAY - 7200);
+          $now = date("Y-m-d\TH:i:sP", time());
 
-			.center-text {
-			    text-align: center;
-			}
+          //grab streamIds from xively
+          $url = 'http://api.xively.com/v2/feeds/120903.json?key=';
+          $key = '-fU3XguRNz7lJxJ-sdR8KcvYqKuSAKxhc2YwREp6TjAzZz0g';
+          $request = $url . $key;
+          $duration = '6hours';
 
-			.large-text {
-			    font-size: 50px;
-			}
+          $curl = curl_init();
+          curl_setopt($curl, CURLOPT_URL, $request);
+          curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
-			.dark-text {
-			    color: #333333;
-			}
+          $resp = curl_exec($curl);
+          $obj_resp = json_decode($resp);
+          curl_close($curl);
 
-			.centered {
-			    border: 2px black auto;
-			    display: block;
-			    margin-right: auto;
-			    margin-left: auto;
-			}
+          echo "<script> var created = " . json_encode($obj_resp->created) . "</script>";
+          $datastreams = $obj_resp->datastreams;
 
-			.px100 {
-			    height: 100px;
-			}
+          $data_ids = array();
 
-			.full-width {
-				width: 100%;
-			}
+          $streamId = 'PTOTAL';
 
-			#main_title {
-				text-align: center;
-				font-size: 30px;
-				margin-bottom: 50px;
-				margin-top: 25px;
-			}
-
-			#template {
-				background-color: #ffffff;
-				text-align: center;
-				font-size: 15px;
-				margin-bottom: 50px;
-				width: 800px;
-				height: 325px;
-				border: 20px #333333 solid;
-				margin-right: auto;
-				margin-left: auto;
-				padding: 20px;
-				border-radius: 25px;
-			}
-
-			#edit {
-				text-align: center;
-				font-size: 30px;
-				min-width: 890px;
-			}
-
-			#feed {
-				display: block;
-				margin-right: auto;
-				margin-left: auto;
-			}
-
-			#duration {
-				margin-left: auto;
-				margin-right: auto;
-				display: inline-block;
-			}
-
-			#units {
-				margin-left: auto;
-				margin-right: auto;
-				display: inline-block;
-				width: 160px;
-			}
-
-			.small-width {
-				width: 40px;
-			}
-
-			#wrapper {
-				position: relative;
-				width: 100%;
-				height: 100%;
-			}
-
-			.min-width {
-				min-width: 890px;
-			}
-
-			.larger-font {
-				float: left;
-				padding-left: 30px;
-				font-size: 20px;
-				white-space:nowrap;
-				overflow:hidden;
-				display: inline-block;
-				z-index: 200px;
-			}
-
-			.key {
-				float: right;
-				position: relative;
-				width: 20px;
-				height: 20px;
-				background-color: #46a564;
-				left: -420px;
-				border-radius: 3px;
-				margin-top: 230px;
-				display: inline-block;
-				z-index: 200px;
-			}
-
-			.image {
-				margin-left: -20px;
-			}
-
-			.large-text {
-			    font-size: 50px;
-			    cursor: pointer;
-			    cursor: hand;
-			}
-
-		</style>
-
-		 <?
-
-            error_reporting(E_ALL);
-            ini_set('display_errors', 1);
-
-            $url = 'http://api.xively.com/v2/feeds/120903.json';
-            // $key = 'N8ATwDUEURXCVHytooImg1TuwhvJRC5Tg38kovOqnAWEyC1e';
-            $key = 'N8ATwDUEURXCVHytooImg1TuwhvJRC5Tg38kovOqnAWEyC1e';
-
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('X-ApiKey: ' . $key));
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-
-            $resp = curl_exec($curl);
-
-            $obj_resp = json_decode($resp);
-
-            curl_close($curl);
-
-            $datastreams = $obj_resp->datastreams;
-
-            $data_ids = array();
-
-            foreach ($datastreams as $data) {
-                array_push($data_ids, $data->id);
+          foreach ($datastreams as $data) {
+            array_push($data_ids, $data->id);
+            if ($data->id == $streamId) {
+              $plot_data = $data;
             }
+          }
 
-            echo "<script> var data_ids = " . json_encode($data_ids) . "</script>";
-            echo "<script> var created = " . json_encode($obj_resp->created) . "</script>";
+          //used to satisfy the quirks of Xively API
+          $intervals = array(21600 => 0, 43200 => 30, 86400 => 60, 432000 => 300, 1209600 => 900,
+                             2678400 => 1800, 7776000 => 10800, 15552000 => 21600, 31536000 => 43200);
 
-        ?>
+          $data = $plot_data;
 
-	</head>
-	<body>
-		<!--[if lt IE 9]>
-		    <div style='text-align: center; border: 5px solid #333333;'>We're sorry.  We do not currently support versions of Internet Explorer earlier than 9.0.  Please either upgrade to a<a href='http://windows.microsoft.com/en-us/internet-explorer/ie-10-worldwide-languages'> more recent version of Internet Explorer </a> or view this site in a <a href='www.google.com/chrome'>different browser</a>.  Thanks!</div>
-		<![endif]-->
-		<a href='home.php' id='home'><img src='images/home.png' class='home-button'></a>
-		<div class="full-width px100 center-text dark-text min-width">
-			<h1 class="large-text" id='home'>TV48<h1>
-			<hr class="fade_line">
-		</div>
+          //set by user
+          $duration = '6hours';
 
-		<div id='chart'></div>
+          //convert time from human readable format to seconds
+          $seconds = strtotime($duration) - time();
 
-		<div id="edit">
-			<select id='feed'>
-			</select>
-			<input id='duration' type='number' class='small-width'>
-			<select id='units'>
-			  <option value="seconds">seconds</option>
-			  <option value="minutes">minutes</option>
-			  <option value="hours">hours</option>
-			  <option value="days">days</option>
-			  <option value="weeks">weeks</option>
-			  <option value="months">months</option>
-			  <option value="years">years</option>
-			</select>
-		</div>
+          $delta = '';
 
-		<script>
+          foreach ($intervals as $time => $delta_time) {
+            if ($seconds/100.0 <= $delta_time) {
+              if ($seconds <= $time) {
+                $delta = '&interval=' . $delta_time;
+                break;
+              }
+            }
+          }
 
-			$(document).ready(function() {
+          if ($seconds < 21600) {
+            $delta = '&interval=0';
+          }
 
-				var key = 'N8ATwDUEURXCVHytooImg1TuwhvJRC5Tg38kovOqnAWEyC1e';
-				var height = $(window).height();
-				var width = $(window).width();
+          //send request to server
+          $datapoints = array();
+          $times = array();
+          $raw_url = 'http://api.xively.com/v2/feeds/120903/datastreams/';
+          $url =  $raw_url . $data->id . '.json?start=' . $past . '&duration=' . $seconds . 'seconds&key=';
+          $key = '-fU3XguRNz7lJxJ-sdR8KcvYqKuSAKxhc2YwREp6TjAzZz0g';
 
-				var timer_id = 0;
-				//Populate feed select with datastream values
-				for (var i = 0; i < data_ids.length; i++) {
-					$('#feed').append('<option value="' + data_ids[i] + '">' + data_ids[i] + '</option>');
-				}
+          //combine strings and make request
+          $request = $url . $key . $delta;
+          $curl = curl_init();
+          curl_setopt($curl, CURLOPT_URL, $request);
+          curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+          $obj_resp = json_decode(curl_exec($curl));
 
-				//Get time created from PHP script to prevent auth error when large value is entered
-				var date_created = new Date(created);
-				var current_date = new Date();
-				var timeDiff = (current_date.getTime() - date_created.getTime())/1000;
+          //push to arrays containing datapoints and time values
+          foreach ($obj_resp->datapoints as $point) {
+              array_push($datapoints, $point->value);
+              $date = strtotime($point->at);
+              array_push($times, $date*1000);
+          }
 
+          $data_length = count($datapoints);
 
-				//Function for populating graph string
-				function template(string,data){
-		    		return string.replace(/%(\w*)%/g,function(m,key){
-		    			return data.hasOwnProperty(key)?data[key]:"";});
-				}
+          //save in json format for use client side
+          echo '<script> window.data["' . $data->id . '"] = ' . json_encode($datapoints) . '</script>';
+          echo '<script> window.times["' . $data->id . '"] = ' . json_encode($times) . '</script>';
+          echo "<script> window.data_ids = " . json_encode($data_ids) . "</script>";
+          echo "<script> window.data_length = " . json_encode($data_length) . "</script>";
+      ?>
 
+    <style>
+      #inner_chart svg {
+/*          height: 500px;
+          width: 1200px;*/
+          font-size: 30px;
+          display: block;
+          margin-bottom: 50px;
+      }
 
-				var feed = data_ids[0];
-				var duration = '60 minutes';
+      .nv-axislabel {
+          font-size: 20px;
+      }
 
-				$('#feed').val(feed);
-				$('#duration').val(60);
-				$('#units').val('minutes');
+    </style>
 
-				$(document).keypress(function(e){
-				    if (e.which == 13){
-				        $("#feed-submit").click();
-				    }
-				});
+  </head>
 
-				update_graph();
+  <!-- minimal html -->
+  <body>
+    <a href='home.php' id='home'><img src='images/home.png' class='home-button'></a>
+    <div class="full-width px100 center-text dark-text min-width">
+      <h1 class="large-text" id='home'>TV48<h1>
+      <hr class="fade_line">
+    </div>
 
-				function update_graph() {
-					var key = 'N8ATwDUEURXCVHytooImg1TuwhvJRC5Tg38kovOqnAWEyC1e';
-					console.log("Updated...");
-					var convert_time = {'seconds': 1, 'minutes': 60, 'hours': 3600, 'days': 86400,
-										'weeks': 604800, 'months': 86400*30, 'years': 365*86400}
-					var graph = "<div id='template' style='display: none;'><h2 id='graph_title'>%title%: Laatste %duration_string%</h2>" +
-					"<img class='image' src=\"http://api.xively.com/v2/feeds/120903/datastreams/%feed%.png?width=730&height=250&colour=%2346a564" +
-					"&duration=%duration%&b=true&g=true&scale=auto&timezone=Brussels&s=7&key=" + key + "\">" +
-					"<div class='key'><div><div class='larger-font'>Watts</div></div>";
+    <div id='chart'>
+        <div id="inner_chart", style="text-align: center">
+        </div>
+    </div>
 
-					//Checking to see if sufficient data is available
-					var feed = $('#feed').val();
-					var units = $('#units').val();
-					var duration = $('#duration').val();
-					var duration = duration + ' ' + units;
-					var duration_in_seconds = convert_time[units] * parseFloat(duration);
+    <div id="edit">
+      <select id='feed'>
+      </select>
+      <input id='duration' type='number' class='small-width'>
+      <select id='units'>
+        <option value="seconds">seconds</option>
+        <option value="minutes">minutes</option>
+        <option value="hours">hours</option>
+        <option value="days">days</option>
+        <option value="weeks">weeks</option>
+        <option value="months">months</option>
+        <!-- Option years currently causes problems -- too large of date range -->
+        <!-- <option value="years">years</option> -->
+      </select>
+    </div>
 
-					if (duration_in_seconds > timeDiff) {
-						var delta = Math.ceil(timeDiff / convert_time[units]);
-						duration = delta + ' ' + units;
-						console.log("Duration in seconds: ", duration_in_seconds);
-						console.log("Time since created:  ", timeDiff);
-						console.log(duration);
-						$('#duration').val(delta);
-						console.log("Only " + duration + " of data are available.")
+    <script>
+      nv.dev = false;
+      var convert_time = {'seconds': 1, 'minutes': 60, 'hours': 3600, 'days': 86400,
+          'weeks': 604800, 'months': 86400*30, 'years': 365*86400}
 
+      function next_chart(svg_id) {
 
-					}
+        //nvd3 magic -- see nvd3 docs for details
+        svg_id = svg_id.toString();
+        $('#inner_chart').html('');
+        $('#inner_chart').append('<svg id="id'+svg_id+'"></svg>');
+        nv.addGraph(function() {
+          var chart = nv.models.lineWithFocusChart().margin({left: 80, bottom: 50})
+                        .tooltipContent(function(key, y, e, graph) { return '<h3>' + e + ' watts</h3>' })
 
-					//Live mode -- updates every 5 seconds and refreshes the graph
-					//Refresh isn't noticeable unless the graph has actually been updated
-					if (duration_in_seconds < 600) {
-						setTimeout(function() {update_graph();}, 5000);
-					}
+          //chart formatting
+          chart.xAxis
+              .axisLabel('Time')
+              .tickFormat(function(d) {
+                return d3.time.format("%H:%M")(new Date(d));
+               });
 
-					//Rerendering chart
-					$('#chart').html('');
+          chart.x2Axis
+              .axisLabel('')
+              .tickFormat(function(d) {
+                return d3.time.format("%b %d")(new Date(d));
+               });
 
-					//Poor man's templating
-					graph = template(graph, {title: feed, feed: feed, duration: duration.replace(/\s/g, ''), duration_string: duration});
-					$('#chart').append(graph);
-					$('#template').css('display', 'block');
+          chart.yAxis
+              .axisLabel('Watts')
+              .tickFormat(d3.format('.00f'));
 
-				}
+          chart.y2Axis
+              .tickFormat(d3.format('.00f'));
 
-				//When the feed, duration, or units change, update the graph
-				$('#feed').change(function() {
-					update_graph();
-				});
+          var chart_id = '#chart svg#' + 'id' + svg_id;
+          d3.select(chart_id)
+              .datum([{key: svg_id, values: window.data[svg_id].slice(0, window.data_length-1)}])
+            .transition().duration(500)
+              .call(chart);
 
-				$('#duration').change(function() {
-					update_graph();
-				});
+          nv.utils.windowResize(chart.update);
+          return chart;
+        });
+      }
 
-				$('#units').change(function() {
-					update_graph();
-				});
-			});
+      //simple wrapper for plotting
+      function populate_graph(svg_id) {
 
-		</script>
-	</body>
+        //for live updating -- only happens when duration of window is < 10 minutes
+        window.new_time = window.times[svg_id][window.data_length - 1];
+
+        if (window.last_time === undefined) {
+          next_chart(svg_id);
+        }
+
+        else if (new_time != window.last_time) {
+          next_chart(svg_id);
+        }
+
+        window.last_time = window.new_time;
+      }
+
+      function render_page(svg_id) {
+
+        var units = $('#units').val();
+        var duration = $('#duration').val();
+        var seconds = convert_time[units] * duration;
+        //called on page load -- sets params based on clients computer
+        //and calls helper functions to render data
+        var height = $(window).height();
+        var width = $(window).width();
+
+        //avoid flickerign
+        $('#inner_chart').css('height', height*.6);
+        $('#inner_chart').css('width', width - 65);
+        $('#inner_chart').css('display', 'block');
+
+        $('#feed').html('');
+        //Populate feed select with datastream values
+        for (var i = 0; i < data_ids.length; i++) {
+          $('#feed').append('<option value="' + window.data_ids[i] + '">' + window.data_ids[i] + '</option>');
+        }
+
+        //Function for populating graph string
+        function template(string,data){
+            return string.replace(/%(\w*)%/g,function(m,key){
+              return data.hasOwnProperty(key)?data[key]:"";});
+        }
+
+        $('#feed').val(svg_id);
+
+        populate_graph(svg_id);
+
+        //When the feed, duration, or units change, update the graph
+      }
+
+      function update_graph() {
+
+        var feed = $('#feed').val();
+        var units = $('#units').val();
+        var duration = $('#duration').val();
+        var duration_in_seconds = convert_time[units] * parseFloat(duration);
+
+        if (duration_in_seconds > timeDiff) {
+          var delta = Math.ceil(window.timeDiff / convert_time[units]);
+          $('#duration').val(delta);
+          console.log("Only " + duration + " of data are available.")
+        }
+
+        //Live mode -- updates every 5 seconds and refreshes the graph
+        //Refresh isn't noticeable unless the graph has actually been updated
+        if (duration_in_seconds < 600) {
+          setTimeout(function() {update_graph();}, 5000);
+        }
+
+        var streamId = $('#feed').val().toString();
+        var duration = $('#duration').val().toString() + $('#units').val().toString();
+        console.log({'streamId': streamId, 'duration': duration});
+        //send jquery post request
+        $.post('getPower.php', {'streamId': streamId, 'duration': duration}, function(data) {
+          console.log(data);
+          var data = JSON.parse(data);
+          //data attached to window object to act as global vars
+          window.data_ids = data.data_ids;
+          window.times = data.times;
+          window.data = data.data;
+          window.data_length = data.data_length;
+          prepare_data();
+          populate_graph(streamId);
+        });
+      }
+
+      //format conversion -- perhaps could be done server side
+      function prepare_data() {
+        for(var stream in window.data) {
+          for (var i = 0; i < 100; i++) {
+              window.data[stream][i] = {x: window.times[stream][i], y: parseInt(window.data[stream][i], 10)};
+          }
+        }
+      }
+
+      $('#feed').change(function() {
+        update_graph();
+      });
+
+      $('#duration').change(function() {
+        update_graph();
+      });
+
+      $('#units').change(function() {
+        update_graph();
+      });
+
+      $(document).ready(function() {
+
+        var date_created = new Date(created);
+        var current_date = new Date();
+        window.timeDiff = (current_date.getTime() - date_created.getTime())/1000;
+
+        $('#units').val("hours");
+        $('#duration').val("6");
+        prepare_data();
+        render_page('PTOTAL');
+      });
+
+      //dynamic plot resizing
+      $(window).resize(function() {
+        var feed = $('#feed').val().toString();
+        render_page(feed);
+      })
+
+    </script>
+  </body>

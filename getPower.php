@@ -15,7 +15,7 @@
 
   $duration = $_POST['duration'];
   $temp = strtotime($duration) - time();
-  $past = date("Y-m-d\TH:i:sP", time() - $temp);
+  $past = date("Y-m-d\TH:i:sP", time() - $temp - 7200);
   $now = date("Y-m-d\TH:i:sP", time());
 
   //grab streamIds from xively
@@ -53,8 +53,8 @@
   }
 
   //used to satisfy the quirks of Xively API
-  $intervals = array(21600 => 0, 43200 => 30, 86400 => 60, 432000 => 300, 1209600 => 900,
-                     2678400 => 1800, 7776000 => 10800, 15552000 => 21600, 31536000 => 43200);
+  $intervals = array(21600 => 0, 43200 => 30, 86400 => 60, 432000 => 300, 1209600 => 900, 2678400 => 1800,
+                     2678400 => 3600, 7776000 => 10800, 15552000 => 21600, 31536000 => 43200, 31536000 => 86400);
 
   $data = $plot_data;
 
@@ -73,10 +73,9 @@
     }
   }
 
-  if ($seconds < 21600) {
+  if ($seconds < 10800) {
     $delta = '&interval=0';
   }
-
   //send request to server
   $datapoints = array();
   $times = array();
@@ -98,8 +97,10 @@
       array_push($times, $date*1000);
   }
 
+  $data_length = count($datapoints);
+
   $_data = array($data->id => $datapoints);
   $_times = array($data->id => $times);
-  $reply = json_encode(array("data" => $_data, "times" => $_times, "data_ids" => $data_ids));
+  $reply = json_encode(array("data" => $_data, "times" => $_times, "data_ids" => $data_ids, "data_length" => $data_length));
   echo $reply;
 ?>
