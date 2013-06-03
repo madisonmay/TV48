@@ -48,6 +48,8 @@ Todo:
           $url = 'http://api.xively.com/v2/feeds/120903.json?key=';
           $key = '-fU3XguRNz7lJxJ-sdR8KcvYqKuSAKxhc2YwREp6TjAzZz0g';
           $request = $url . $key;
+
+          //default duration is currently 6 hours
           $duration = '6hours';
 
           $curl = curl_init();
@@ -58,13 +60,16 @@ Todo:
           $obj_resp = json_decode($resp);
           curl_close($curl);
 
+          //pass date of creation to client side code
           echo "<script> var created = " . json_encode($obj_resp->created) . "</script>";
+
           $datastreams = $obj_resp->datastreams;
 
           $data_ids = array();
 
           $streamId = 'PTOTAL';
 
+          //compile datapoints and strip unnecessary ingo
           foreach ($datastreams as $data) {
             array_push($data_ids, $data->id);
             if ($data->id == $streamId) {
@@ -86,6 +91,7 @@ Todo:
 
           $delta = '';
 
+          // calculate the ideal "resolution" (aka interval)
           foreach ($intervals as $time => $delta_time) {
             if ($seconds/100.0 <= $delta_time) {
               if ($seconds <= $time) {
@@ -130,6 +136,8 @@ Todo:
       ?>
 
     <style>
+
+    /*nvd3 css modifications*/
       #inner_chart svg {
 /*          height: 500px;
           width: 1200px;*/
@@ -158,6 +166,9 @@ Todo:
         <div id="inner_chart", style="text-align: center">
         </div>
     </div>
+
+    <!-- simple gui for user interaction -- change time plotted or dataset -->
+    <!-- eventually should also allow for datasets that do not contain the current value -->
 
     <div id="edit">
       <select id='feed'>
@@ -227,6 +238,7 @@ Todo:
         //for live updating -- only happens when duration of window is < 10 minutes
         window.new_time = window.times[svg_id][window.data_length - 1];
 
+        //do not update chart if new information is not present
         if (window.last_time === undefined) {
           next_chart(svg_id);
         }
@@ -243,6 +255,7 @@ Todo:
         var units = $('#units').val();
         var duration = $('#duration').val();
         var seconds = convert_time[units] * duration;
+
         //called on page load -- sets params based on clients computer
         //and calls helper functions to render data
         var height = $(window).height();
@@ -274,11 +287,14 @@ Todo:
 
       function update_graph() {
 
+        //as indicated, called when graph state must be updated
+        //variables from sliders and inputs are pulled
         var feed = $('#feed').val();
         var units = $('#units').val();
         var duration = $('#duration').val();
         var duration_in_seconds = convert_time[units] * parseFloat(duration);
 
+        //a bit of processing to ensure that the date range is not too large
         if (duration_in_seconds > timeDiff) {
           var delta = Math.ceil(window.timeDiff / convert_time[units]);
           $('#duration').val(delta);
@@ -291,6 +307,7 @@ Todo:
           setTimeout(function() {update_graph();}, 5000);
         }
 
+        //more variables are grabbed from DOM elements
         var streamId = $('#feed').val().toString();
         var duration = $('#duration').val().toString() + $('#units').val().toString();
         console.log({'streamId': streamId, 'duration': duration});
@@ -303,7 +320,11 @@ Todo:
           window.times = data.times;
           window.data = data.data;
           window.data_length = data.data_length;
+
+          //data is reformatted -- will eventually remove and streamline this step
           prepare_data();
+
+          //graph is populated and rerendered
           populate_graph(streamId);
         });
       }
@@ -317,6 +338,7 @@ Todo:
         }
       }
 
+      //bind function handlers to events that should change the set of points plotted
       $('#feed').change(function() {
         update_graph();
       });
@@ -341,7 +363,7 @@ Todo:
         render_page('PTOTAL');
       });
 
-      //dynamic plot resizing
+      //dynamic plot resizing based on screen size
       $(window).resize(function() {
         var feed = $('#feed').val().toString();
         render_page(feed);
