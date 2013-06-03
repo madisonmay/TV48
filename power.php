@@ -336,6 +336,7 @@ Todo:
         console.log({'streamId': streamId, 'duration': duration});
         //send jquery post request
         $.post('getPower.php', {'streamId': streamId, 'duration': duration}, function(data) {
+          console.log(data);
           var data = JSON.parse(data);
           //data attached to window object to act as global vars
           window.data_ids = data.data_ids;

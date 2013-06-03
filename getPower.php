@@ -1,5 +1,3 @@
-<!-- Used for updating the power.php page -->
-
  <?
   session_start();
 
