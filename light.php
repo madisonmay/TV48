@@ -218,20 +218,9 @@
 
 <!-- Base html -->
 <body>
-<<<<<<< HEAD
     <? include('header.php') ?>
     TV48
     <? include('header2.php') ?>
-=======
-    <!--[if lt IE 9]>
-        <div style='text-align: center; border: 5px solid #333333;'>We're sorry.  We do not currently support versions of Internet Explorer earlier than 9.0.  Please either upgrade to a<a href='http://windows.microsoft.com/en-us/internet-explorer/ie-10-worldwide-languages'> more recent version of Internet Explorer </a> or view this site in a <a href='www.google.com/chrome'>different browser</a>.  Thanks!</div>
-    <![endif]-->
-    <a href='home.php' id='home'><img src='images/home.png' class='home-button'></a>
-    <div class="full-width px100 center-text dark-text">
-        <h1 class="large-text" id='home'>TV48</h1>
-        <hr class="fade_line">
-    </div>
->>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
     <div class='top_group'>
         <button class='btn all-off'>All Off</button>
         <button class='btn btn-success update'>Update</button>

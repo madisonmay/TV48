@@ -8,14 +8,7 @@
 
   //config file won't be included for some reason
   //pass is included by hand
-<<<<<<< HEAD
   include('ESF_config.php');
-=======
-  $username = 'thinkcore';
-  $password = 'K5FBNbt34BAYCZ4W';
-  $database = 'thinkcore_drupal';
-  $server = 'localhost';
->>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
 
   //grab variables from Jquery post
   $duration = $_POST['duration'];

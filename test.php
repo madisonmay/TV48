@@ -1,13 +1,5 @@
 <!DOCTYPE html>
 
-<<<<<<< HEAD
-=======
-<!--
-Todo:
--Add security measure to prevent unwanted users from accessing feed
--Try to fix weird issues with png export time scale (might need to contact Xively about that)
--->
->>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
 <html>
 	<head>
 	   <title>TV48 - Power</title>
