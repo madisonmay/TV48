@@ -93,7 +93,6 @@ $(document).ready(function() {
 
 
     function currentRooms(parent_id) {
-        //$(this).attr('id').slice(4)
         var user_rooms = []
         $('#' + parent_id).children('td:eq(1)').children('.btn').each(function() {
             user_rooms.push(parseInt($(this).attr('id').slice(4)));
