@@ -15,12 +15,10 @@
 		}
 
 		$stmt = $mysqli->stmt_init();
-		$stmt->prepare("SELECT id, confirmed FROM `ESF_users` WHERE email = ? AND password = ?");
-		$stmt->bind_param('ss', $_POST["email"], $passMD5);
+		$stmt->prepare("UPDATE `ESF_users` SET `rooms`=? WHERE id = ?");
+		$stmt->bind_param('ss', json_encode($_POST['rooms']), $_POST["id"]);
 		$stmt->execute();
 		$stmt->store_result();
-		$stmt->bind_result($id,$confirmed);
-		$stmt->fetch();
-
+		$stmt->close();
 	}
 ?>

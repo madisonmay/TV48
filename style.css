@@ -13,7 +13,10 @@ body {
     background-color: #eeeeee;
     font-family: 'Lato', sans-serif;
     padding: 25px;
+<<<<<<< HEAD
     min-width: 375px;
+=======
+>>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
 }
 
 .center-text {
@@ -23,6 +26,11 @@ body {
 .large-text {
     font-size: 50px;
     margin-bottom: -5px;
+<<<<<<< HEAD
+=======
+    cursor: pointer;
+    cursor: hand;
+>>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
 }
 
 .dark-text {
@@ -224,19 +232,33 @@ body {
 .large-text {
     margin-top: -20px;
     font-size: 50px;
+<<<<<<< HEAD
     max-width: 800px;
     margin-right: auto;
     margin-left: auto;
     text-align: center;
+=======
+    max-width: 150px;
+    margin-right: auto;
+    margin-left: auto;
+    cursor: pointer;
+>>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
 }
 
 .home-button {
     width: 50px;
+<<<<<<< HEAD
     float: left;
+=======
+    margin-bottom: -78px;
+    margin-left: 7%;
+    margin-top: -55px;
+>>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
 }
 
 .text-center {
     text-align: center;
+<<<<<<< HEAD
 }
 
 #register {
@@ -258,3 +280,6 @@ body {
 /** {
     border: 2px black solid;
 }*/
+=======
+}
+>>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a

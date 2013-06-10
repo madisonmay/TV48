@@ -1,6 +1,13 @@
 <?
 
+<<<<<<< HEAD
     include('ESF_config.php');
+=======
+    $username = 'thinkcore';
+    $password = 'K5FBNbt34BAYCZ4W';
+    $database = 'thinkcore_drupal';
+    $server = 'localhost';
+>>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
 
     $mysqli = new mysqli($server, $username, $password, $database);
 

@@ -1,3 +1,56 @@
+<<<<<<< HEAD
+=======
+
+
+html {
+  background-color: #eeeeee;
+}
+
+body {
+  background-color: #eeeeee;
+    font-family: 'Lato', sans-serif;
+    padding: 25px;
+}
+
+.fade_line{
+    display:block;
+    border:none;
+    color:white;
+    height:2px;
+    background:black;
+    background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 1000, from(#333), to(#fff));
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.large-text {
+    font-size: 50px;
+}
+
+.dark-text {
+    color: #333333;
+}
+
+.centered {
+    border: 2px black auto;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.px100 {
+    height: 100px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+>>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
 #main_title {
   text-align: center;
   font-size: 30px;
@@ -46,6 +99,13 @@
   width: 160px;
 }
 
+<<<<<<< HEAD
+=======
+.small-width {
+  width: 40px;
+}
+
+>>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
 #wrapper {
   position: relative;
   width: 100%;
@@ -56,7 +116,11 @@
   min-width: 890px;
 }
 
+<<<<<<< HEAD
 /*.larger-font {
+=======
+.larger-font {
+>>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
   float: left;
   padding-left: 30px;
   font-size: 20px;
@@ -64,7 +128,11 @@
   overflow:hidden;
   display: inline-block;
   z-index: 200px;
+<<<<<<< HEAD
 }*/
+=======
+}
+>>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
 
 .key {
   float: right;

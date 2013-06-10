@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"></html>
 <head>
+<<<<<<< HEAD
 
     <?
         include("check.php");
@@ -10,6 +11,17 @@
     <title>TV48</title>
     <meta charset="utf-8">
     <? include('base.php'); ?>
+=======
+    <title>TV48 - Home</title>
+    <title>TV48</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="stylesheets/bootstrap-combined.min.css">
+    <link rel="stylesheet" href="stylesheets/jquery-ui.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="scripts/jquery.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <script src="scripts/jquery-ui.min.js"></script>
+>>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
     <style>
         .home-button {
             opacity: 0;
@@ -51,9 +63,18 @@
     <!--[if lt IE 9]>
         <div style='text-align: center; border: 5px solid #333333;'>We're sorry.  We do not currently support versions of Internet Explorer earlier than 9.0.  Please either upgrade to a<a href='http://windows.microsoft.com/en-us/internet-explorer/ie-10-worldwide-languages'> more recent version of Internet Explorer </a> or view this site in a <a href='www.google.com/chrome'>different browser</a>.  Thanks!</div>
     <![endif]-->
+<<<<<<< HEAD
     <? include('header.php'); ?>
     TV48
     <? include('header2.php'); ?>
+=======
+    <div class="hide-this">
+    <a href='home.php' id='home'><img src='images/home.png' class='home-button'></a>
+    <div class="full-width px100 center-text dark-text min-width">
+        <h1 class="large-text" id='home'>TV48<h1>
+        <hr class="fade_line">
+    </div>
+>>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
     <div class="row-fluid not-too-small">
         <div class="span4">
             <a href='light.php'><div class="border">

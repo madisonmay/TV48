@@ -14,6 +14,11 @@ $(document).ready(function() {
         });
     }
 
+    String.prototype.strip = function(){
+        //strips all whitespace from string
+        return this.replace(/ /g,'');
+    }
+
     function template(string,data){
         return string.replace(/%(\w*)%/g,function(m,key){
           return data.hasOwnProperty(key)?data[key]:"";
@@ -32,7 +37,14 @@ $(document).ready(function() {
         if (!rooms) {
             rooms = [];
         } else {
-            rooms =  rooms.split(',');
+            rooms =  rooms.slice(1).slice(0, rooms.length-2).strip().split(',');
+            for (var j = 0; j < rooms.length; j++) {
+                //string length
+                sl = rooms[j].length;
+                rooms[j] = rooms[j].slice(1, sl-1);
+
+            }
+            console.log(rooms);
         }
 
         $('#table-body').append(template(entry, {'name': name, 'id': tenant_id}));
@@ -40,7 +52,7 @@ $(document).ready(function() {
             var light = window.lights[j];
             match = false;
             for (var k = 0; k < rooms.length; k++) {
-                if (rooms[k] == light['streamId']) {
+                if (parseInt(rooms[k]) == parseInt(light['streamId'])) {
                     match = true;
                 }
             }
@@ -80,6 +92,14 @@ $(document).ready(function() {
     });
 
 
+    function currentRooms(parent_id) {
+        //$(this).attr('id').slice(4)
+        var user_rooms = []
+        $('#' + parent_id).children('td:eq(1)').children('.btn').each(function() {
+            user_rooms.push(parseInt($(this).attr('id').slice(4)));
+        });
+        return user_rooms;
+    }
     //toggle between permitted and restricted
     $('.btn').on('click', function() {
         var parent_id = $(this).parent().parent().attr('id');
@@ -88,12 +108,20 @@ $(document).ready(function() {
         $(this).toggleClass("permitted");
         if ($(this).hasClass('permitted')) {
             $('#' + parent_id).children('td:eq(1)').append($(this));
-            $.post('editPermissions.php', {'id': parent_id, 'room': $(this).attr('id').slice(4), 'type'; 'ADD'}, function(data) {
+            var user_rooms = currentRooms(parent_id);
+            if ($('#' + parent_id).children('td:eq(1)').children('a').hasClass('hidden-buttons')) {
+                $('#' + parent_id).children('td:eq(1)').children('a').click();    
+            }
+            $.post('editPermissions.php', {'id': parent_id, 'rooms': user_rooms}, function(data) {
                 console.log(data);
             });
         } else if ($(this).hasClass('restricted')) {
             $('#' + parent_id).children('td:eq(2)').append($(this));
-            $.post('editPermissions.php', {'id': parent_id, 'room': $(this).attr('id').slice(4), 'type'; 'REMOVE'}, function(data) {
+            var user_rooms = currentRooms(parent_id);
+            if ($('#' + parent_id).children('td:eq(2)').children('a').hasClass('hidden-buttons')) {
+                $('#' + parent_id).children('td:eq(2)').children('a').click();    
+            }
+            $.post('editPermissions.php', {'id': parent_id, 'rooms': user_rooms}, function(data) {
                 console.log(data);
             });
         }
