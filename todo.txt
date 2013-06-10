@@ -1,0 +1,13 @@
+Refactor code to remove redundancies -- there are quite a few areas where code is repeated.
+
+Tie in to new database format
+
+Management page needed for landlord
+
+Fix minor eccentricities with reporting page
+
+Look up multilingual strategies
+
+Visualize dollars and grams of CO2 -- bootstrap modal
+
+Pull users from database
