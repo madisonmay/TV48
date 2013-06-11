@@ -2,12 +2,11 @@ Refactor code to remove redundancies -- there are quite a few areas where code i
 
 Tie in to new database format
 
-Management page needed for landlord
+Tie management page into database
 
-Fix minor eccentricities with reporting page
+Link new users to existing user objects created by landlord?
 
 Look up multilingual strategies
 
 Visualize dollars and grams of CO2 -- bootstrap modal
-
-Pull users from database
+ - Seperate units of energy and units of time

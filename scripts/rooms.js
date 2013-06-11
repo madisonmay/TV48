@@ -1,7 +1,6 @@
 function render_page() {
-
-
-
+	//called on page load and window resize
+	
 	var window_width = $(window).width();
 
 	//Varying numbers of columns for different window sizes

@@ -7,28 +7,11 @@
 	<link href="stylesheets/bootstrap-combined.min.css" rel="stylesheet" type="text/css" />
 	<link href="style.css" rel="stylesheet" type="text/css" />
 
-	<script>
-		function checkPassword(input) {
-			if (input.value != document.getElementById('password').value) {
-				input.setCustomValidity('De wachtwoorden moeten overeen komen');
-			} else {
-				// input is valid -- reset the error message
-				input.setCustomValidity('');
-			}
-		}
-		function checkEmail(input) {
-			if (input.value != document.getElementById('email').value) {
-				input.setCustomValidity('De E-mailadressen moeten overeen komen');
-			} else {
-				// input is valid -- reset the error message
-				input.setCustomValidity('');
-			}
-		}
-	</script>
+	<script src='scripts/register.js'></script>
 </head>
 <body>
 	<? include('header.php'); ?>
-	Registreer
+	Register
 	<? include('header2.php'); ?>
 	<div class="contentWrapper">
 		<form name="register" id="register" action="register_db.php" method="post">
