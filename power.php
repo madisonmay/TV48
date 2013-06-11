@@ -103,6 +103,10 @@ Todo:
           //associated with the current user and the total for the house.
           //support for 'public areas' still needs to be added
 
+          //rooms should be pulled from user objects
+
+          $rooms = json_decode($rooms);
+
           foreach ($datastreams as $data) {
             if ($landlord) {
               array_push($data_ids, $data->id);
@@ -111,10 +115,12 @@ Todo:
               }
             } else {
               //rooms will eventually be an array, so this code is out of date
-              if ($data->id == $rooms || $data->id == "PTOTAL") {
-                array_push($data_ids, $data->id);
-                if ($data->id == $streamId) {
-                  $plot_data = $data;
+              foreach ($rooms as $room) {
+                if ($data->id == $room || $data->id == "PTOTAL") {
+                  array_push($data_ids, $data->id);
+                  if ($data->id == $streamId) {
+                    $plot_data = $data;
+                  }
                 }
               }
             }
@@ -250,6 +256,8 @@ Todo:
       </div>
 
       <!-- Modal -->
+
+      <!-- Switch around this interface - all that is needed is a mapping betweeen users and rooms, and a way to assign rooms to be public -->
       <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -390,7 +398,9 @@ Todo:
         //May eventually want to compose string and then add it all at once to
         //speed up the process a bit.
         for (var i = 0; i < data_ids.length; i++) {
-          $('#feed').append('<option value="' + window.data_ids[i] + '">' + window.data_ids[i] + '</option>');
+          if (!$('option[value=' + window.data_ids[i] + ']').length) {
+            $('#feed').append('<option value="' + window.data_ids[i] + '">' + window.data_ids[i] + '</option>');
+          }
         }
 
         //update feed value and populate graph with the appropriate information

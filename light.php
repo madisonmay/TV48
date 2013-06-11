@@ -4,16 +4,7 @@
     <title>TV48 - Lights</title>
     <title>TV48</title>
     <meta charset="utf-8">
-<<<<<<< HEAD
     <? include('base.php'); ?>
-=======
-    <script src="scripts/jquery.min.js"></script>
-    <script src="scripts/bootstrap.min.js"></script>
-    <script src="scripts/jquery-ui.min.js"></script>
-    <link rel="stylesheet" href="stylesheets/bootstrap-combined.min.css">
-    <link rel="stylesheet" href="stylesheets/jquery-ui.css">
-    <link rel="stylesheet" href="style.css">
->>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
     <!--[if lt IE 9]>
         <style>
 

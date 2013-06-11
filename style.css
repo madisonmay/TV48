@@ -263,6 +263,94 @@ body {
     margin-top: 5px;
 }
 
+.room-settings {
+    border: 5px solid #333333;
+    border-radius: 15px;
+    padding: 10px;
+    text-align: center;
+    min-width: 300px;
+    max-width: 500px;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.text-block {
+    width: 90%; 
+    height: 45px; 
+    max-height: 45px; 
+    margin-left: 0px; 
+    font-size: 20px; 
+    line-height: 45px; 
+    display: inline-block;
+}
+
+.text-block-block {
+    margin-top: -5px;
+    width: 90%; 
+    height: 45px; 
+    max-height: 45px; 
+    margin-left: auto;
+    margin-right: auto; 
+    padding-left: 3.5%;
+    margin-top: 20px;
+    margin-bottom: -5px;
+    font-size: 20px; 
+    line-height: 45px; 
+    display: block;
+}
+
+.vert-text-align {
+    display: inline-block; 
+    vertical-align: middle; 
+    line-height: normal;
+    max-height: 45px;
+}
+
+#settings-block {
+    display: inline-block;
+    text-align: center; 
+    width: 8%; 
+    font-size: 20px; 
+    color: #46a564; 
+    cursor: pointer;
+}
+
+.thin-hr {
+    border-color: #333333;
+    width: 80%; 
+    margin-left: 5%; 
+    margin-right: 5%; 
+    margin-top: 10px; 
+    margin-bottom: 10px; 
+    height: 1px; 
+    border: none; 
+    background-color: #333333;
+}
+
+.room-wrapper {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.assigned-user {
+    float: none;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+    cursor: pointer;
+    padding: 5px;
+}
+
+input {
+    font-family: Lato;
+    text-align: center;
+}
+
+.maintain-size {
+    min-width: 1300px;
+}
+
 /** {
     border: 2px black solid;
 }*/

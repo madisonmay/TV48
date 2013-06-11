@@ -1,5 +1,5 @@
-$(document).ready(function() {
-    //Function for populating graph string
+function render_page() {
+
     var permitted = "<button class='btn spaced permitted' id='room%room_id%' style='display: none;'>%location%</button>" 
     var restricted = "<button class='btn spaced restricted' id='room%room_id%' style='display: none;'>%location%</button>"
     var entry = "<tr id='%id%' class='hideable'><td style='text-align: center;'>%name%</td> \
@@ -125,6 +125,13 @@ $(document).ready(function() {
             });
         }
     })
+}
 
-
+$(document).ready(function() {
+    render_page();
 })
+
+$(window).resize(function() {
+    console.log("Resize");
+    render_page();
+});
