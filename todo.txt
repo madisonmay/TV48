@@ -1,22 +1,27 @@
-Refactor code to remove redundancies -- there are quite a few areas where code is repeated.
-
 Tie in to new database format
-
-Tie management page into database
-
-Link new users to existing user objects created by landlord?
 
 Streamline lights page by removing need for "update" button.
 
-Look up multilingual strategies
+Look up multilingual strategies -- database of page entries.
 
 Add tutorial for site -- when new page is visited, tutorial should appear to guide the user through the basics.
 
 Form for adding tenants -- fairly simple, should send out emails to each of the tenant emails;
 
-Add start and end dates for rental periods, along with address, email address, phone number, etc.
+Add start and end dates for rental periods, along with address, email address, phone number, EN/NL etc.
 
 Multiple people added to the same room.
 
+Dashboard for home page -- what statistics should be shown? 
+ - Mean values
+
 Visualize dollars and grams of CO2 -- bootstrap modal
  - Seperate units of energy and units of time
+
+Power.php 
+ - Mean value should be marked on graph
+ - Fix odds and ends with formatting
+
+All of the graphs displayed on the same screen
+
+Comparisons between rooms
