@@ -28,13 +28,9 @@
 
             if ($brightness <= 50000) {
                 $stmt = $mysqli->stmt_init();
-
                 $stmt->prepare("UPDATE `lightStreams` SET `pwm` = ?, `request` = 1, `time` = NOW() WHERE `streamId` = ?");
-
                 $stmt->bind_param('ss', $brightness, $light->streamId);
-
                 $stmt->execute();
-
                 $stmt->store_result();
             }
         }

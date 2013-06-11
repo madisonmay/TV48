@@ -1,3 +1,7 @@
+<!-- Home.php Todo List:
+Add in statistics/dashboard
+Add in link to management page(s) -->
+
 <!DOCTYPE html>
 <html lang="en"></html>
 <head>
@@ -38,28 +42,9 @@
 
         </style>
     <![endif]-->
-    <script>
-      $(document).ready(function() {
-        $('.border').mouseover(function() {
-          $(this).stop(true).animate({"borderColor": "#46a546"}, 500);
-          $(this).children('.circle').children('.opaque').stop(true)
-            .animate({'opacity': '.9', '-moz-opacity': '.9', 'filter': 'Alpha(Opacity=90)',
-                     '-ms-filter': '"progid:DXImageTransform.Microsoft.Alpha(Opacity=90}"'}, 500);
-        });
-
-        $('.border').mouseout(function() {
-          $(this).stop(true).animate({"borderColor": "#333333"}, 500);
-          $(this).children('.circle').children('.opaque').stop(true)
-            .animate({'opacity': '0', '-moz-opacity': '0', 'filter': 'Alpha(Opacity=0)',
-                     '-ms-filter': '"progid:DXImageTransform.Microsoft.Alpha(Opacity=0}"'}, 500);
-        });
-      });
-    </script>
+    <script src='scripts/home.js'></script>
 </head>
 <body>
-    <!--[if lt IE 9]>
-        <div style='text-align: center; border: 5px solid #333333;'>We're sorry.  We do not currently support versions of Internet Explorer earlier than 9.0.  Please either upgrade to a<a href='http://windows.microsoft.com/en-us/internet-explorer/ie-10-worldwide-languages'> more recent version of Internet Explorer </a> or view this site in a <a href='www.google.com/chrome'>different browser</a>.  Thanks!</div>
-    <![endif]-->
     <? include('header.php'); ?>
     TV48
     <? include('header2.php'); ?>

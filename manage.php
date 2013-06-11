@@ -41,15 +41,10 @@
         }
 
         $stmt = $mysqli->stmt_init();
-
         $stmt->prepare("SELECT `streamId`, `location`  FROM `lightStreams` WHERE pwm >= 0");
-
         $stmt->execute();
-
         $stmt->store_result();
-
         $stmt->bind_result($streamId, $location);
-
         $lights = array();
 
         while ($stmt->fetch()) {
@@ -58,19 +53,13 @@
         }
 
         $stmt->close();
-
         echo "<script> window.lights = " . json_encode($lights) . "</script>";
 
         $stmt = $mysqli->stmt_init();
-
         $stmt->prepare("SELECT `firstName`, `lastName`, `id`, `rooms` FROM `ESF_users` WHERE `landlord` = 0");
-
         $stmt->execute();
-
         $stmt->store_result();
-
         $stmt->bind_result($firstName, $lastName, $id, $rooms);
-
         $tenants = array();
 
         while ($stmt->fetch()) {
@@ -79,7 +68,6 @@
         }
 
         $stmt->close();
-
         echo "<script> window.tenants = " . json_encode($tenants) . "</script>";
 
     ?>

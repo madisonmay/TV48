@@ -41,9 +41,6 @@
 			<input type="hidden" name="session" value="<? session_start(); echo session_id() ?>" />
 			<input type="submit" value="Registreer!" class="btn btn-success centered">
 		</form>
-
-
-
 	</div>
 	<div class="footerWrapper">
 	</div>

@@ -13,15 +13,10 @@
     }
 
     $stmt = $mysqli->stmt_init();
-
     $stmt->prepare("SELECT `streamId`, `pwm`, `location`, `request`  FROM `lightStreams` WHERE pwm >= 0");
-
     $stmt->execute();
-
     $stmt->store_result();
-
     $stmt->bind_result($streamId, $pwm, $location, $request);
-
     $lights = array();
 
     while ($stmt->fetch()) {

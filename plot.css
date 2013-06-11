@@ -47,13 +47,7 @@
   width: 160px;
 }
 
-<<<<<<< HEAD
-=======
-.small-width {
-  width: 40px;
-}
 
->>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
 #wrapper {
   position: relative;
   width: 100%;
@@ -63,24 +57,6 @@
 .min-width {
   min-width: 890px;
 }
-
-<<<<<<< HEAD
-/*.larger-font {
-=======
-.larger-font {
->>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
-  float: left;
-  padding-left: 30px;
-  font-size: 20px;
-  white-space:nowrap;
-  overflow:hidden;
-  display: inline-block;
-  z-index: 200px;
-<<<<<<< HEAD
-}*/
-=======
-}
->>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
 
 .key {
   float: right;
