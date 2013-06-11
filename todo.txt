@@ -10,5 +10,7 @@ Streamline lights page by removing need for "update" button.
 
 Look up multilingual strategies
 
+Add tutorial for site -- when new page is visited, tutorial should appear to guide the user through the basics.
+
 Visualize dollars and grams of CO2 -- bootstrap modal
  - Seperate units of energy and units of time
