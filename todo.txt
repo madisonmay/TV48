@@ -25,3 +25,7 @@ Power.php
 All of the graphs displayed on the same screen
 
 Comparisons between rooms
+
+Comparison against average
+
+Ranking rooms based on consumption
