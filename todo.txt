@@ -6,6 +6,8 @@ Tie management page into database
 
 Link new users to existing user objects created by landlord?
 
+Streamline lights page by removing need for "update" button.
+
 Look up multilingual strategies
 
 Visualize dollars and grams of CO2 -- bootstrap modal
