@@ -110,9 +110,9 @@ function render_page() {
 	});
 
 	// Not currently functional!  Need to figure this problem out before saving to db
-	$('.assign-user').change(function() {
+	$('.assigned-user').on('change', function() {
 		console.log("Logging selected value: ");
-		console.log($('this :selected').text());
+		console.log($(this).parent().next('select.assigned-user option:selected'));
 	});
 
 	//display content after html string is composed and html is added to DOM

@@ -12,5 +12,11 @@ Look up multilingual strategies
 
 Add tutorial for site -- when new page is visited, tutorial should appear to guide the user through the basics.
 
+Form for adding tenants -- fairly simple, should send out emails to each of the tenant emails;
+
+Add start and end dates for rental periods, along with address, email address, phone number, etc.
+
+Multiple people added to the same room.
+
 Visualize dollars and grams of CO2 -- bootstrap modal
  - Seperate units of energy and units of time
