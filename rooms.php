@@ -21,6 +21,7 @@
 
     <?
 
+        // Again, should use ESF_config.php
         $username = 'thinkcore';
         $password = 'K5FBNbt34BAYCZ4W';
         $database = 'thinkcore_drupal';
@@ -34,16 +35,12 @@
             exit();
         }
 
+        //get list of all lights
         $stmt = $mysqli->stmt_init();
-
         $stmt->prepare("SELECT `streamId`, `location`, `public`, `userId`, `user`  FROM `lightStreams` WHERE pwm >= 0");
-
         $stmt->execute();
-
         $stmt->store_result();
-
         $stmt->bind_result($streamId, $location, $public, $userId, $user);
-
         $lights = array();
 
         while ($stmt->fetch()) {
@@ -57,19 +54,14 @@
         }
 
         $stmt->close();
-
         echo "<script> window.lights = " . json_encode($lights) . "</script>";
 
+        //get list of all users/tenants
         $stmt = $mysqli->stmt_init();
-
         $stmt->prepare("SELECT `firstName`, `lastName`, `id` FROM `ESF_users` WHERE `landlord` = 0");
-
         $stmt->execute();
-
         $stmt->store_result();
-
         $stmt->bind_result($firstName, $lastName, $id);
-
         $tenants = array();
 
         while ($stmt->fetch()) {
