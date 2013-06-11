@@ -103,7 +103,7 @@ function render_page() {
 	//should eventually send request to server here and change item in database
 	$('.privacy').on('click', function() {
 		if ($(this).attr('src') === 'images/locked.png') {
-			// $(this).attr('src', 'images/public.png');
+			$(this).attr('src', 'images/public.png');
 		} else {
 			$(this).attr('src', 'images/locked.png');
 		}
