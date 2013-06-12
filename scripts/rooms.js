@@ -104,15 +104,43 @@ function render_page() {
 	$('.privacy').on('click', function() {
 		if ($(this).attr('src') === 'images/locked.png') {
 			$(this).attr('src', 'images/public.png');
+			var parent = $(this).parent().get(0);
+			var root = $(parent).next().next();
+			var select = $(root).children('select');
+			select.children("option[selected='selected']").removeAttr('selected');
+			select.children("option[value='public']").attr('selected', 'selected');
+			root.children('.combobox-container').children('.assigned-user').val('Public');
 		} else {
 			$(this).attr('src', 'images/locked.png');
+			var parent = $(this).parent().get(0);
+			var root = $(parent).next().next();
+			var select = $(root).children('select');
+			select.children("option[selected='selected']").removeAttr('selected');
+			select.children("option[value='restricted']").attr('selected', 'selected');
+			root.children('.combobox-container').children('.assigned-user').val('Restricted');
 		}
 	});
 
-	// Not currently functional!  Need to figure this problem out before saving to db
+	//unwieldy code, but functional
 	$('.assigned-user').on('change', function() {
-		console.log("Logging selected value: ");
-		console.log($(this).parent().next('select.assigned-user option:selected'));
+		var root = $(this).parent().get(0);
+		var select = $(root).children('select');
+		var current = select.children("option[selected='selected']");
+		var text = $(root).children('.combobox-container').children('.assigned-user').val();
+		if (text === 'Restricted') {
+			var parent = $(root).prev().prev();
+			var child = $(parent).children('.privacy');
+			$(child).attr('src', 'images/locked.png');
+		} else if (text === 'Public') {
+			//change icon
+			var parent = $(root).prev().prev();
+			var child = $(parent).children('.privacy');
+			$(child).attr('src', 'images/public.png');
+		} else {
+			var parent = $(root).prev().prev();
+			var child = $(parent).children('.privacy');
+			$(child).attr('src', 'images/locked.png');
+		}
 	});
 
 	//display content after html string is composed and html is added to DOM

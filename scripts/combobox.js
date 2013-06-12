@@ -228,7 +228,7 @@
 
   $.fn.combobox.defaults = {
   template: '<div class="combobox-container" style="width: 90%"><input type="hidden" /><input type="text" autocomplete="off" style="float: none; border-top-right-radius: 3px; border-bottom-right-radius: 3px;" class="dropdown-toggle" data-dropdown="dropdown"/></div>'
-  , menu: '<ul class="typeahead typeahead-long dropdown-menu" style="margin-left: 9px;"></ul>'
+  , menu: '<ul class="typeahead typeahead-long dropdown-menu" style="margin-left: 0px; width: 218px;"></ul>'
   , item: '<li><a href="#"></a></li>'
   }
 
