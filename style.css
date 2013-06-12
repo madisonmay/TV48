@@ -13,10 +13,7 @@ body {
     background-color: #eeeeee;
     font-family: 'Lato', sans-serif;
     padding: 25px;
-<<<<<<< HEAD
     min-width: 375px;
-=======
->>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
 }
 
 .center-text {
@@ -26,11 +23,8 @@ body {
 .large-text {
     font-size: 50px;
     margin-bottom: -5px;
-<<<<<<< HEAD
-=======
     cursor: pointer;
     cursor: hand;
->>>>>>> 265d4b089c5d702f0e43ca0ca99bc50646166d6a
 }
 
 .dark-text {

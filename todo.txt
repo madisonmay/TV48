@@ -29,3 +29,13 @@ Comparisons between rooms
 Comparison against average
 
 Ranking rooms based on consumption
+
+Cumulative display
+
+Change upper graph to support actual zooming with a different resolution than the lower graph
+
+Set up an alert system
+
+Set up a prepaid energy system
+
+Handle studio seperately -- public is not always good if it means you also have to pay for public resources
