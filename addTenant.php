@@ -84,10 +84,16 @@
     Add Tenant
     <? include('header2.php'); ?>
     <form style='text-align: center;' action='submitTenant.php' method='post'>
-        <input type='text' class='centered' style='display: block;' id='firstName' placeholder='First name...' required>
-        <input type='text' class='centered' style='display: block;' id='lastName' placeholder='Last name...' required>
-        <input type='email' class='centered' style='display: block;' id='email' placeholder='Email...' required>
-        <select style='text-align:center; display: block;' class='centered' id='room'>
+        <input type='text' class='centered' style='display: block;' id='firstName' name='firstName' placeholder='First name...' required>
+        <input type='text' class='centered' style='display: block;' id='lastName' name='lastName' placeholder='Last name...' required>
+        <input type='text' class='centered datepicker' style='display: block;' id='startDate' name='startDate' placeholder='Start date...' required>
+        <input type='text' class='centered datepicker' style='display: block;' id='endDate' name='endDate' placeholder='End date...' required>
+        <div class="input-prepend">
+            <span class="add-on">€</span>
+            <input type='text' class='centered' style='width: 180px;' id='balance' name='balance' placeholder='Account balance...'>
+        </div>
+        <input type='email' class='centered' style='display: block;' id='email' name='email' placeholder='Email...' required>
+        <select style='text-align:center; display: block;' class='centered' id='room' name='room_id'>
             
             <?
                 $pid = $_GET['property'];
@@ -113,12 +119,17 @@
 
             ?>
         </select>
-        <select style='text-align: center; display: block;' id='language' class='centered'>
-            <option value='English' selected='selected'> English
-            <option value='Dutch'> Dutch
+        <select style='text-align: center; display: block;' id='language' nane='language' class='centered'>
+            <option value='English'> English </option>
+            <option value='Dutch'> Dutch </option>
         </select>
         <input type='submit' value='Submit' class='btn btn-success'>
     </form>
     </div>
+    <script>
+        $(document).ready(function() {
+            $('.datepicker').datepicker();
+        });
+    </script>
 </body>
 </html>

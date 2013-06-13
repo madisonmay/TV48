@@ -32,16 +32,11 @@
 			?>
 			<h1> Registratie compleet </h1>
 			<?
-			header ('Location: login.php');
+			header ('Location: newTenant.php');
 
-
-		} else
-		{
-			?>
-			<h1>Error</h1>
-			<p>U heeft geen toegang tot deze pagina</p>
-			<?
+		} else {
 			header ('Location: login.php');
+			exit(0);
 		}
 		?>
 	</div>

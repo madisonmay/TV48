@@ -53,14 +53,30 @@ Todo:
             if ($stmt->num_rows != 0) {
               $stmt->close();
               $stmt = $mysqli->stmt_init();
-              $stmt->prepare("SELECT landlord, rooms FROM `ESF_users` WHERE sessionID = ?");
+              $stmt->prepare("SELECT landlord, id FROM `ESF_users` WHERE sessionID = ?");
               $stmt->bind_param('s', $_SESSION['id']);
               $stmt->execute();
-              $stmt->bind_result($landlord, $rooms);
+              $stmt->bind_result($landlord, $user_id);
               $stmt->store_result();
               $stmt->fetch();
               $stmt->close();
             }
+
+            $stmt = $mysqli->stmt_init();
+            $stmt->prepare("SELECT `room_id` FROM `User_X_Room` WHERE user_id = ?");
+            $stmt->bind_param('s', $user_id);
+            $stmt->execute();
+            $stmt->bind_result($room_id);
+            $stmt->store_result();
+
+            $rooms = Array();
+            while($stmt->fetch()) {
+              array_push($room_id);
+            }
+
+          } else {
+            header ('Location: login.php');
+            exit(0);
           }
 
           define('SECONDS_PER_DAY', 86400);
@@ -104,8 +120,6 @@ Todo:
           //support for 'public areas' still needs to be added
 
           //rooms should be pulled from user objects
-
-          $rooms = json_decode($rooms);
 
           foreach ($datastreams as $data) {
             if ($landlord) {

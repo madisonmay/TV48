@@ -7,7 +7,7 @@ Log In
         <input type="email" name="email" placeholder="E-mail" required><br>
 		<!-- <label style="margin-top:3px;">Wachtwoord</label>	 -->
         <input type="password" name="pass" placeholder="Wachtwoord" required>
-		<p><a href="register.php">Nog geen account?</a></p>
+		<p><a href="register.php">Don't have an account? Register here</a></p>
 		<input class="btn btn-success" type="submit" value="Log in">
 	</fieldset>
 </form>
