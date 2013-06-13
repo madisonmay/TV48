@@ -28,7 +28,7 @@
     <![endif]-->
     <script>
         $(document).ready(function() {
-            $('#room-type').change(function() {
+            $('#room_type').change(function() {
                 if ($(this).val() === 'Public') {
                     $('.thin-wrapper').css('display', 'none');
                 }  else {
@@ -101,14 +101,14 @@
     Add Room
     <? include('header2.php'); ?>
     <form style='text-align: center;' action='submitRoom.php' method='post'>
-        <input type='text' class='centered' style='display: block;' id='room_title' placeholder='Room title...' required>
-        <select style='text-align: center; display: block;' class='centered' id='room-type' required>
+        <input type='text' class='centered' style='display: block;' id='room_title' name='room_title' placeholder='Room title...' required>
+        <select style='text-align: center; display: block;' class='centered' name='room_type' id='room_type' required>
             <option value='Public'> Public
             <option value='Dorm'> Dorm
             <option value='Studio'> Studio
         </select>
         <div class='thin-wrapper'>
-            <select style='text-align: center; display: block;' class='centered' id='tenant' required>
+            <select style='text-align: center; display: block;' class='centered' name='tenant' id='tenant' required>
                 <option value='NULL'>None</option>
                             
             <?
