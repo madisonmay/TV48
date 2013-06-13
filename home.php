@@ -13,16 +13,10 @@ Add in link to management page(s) -->
     <title>TV48 - Home</title>
     <title>TV48</title>
     <meta charset="utf-8">
+    <script src="http://d3js.org/d3.v2.js"></script>
+    <script src="nv.d3.js"></script>
     <? include('base.php'); ?>
-    <title>TV48 - Home</title>
-    <title>TV48</title>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="stylesheets/bootstrap-combined.min.css">
-    <link rel="stylesheet" href="stylesheets/jquery-ui.css">
-    <link rel="stylesheet" href="style.css">
-    <script src="scripts/jquery.min.js"></script>
-    <script src="scripts/bootstrap.min.js"></script>
-    <script src="scripts/jquery-ui.min.js"></script>
+
     <style>
         .home-button {
             opacity: 0;
@@ -57,7 +51,8 @@ Add in link to management page(s) -->
                     </div>
                 </div>
             </div></a>
-            <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+            <div class="description">
+            </div>
         </div>
         <div class="span4">
             <a href='heat.php'><div class="border">
@@ -67,7 +62,8 @@ Add in link to management page(s) -->
                     </div>
                 </div>
             </div></a>
-            <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+            <div class="description">
+            </div>
         </div>
         <div class="span4">
             <a href='power.php'><div class="border">
@@ -77,7 +73,8 @@ Add in link to management page(s) -->
                     </div>
                 </div>
             </div></a>
-            <div class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+            <div class="description">
+            </div>
         </div>
     </div>
     </div>

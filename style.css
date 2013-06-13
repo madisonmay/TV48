@@ -341,8 +341,17 @@ input {
     text-align: center;
 }
 
+select {
+    font-family: Lato;
+    text-align: center;
+}
+
 .maintain-size {
     min-width: 1300px;
+}
+
+.block {
+    display: block;
 }
 
 /** {

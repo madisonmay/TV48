@@ -1,4 +1,5 @@
 $(document).ready(function() {
+  nv.dev = false;
   $('.border').mouseover(function() {
     $(this).stop(true).animate({"borderColor": "#46a546"}, 500);
     $(this).children('.circle').children('.opaque').stop(true)
