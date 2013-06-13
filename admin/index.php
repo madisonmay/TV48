@@ -68,20 +68,22 @@
     <a href='../logout.php' id='logout'><img src='../images/power.png' class='logout-button'></a>
     <div class="full-width px100 center-text dark-text min-width">
         <h1 class="large-text" id='home'>
-            Add Landlord
+            Administration
         </h1>
         <hr class="fade_line">
     </div>
-    <form style='text-align: center;' action='submitLandlord.php' method='POST'>
-        <input type='text' class='centered' style='display: block;' id='firstName' name='firstName' placeholder='First name...' required>
-        <input type='text' class='centered' style='display: block;' id='lastName' name='lastName' placeholder='Last name...' required>
-        <input type='email' class='centered' style='display: block;' id='email' name='email' placeholder='Email...' required>
-        <select style='text-align: center; display: block;' id='language' name='language' class='centered'>
-            <option value='English' selected='selected'> English
-            <option value='Dutch'> Dutch
-        </select>
-        <input type='submit' value='Submit' class='btn btn-success'>
-    </form>
-
+    <div style='text-align: center;'>
+        <button type='button' class='btn redirect' url='addLandlord.php'>Add Landlord</button>
+        <button type='button' class='btn redirect' url='editLandlord.php'>Edit Landlords</button>
     </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('.redirect').click(function() {
+                var url = $(this).attr('url');
+                window.location = url;
+            });
+        });
+    </script>
 </body>
+</html>

@@ -63,40 +63,10 @@
     <? include('header.php'); ?>
     Add Property
     <? include('header2.php'); ?>
-    <form style='text-align: center;' action='submitRoom.php' method='post'>
-        <input type='text' class='centered' style='display: block;' placeholder='Property name...' required>
-        <div class='thin-wrapper'>
-            <select style='text-align: center; display: block;' class='centered' id='tenant' required>
-                            
-            <?
-                $pid = $_GET['property'];
-
-                $stmt = $mysqli->stmt_init();
-                $stmt->prepare('SELECT `id`, `firstName`, `lastName` FROM `ESF_users` WHERE landlord_id = ? AND has_room = 0 and landlord != 1');
-                $stmt->bind_param('s', $landlord_id);
-                $stmt->execute();
-                $stmt->store_result();
-                $stmt->bind_result($user_id, $firstName, $lastName);
-
-                $count = 0;
-                while($stmt->fetch()) {
-                    echo("<option value='" . $user_id ."'>" . $firstName . ' ' . $lastName . "</option>");
-                    $count++;
-                }
-
-                $stmt->close();
-
-                if ($count == 0) {
-                    echo("<option value='-1'>No Tenants Need Rooms</option>");
-                }
-
-            ?>
-
-            </select>
-        </div>
+    <form style='text-align: center;' action='submitProperty.php' method='POST'>
+        <input type='text' class='centered' style='display: block;' name='name' placeholder='Property name...' required>
         <input type='submit' value='Submit' class='btn btn-success'>
     </form>
-
     </div>
 </body>
 </html>

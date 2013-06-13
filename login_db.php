@@ -101,7 +101,7 @@
 			<h1>Error</h1>
 			<p>U heeft geen toegang tot deze pagina</p>
 			<?
-			header ('Location: url=login.php');
+			header ('Location: login.php');
 			exit();
 		}
 		?>

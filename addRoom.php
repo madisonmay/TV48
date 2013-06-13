@@ -109,6 +109,7 @@
         </select>
         <div class='thin-wrapper'>
             <select style='text-align: center; display: block;' class='centered' id='tenant' required>
+                <option value='NULL'>None</option>
                             
             <?
                 $pid = $_GET['property'];
