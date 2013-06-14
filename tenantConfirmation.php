@@ -22,9 +22,33 @@
 				exit();
 			}
 
+			//Needs error handling
 			$stmt = $mysqli->stmt_init();
-			$stmt->prepare("UPDATE ESF_users SET confirmed = 1 WHERE email = ? AND confirmationCode = ?");
+			$stmt->prepare("UPDATE ESF_users SET confirmed = 1, property_id = ? WHERE email = ? AND confirmationCode = ?");
+			$stmt->bind_param('iss', $_GET['property_id'], $email, $code);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("SELECT `id`, `tenant_id` FROM `ESF_users` WHERE email = ? AND confirmationCode = ?");
 			$stmt->bind_param('ss', $email, $code);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->bind_result($user_id, $tenant_id);
+			$stmt->fetch();
+			$stmt->close();
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE Tenants SET user_id = ? WHERE id = ?");
+			$stmt->bind_param('ii', $user_id, $tenant_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE ESF_users SET confirmed = 1, property_id = ? WHERE email = ? AND confirmationCode = ?");
+			$stmt->bind_param('iss', $_GET['property_id'], $email, $code);
 			$stmt->execute();
 			$stmt->store_result();
 			$stmt->close();
@@ -33,6 +57,7 @@
 			<h1> Registratie compleet </h1>
 			<?
 			header ('Location: newTenant.php');
+			exit(0);
 
 		} else {
 			header ('Location: login.php');
@@ -41,7 +66,6 @@
 		?>
 	</div>
 	<div class="footerWrapper">
-	footer
 	</div>
 </body>
 </html>

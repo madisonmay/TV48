@@ -118,12 +118,15 @@
                 }
 
             ?>
+
+            <option value='-1'>None</option>
         </select>
         <select style='text-align: center; display: block;' id='language' nane='language' class='centered'>
             <option value='English'> English </option>
             <option value='Dutch'> Dutch </option>
         </select>
         <input type='submit' value='Submit' class='btn btn-success'>
+        <input class="hidden" style='display: none;' name='property_id' value='<? echo $pid; ?>'>
     </form>
     </div>
     <script>

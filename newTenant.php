@@ -30,7 +30,7 @@
 </head>
 <body>
     <? include('header.php'); ?>
-    Add Tenant
+    Registration
     <? include('header2.php'); ?>
     <form style='text-align: center;' action='tenantRegister.php' method='POST'>
         <input type='email' class='centered' style='display: block;' id='email' name='email' placeholder='Confirm Email...' required>

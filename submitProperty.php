@@ -52,16 +52,8 @@
 		} else {
 
 			$stmt = $mysqli->stmt_init();
-			$stmt->prepare("SELECT `id` from `Properties` WHERE name = ?");
-			$stmt->bind_param('s', $_POST["name"]);
-			$stmt->execute();
-			$stmt->store_result();
-			$stmt->bind_result($property_id);
-			$stmt->close();
-
-			$stmt = $mysqli->stmt_init();
-			$stmt->prepare("INSERT INTO `Property_X_Landlord` (landlord_id, property_id, property_name) VALUES (?, ?, ?)");
-			$stmt->bind_param('iis', $landlord_id, $property_id, $_POST["name"]);
+			$stmt->prepare("INSERT INTO `Property_X_Landlord` (landlord_id, property_id, property_name) VALUES (?, LAST_INSERT_ID(), ?)");
+			$stmt->bind_param('is', $landlord_id, $_POST["name"]);
 			$stmt->execute();
 			$stmt->store_result();
 			$stmt->bind_result($property_id);

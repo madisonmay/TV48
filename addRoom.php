@@ -109,13 +109,12 @@
         </select>
         <div class='thin-wrapper'>
             <select style='text-align: center; display: block;' class='centered' name='tenant' id='tenant' required>
-                <option value='NULL'>None</option>
                             
             <?
                 $pid = $_GET['property'];
 
                 $stmt = $mysqli->stmt_init();
-                $stmt->prepare('SELECT `id`, `firstName`, `lastName` FROM `ESF_users` WHERE landlord_id = ? AND has_room = 0 and landlord != 1');
+                $stmt->prepare('SELECT `id`, `firstName`, `lastName` FROM `ESF_users` WHERE landlord_id = ? AND has_room=0 and landlord != 1');
                 $stmt->bind_param('s', $landlord_id);
                 $stmt->execute();
                 $stmt->store_result();
@@ -134,10 +133,12 @@
                 }
 
             ?>
+                <option value='-1'>None</option>
 
             </select>
         </div>
         <input type='submit' value='Submit' class='btn btn-success'>
+        <input class='hidden' name='property_id' value=<? echo($_GET['property']); ?>></div>
     </form>
 
     </div>
