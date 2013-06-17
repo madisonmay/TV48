@@ -14,6 +14,7 @@
 		{
 			$code = $_GET["code"];
 			$email = $_GET["email"];
+			$pid = $_GET['property_id']
 
 			$mysqli = new mysqli($server, $username, $password, $database);
 			if ($mysqli->connect_errno)
@@ -25,7 +26,7 @@
 			//Needs error handling
 			$stmt = $mysqli->stmt_init();
 			$stmt->prepare("UPDATE ESF_users SET confirmed = 1, property_id = ? WHERE email = ? AND confirmationCode = ?");
-			$stmt->bind_param('iss', $_GET['property_id'], $email, $code);
+			$stmt->bind_param('iss', $pid, $email, $code);
 			$stmt->execute();
 			$stmt->store_result();
 			$stmt->close();
@@ -48,7 +49,7 @@
 
 			$stmt = $mysqli->stmt_init();
 			$stmt->prepare("UPDATE ESF_users SET confirmed = 1, property_id = ? WHERE email = ? AND confirmationCode = ?");
-			$stmt->bind_param('iss', $_GET['property_id'], $email, $code);
+			$stmt->bind_param('iss', $pid, $email, $code);
 			$stmt->execute();
 			$stmt->store_result();
 			$stmt->close();

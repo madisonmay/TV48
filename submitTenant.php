@@ -10,6 +10,15 @@
 	include ("ESF_config.php");
 	include ("check.php");
 
+	$room_id = $_POST['room_id'];
+	$startDate = $_POST['startDate'];
+	$endDate = $_POST['endDate'];
+	$balance = $_POST['balance'];
+	$firstName = $_POST['firstName'];
+	$lastName = $_POST['lastName'];
+	$pid = $_POST['property_id'];
+	$email = $_POST['email'];
+
 	if ($_SERVER['REQUEST_METHOD'] == "POST")
 	{
 
@@ -40,12 +49,9 @@
 
 		$stmt = $mysqli->stmt_init();
 
-		//sketchy
-		$property_id = $_POST['property_id'];
-
 		$stmt = $mysqli->stmt_init();
 		$stmt->prepare("INSERT INTO `Tenants` (start_date, end_date, property_id, balance) VALUES (?, ?, ?, ?)");
-		$stmt->bind_param('ssid', $_POST["startDate"], $_POST['endDate'], $property_id, $_POST['balance']);
+		$stmt->bind_param('ssid', $startDate, $endDate, $pid, $balance);
 		$stmt->execute();
 		$stmt->store_result();
 		$stmt->close();
@@ -54,7 +60,7 @@
 		  	die('Invalid query: ' . mysql_error());
 		} else {
 
-			if ($_POST['room_id'] >= 0 && $_POST['room_id'] != "None") {
+			if ($room_id >= 0 && $room_id != "None") {
 				$has_room = 1;
 			} else {
 				$has_room = 0;
@@ -66,14 +72,14 @@
 			$stmt = $mysqli->stmt_init();
 			$stmt->prepare("INSERT INTO `ESF_users` (firstName, lastName, email, confirmationCode, sessionId, landlord, landlord_id, tenant_id, has_room, property_id) 
 							VALUES (?, ?, ?, ?, NULL, 0, ?, LAST_INSERT_ID(), ?, ?)");
-			$stmt->bind_param('sssiibi', $_POST['firstName'], $_POST['lastName'], $_POST['email'], $code, $landlord_id, $has_room, $property_id);
+			$stmt->bind_param('sssiibi', $firstName, $lastName, $email, $code, $landlord_id, $has_room, $pid);
 			$stmt->execute();
 			$stmt->store_result();
 			$stmt->close();
 
 			$stmt = $mysqli->stmt_init();
 			$stmt->prepare('SELECT `id` FROM `ESF_users` WHERE `property_id` = ? AND firstname = ? and lastName = ? ORDER BY `id` DESC LIMIT 1');
-			$stmt->bind_param('iss', $property_id, $_POST['firstName'], $_POST['lastName']);
+			$stmt->bind_param('iss', $pid, $firstName, $lastName);
 			$stmt->execute();
 			$stmt->store_result();
 			$stmt->bind_result($new_user_id);
@@ -92,13 +98,13 @@
 			// print_r($_POST['lastName']);
 			// print('<br>');
 			// print('Property id: ');
-			// print_r($property_id);
+			// print_r($pid);
 			// print('<br>');
 			// exit(0);
 
 			$stmt = $mysqli->stmt_init();
 			$stmt->prepare("SELECT `id` FROM `Rooms` WHERE type = 'Public' and property_id = ?");
-			$stmt->bind_param('i', $property_id);
+			$stmt->bind_param('i', $pid);
 			$stmt->execute();
 			$stmt->store_result();
 			$stmt->bind_result($_room_id);
@@ -106,7 +112,7 @@
 			while($stmt->fetch()) {
 				$stmt = $mysqli->stmt_init();
 				$stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, 1, 0, ?)");
-				$stmt->bind_param('iii', $new_user_id, $_room_id, $property_id);
+				$stmt->bind_param('iii', $new_user_id, $_room_id, $pid);
 				$stmt->execute();
 				$stmt->store_result();
 				$stmt->close();
@@ -117,14 +123,14 @@
 			if ($has_room) {
 				$stmt = $mysqli->stmt_init();
 				$stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (LAST_INSERT_ID(), ?, 1, 1, 1, ?)");
-				$stmt->bind_param('ii', $_POST['room_id'], $property_id);
+				$stmt->bind_param('ii', $room_id, $pid);
 				$stmt->execute();
 				$stmt->store_result();
 				$stmt->close();
 
 				$stmt = $mysqli->stmt_init();
 				$stmt->prepare("UPDATE `Rooms` SET available = 0 WHERE id = ? ");
-				$stmt->bind_param('i', $_POST['room_id']);
+				$stmt->bind_param('i', $room_id);
 				$stmt->execute();
 				$stmt->store_result();
 				$stmt->close();
@@ -144,9 +150,9 @@
 							<title>CORE registration -- setup your account</title>
 						</head>
 						<body>
-							<h1>Hi, ".$_POST['firstName']."</h1>
+							<h1>Hi, ".$firstName."</h1>
 							<p>Start your account setup process by clicking on the link below:</p>
-							<a href=http://www.thinkcore.be/TV48/tenantConfirmation.php?code=".$code."&email=".$_POST['email']."&property_id=".$property_id.">Setup Your Account</a><br/>
+							<a href=http://www.thinkcore.be/TV48/tenantConfirmation.php?code=".$code."&email=".$email."&property_id=".$pid.">Setup Your Account</a><br/>
 							<p>Thanks, </p>
 							<p>The CORE team</p>
 					</html>

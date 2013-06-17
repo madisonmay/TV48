@@ -9,6 +9,10 @@
 		//rooms.  The question is how can this be done in a secure manner?
 	include ("ESF_config.php");
 
+	$address = $_POST['address'];
+	$phone = $_POST['phone_number'];
+	$email = $_POST['email'];
+
 	if ($_SERVER['REQUEST_METHOD'] == "POST")
 	{
 
@@ -25,7 +29,7 @@
 		$pass = md5($_POST["password"]);
 		$stmt = $mysqli->stmt_init();
 		$stmt->prepare("UPDATE `ESF_users` SET password=?, address=?, phone_number=?, registered=1 WHERE email = ?");
-		$stmt->bind_param('ssss', $pass, $_POST['address'], $_POST['phone_number'], $_POST["email"]);
+		$stmt->bind_param('ssss', $pass, $address, $phone, $email);
 		$stmt->execute();
 		$stmt->store_result();
 		$stmt->fetch();

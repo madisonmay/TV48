@@ -22,9 +22,12 @@
 			exit();
 		}
 
+		$session_id = $_SESSION['id'];
+		$name = $_POST['name'];
+
 		$stmt = $mysqli->stmt_init();
 		$stmt->prepare("SELECT `id`, `landlord`, `landlord_id` FROM `ESF_users` WHERE sessionId = ?");
-		$stmt->bind_param('s', $_SESSION["id"]);
+		$stmt->bind_param('s', $session_id);
 		$stmt->execute();
 		$stmt->store_result();
 		$stmt->bind_result($user_id, $landlord, $landlord_id);
@@ -42,7 +45,7 @@
 
 		$stmt = $mysqli->stmt_init();
 		$stmt->prepare("INSERT INTO `Properties` (name) VALUES (?)");
-		$stmt->bind_param('s', $_POST["name"]);
+		$stmt->bind_param('s', $name);
 		$stmt->execute();
 		$stmt->store_result();
 		$stmt->close();
@@ -53,7 +56,7 @@
 
 			$stmt = $mysqli->stmt_init();
 			$stmt->prepare("INSERT INTO `Property_X_Landlord` (landlord_id, property_id, property_name) VALUES (?, LAST_INSERT_ID(), ?)");
-			$stmt->bind_param('is', $landlord_id, $_POST["name"]);
+			$stmt->bind_param('is', $landlord_id, $name);
 			$stmt->execute();
 			$stmt->store_result();
 			$stmt->bind_result($property_id);

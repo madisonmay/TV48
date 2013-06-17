@@ -244,8 +244,8 @@
             <option value='Dutch'> Dutch </option>
         </select>
         <input type='submit' value='Submit' class='btn btn-success'>
-        <input type='hidden' name='user_id' value=<? echo $_GET['tenant']; ?>>
-        <input type='hidden' name='property_id' value=<? echo $_GET['property']; ?>>
+        <input type='hidden' name='user_id' value=<? echo $tenant; ?>>
+        <input type='hidden' name='property_id' value=<? echo $pid; ?>>
         <input type='hidden' name='old_room_id' value=<? echo $user_room_id; ?>>
     </form>
     </div>

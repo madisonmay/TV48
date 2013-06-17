@@ -5,13 +5,17 @@
 
 	//There should really be a way to link new users to existing objects in the databse
 	//If this could be created, the landlord would not have to wait for all of the tenants
-		//to register in the system for he/she to be able to set the permissions for each of the 
-		//rooms.  The question is how can this be done in a secure manner?
+	//to register in the system for he/she to be able to set the permissions for each of the 
+	//rooms.  The question is how can this be done in a secure manner?
+	
 	include ("ESF_config.php");
 	include ("check.php");
 
 	if ($_SERVER['REQUEST_METHOD'] == "POST")
 	{
+
+
+		//Sketchy use of both id, user_id, and old_user_id -- should sort that out.
 
 		// Opens a connection to a MySQL server.
 		$mysqli = new mysqli($server, $username, $password, $database);
