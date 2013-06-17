@@ -40,10 +40,20 @@
         }
 
         if ($_POST['tenant'] != "-1" || $_POST['room_type'] == 'Public') {
-            $available = (bool) 0;
+            $available = 0;
         } else {
-            $available = (bool) 1;
+            $available = 1;
         }
+
+        //Debugging
+
+        // print_r($_POST['tenant']);
+        // print('<br>');
+        // print_r($_POST['room_type']);
+        // print('<br>');
+        // print($available);
+        // print('<br>');
+        // exit(0);
 
         $stmt = $mysqli->stmt_init();
         $stmt->prepare("INSERT INTO `Rooms` (name, property_id, type, available) VALUES (?, ?, ?, ?)");
@@ -73,6 +83,36 @@
                     $stmt->store_result();
                     $stmt->close();   
                 }
+            } elseif ($_POST['room_type'] == 'Public') {
+                //add User_x_room permssions, set view to 1
+
+                //get the id of the room that was just inserted into Rooms
+                $stmt = $mysqli->stmt_init();
+                $stmt->prepare('SELECT `id` FROM `Rooms` WHERE `property_id` = ? ORDER BY `id` DESC LIMIT 1');
+                $stmt->bind_param('i', $_POST['property_id']);
+                $stmt->execute();
+                $stmt->store_result();
+                $stmt->bind_result($room_id);
+                $stmt->close();                
+
+                $stmt = $mysqli->stmt_init();
+                $stmt->prepare('SELECT `id` FROM `ESF_users` WHERE landlord_id = ? AND landlord != 1 and property_id = ?');
+                $stmt->bind_param('ii', $landlord_id, $_POST['property_id']);
+                $stmt->execute();
+                $stmt->store_result();
+                $stmt->bind_result($_user_id);
+
+                while ($stmt->fetch()) {
+                    //for each user of the property, add view access by adding entry to the cross table
+                    $_stmt = $mysqli->stmt_init();
+                    $_stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, 1, 0, ?)");
+                    $_stmt->bind_param('iii', $_user_id, $room_id, $_POST['property_id']);
+                    $_stmt->execute();
+                    $_stmt->store_result();
+                    $_stmt->close(); 
+                }
+                $stmt->close(); 
+
             }
 
             header ('Location: editProperty.php');

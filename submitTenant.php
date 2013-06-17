@@ -64,11 +64,54 @@
 
 			//add in language later
 			$stmt = $mysqli->stmt_init();
-			$stmt->prepare("INSERT INTO `ESF_users` (firstName, lastName, email, confirmationCode, sessionId, landlord, landlord_id, tenant_id, has_room) 
-							VALUES (?, ?, ?, ?, NULL, 0, ?, LAST_INSERT_ID(), ?)");
-			$stmt->bind_param('sssiib', $_POST['firstName'], $_POST['lastName'], $_POST['email'], $code, $landlord_id, $has_room);
+			$stmt->prepare("INSERT INTO `ESF_users` (firstName, lastName, email, confirmationCode, sessionId, landlord, landlord_id, tenant_id, has_room, property_id) 
+							VALUES (?, ?, ?, ?, NULL, 0, ?, LAST_INSERT_ID(), ?, ?)");
+			$stmt->bind_param('sssiibi', $_POST['firstName'], $_POST['lastName'], $_POST['email'], $code, $landlord_id, $has_room, $property_id);
 			$stmt->execute();
 			$stmt->store_result();
+			$stmt->close();
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare('SELECT `id` FROM `ESF_users` WHERE `property_id` = ? AND firstname = ? and lastName = ? ORDER BY `id` DESC LIMIT 1');
+			$stmt->bind_param('iss', $property_id, $_POST['firstName'], $_POST['lastName']);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->bind_result($new_user_id);
+			$stmt->fetch();
+			$stmt->close();
+
+			//Debugging
+
+			// print('User id: ');
+			// print_r($new_user_id);
+			// print('<br>');
+			// print('First name: ');
+			// print_r($_POST['firstName']);
+			// print('<br>');
+			// print('Last name: ');
+			// print_r($_POST['lastName']);
+			// print('<br>');
+			// print('Property id: ');
+			// print_r($property_id);
+			// print('<br>');
+			// exit(0);
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("SELECT `id` FROM `Rooms` WHERE type = 'Public' and property_id = ?");
+			$stmt->bind_param('i', $property_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->bind_result($_room_id);
+
+			while($stmt->fetch()) {
+				$stmt = $mysqli->stmt_init();
+				$stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, 1, 0, ?)");
+				$stmt->bind_param('iii', $new_user_id, $_room_id, $property_id);
+				$stmt->execute();
+				$stmt->store_result();
+				$stmt->close();
+			}
+			
 			$stmt->close();
 
 			if ($has_room) {
@@ -119,7 +162,7 @@
 				// Mail it
 				mail($to, $subject, $message, $headers);
 
-				header ('Location: management.php');
+				header ('Location: editProperty.php');
 				exit(0);
 			}
 		}

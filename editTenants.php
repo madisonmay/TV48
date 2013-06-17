@@ -28,12 +28,13 @@
     <select style='text-align: center; display: block;' class='centered' id='tenant'>
         <?
 
-            echo "<script> var property = '" . $_GET['property'] . "'</script>";
             $username = 'thinkcore';
             $password = 'K5FBNbt34BAYCZ4W';
             $database = 'thinkcore_drupal';
             $server = 'localhost';
+            $pid = $_GET['property'];
 
+            echo "<script> var property = '" . $pid . "'</script>";
             $mysqli = new mysqli($server, $username, $password, $database);
 
             /* check connection */
@@ -55,7 +56,7 @@
 
                 $stmt = $mysqli->stmt_init();
                 $stmt->prepare("SELECT `firstName`, `lastName`, `id` FROM `ESF_users` WHERE landlord_id = ? AND landlord = 0 AND property_id = ?");
-                $stmt->bind_param('ii', $landlord_id, $_GET['property']);
+                $stmt->bind_param('ii', $landlord_id, $pid);
                 $stmt->execute();
                 $stmt->store_result();
                 $stmt->bind_result($firstName, $lastName, $user_id);

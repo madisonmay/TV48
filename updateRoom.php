@@ -48,11 +48,15 @@
 			$available = 0;
 		}
 
+		//Debugging
+
 		// print_r($_POST['user_id']);
 		// print('<br>');
 		// print_r($_POST['old_user_id']);
 		// print('<br>');
 		// print_r($_POST['room_id']);
+		// print('<br>');
+		// print_r($_POST['room_type']);
 		// print('<br>');
 		// print_r($available);
 		// print('<br>');
@@ -65,51 +69,126 @@
 		$stmt->store_result();
 		$stmt->close();
 
-		if ($user_id != $old_user_id) {	
-			if ((int) $old_user_id != 0) {
+		if($_POST['room_type'] != 'Public' && $_POST['old_room_type'] != 'Public') {
+			if ($user_id != $old_user_id) {	
+				if ((int) $old_user_id != 0) {
 
-				$stmt = $mysqli->stmt_init();
-				$stmt->prepare("UPDATE `User_X_Room` SET view=0, pay=0, modify=0 WHERE room_id = ? and user_id = ?");
-				$stmt->bind_param('ii', $room_id, $old_user_id);
-				$stmt->execute();
-				$stmt->store_result();
-				$stmt->close();
+					$stmt = $mysqli->stmt_init();
+					$stmt->prepare("UPDATE `User_X_Room` SET view=0, pay=0, modify=0 WHERE room_id = ? and user_id = ?");
+					$stmt->bind_param('ii', $room_id, $old_user_id);
+					$stmt->execute();
+					$stmt->store_result();
+					$stmt->close();
 
+					$stmt = $mysqli->stmt_init();
+					$stmt->prepare("UPDATE `ESF_users` SET has_room=0 WHERE and id = ?");
+					$stmt->bind_param('i', $old_user_id);
+					$stmt->execute();
+					$stmt->store_result();
+					$stmt->close();
+
+					$stmt = $mysqli->stmt_init();
+					$stmt->prepare("UPDATE `Rooms` SET available = 0 WHERE id = ?");
+					$stmt->bind_param('i', $room_id);
+					$stmt->execute();
+					$stmt->store_result();
+					$stmt->close();
+
+				} 
+				if (!$available) {
+					$stmt = $mysqli->stmt_init();
+					$stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, 1, 1, ?)");
+					$stmt->bind_param('iii', $id, $room_id, $property_id);
+					$stmt->execute();
+					$stmt->store_result();
+					$stmt->close();
+
+					$stmt = $mysqli->stmt_init();
+					$stmt->prepare("UPDATE `Rooms` SET available = 1 WHERE id = ?");
+					$stmt->bind_param('i', $room_id);
+					$stmt->execute();
+					$stmt->store_result();
+					$stmt->close();
+				}
+			}
+		} elseif ($_POST['room_type'] == 'Public') {
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `User_X_Room` SET view=0, pay=0, modify=0 WHERE room_id = ?");
+			$stmt->bind_param('i', $room_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `Rooms` SET available = 0 WHERE id = ?");
+			$stmt->bind_param('i', $room_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+			if ($user_id != "-1") {
 				$stmt = $mysqli->stmt_init();
-				$stmt->prepare("UPDATE `ESF_users` SET has_room=0 WHERE and id = ?");
+				$stmt->prepare("UPDATE `ESF_users` SET has_room=0 WHERE id = ?");
 				$stmt->bind_param('i', $old_user_id);
 				$stmt->execute();
 				$stmt->store_result();
 				$stmt->close();
-
-				$stmt = $mysqli->stmt_init();
-				$stmt->prepare("UPDATE `Rooms` SET available = 0 WHERE id = ?");
-				$stmt->bind_param('i', $room_id);
-				$stmt->execute();
-				$stmt->store_result();
-				$stmt->close();
-
-			} 
-			if (!$available) {
-				$stmt = $mysqli->stmt_init();
-				$stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, 1, 1, ?)");
-				$stmt->bind_param('iii', $id, $room_id, $property_id);
-				$stmt->execute();
-				$stmt->store_result();
-				$stmt->close();
-
-				$stmt = $mysqli->stmt_init();
-				$stmt->prepare("UPDATE `Rooms` SET available = 1 WHERE id = ?");
-				$stmt->bind_param('i', $room_id);
-				$stmt->execute();
-				$stmt->store_result();
-				$stmt->close();
 			}
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare('SELECT `id` FROM `ESF_users` WHERE landlord_id = ? AND landlord != 1 and property_id = ?');
+			$stmt->bind_param('ii', $landlord_id, $property_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->bind_result($_user_id);
+
+			while ($stmt->fetch()) {
+			    //for each user of the property, add view access by adding entry to the cross table
+			    $_stmt = $mysqli->stmt_init();
+			    $_stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, 1, 0, ?)");
+			    $_stmt->bind_param('iii', $_user_id, $room_id, $property_id);
+			    $_stmt->execute();
+			    $_stmt->store_result();
+			    $_stmt->close(); 
+			}
+			$stmt->close(); 
+
+		} else {
+		    $stmt = $mysqli->stmt_init();
+		    $stmt->prepare("UPDATE `User_X_Room` SET view = 0, pay = 0, modify = 0 WHERE room_id = ? AND property_id = ?");
+		    $stmt->bind_param('ii', $room_id, $property_id);
+		    $stmt->execute();
+		    $stmt->store_result();
+		    $stmt->close(); 
+
+		    if ($user_id != "-1") {
+				$stmt = $mysqli->stmt_init();
+				$stmt->prepare("UPDATE `User_X_Room` SET view=1, pay=1, modify=1 WHERE room_id = ? AND user_id = ?");
+				$stmt->bind_param('ii', $room_id, $user_id);
+				$stmt->execute();
+				$stmt->store_result();
+				$stmt->close();
+
+				$stmt = $mysqli->stmt_init();
+				$stmt->prepare("UPDATE `ESF_users` SET has_room=1 WHERE id = ?");
+				$stmt->bind_param('i', $old_user_id);
+				$stmt->execute();
+				$stmt->store_result();
+				$stmt->close();
+		    } else {
+		    	$stmt = $mysqli->stmt_init();
+		    	$stmt->prepare("UPDATE `Rooms` SET available=1 WHERE id = ?");
+		    	$stmt->bind_param('i', $room_id);
+		    	$stmt->execute();
+		    	$stmt->store_result();
+		    	$stmt->close();
+		    }
 		}
 
 		//funky errors still occuring here
 
-		header ('Location: management.php');
+		header ('Location: editProperty.php');
 		exit(0);
 
 	} else {

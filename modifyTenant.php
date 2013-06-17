@@ -37,6 +37,7 @@
         }
 
         $pid = $_GET['property'];
+        $tenant = $_GET['tenant'];
 
         $stmt = $mysqli->stmt_init();
         $stmt->prepare("SELECT `id`, `landlord`, `landlord_id` FROM `ESF_users` WHERE sessionId = ?");
@@ -75,7 +76,7 @@
 
             $stmt = $mysqli->stmt_init();
             $stmt->prepare("SELECT `firstName`, `lastName`, `tenant_id`, `has_room`, `email` FROM `ESF_users` WHERE id = ?");
-            $stmt->bind_param('i', $_GET['tenant']);
+            $stmt->bind_param('i', $tenant);
             $stmt->execute();
             $stmt->store_result();
             $stmt->bind_result($firstName, $lastName, $tenant_id, $has_room, $email);
@@ -85,7 +86,7 @@
 
             $stmt = $mysqli->stmt_init();
             $stmt->prepare("SELECT `room_id`, `view`, `modify`, `pay` FROM `User_X_Room` WHERE user_id = ?");
-            $stmt->bind_param('i', $_GET['tenant']);
+            $stmt->bind_param('i', $tenant);
             $stmt->execute();
             $stmt->store_result();
             $stmt->bind_result($room_id, $view, $modify, $pay);
@@ -103,7 +104,7 @@
 
             $stmt = $mysqli->stmt_init();
             $stmt->prepare("SELECT `start_date`, `end_date`, `balance` FROM `Tenants` WHERE user_id = ?");
-            $stmt->bind_param('i', $_GET['tenant']);
+            $stmt->bind_param('i', $tenant);
             $stmt->execute();
             $stmt->store_result();
             $stmt->bind_result($startDate, $endDate, $balance);
@@ -193,7 +194,6 @@
         <select style='text-align:center; display: block;' class='centered' id='room' name='room_id'>
             
             <?
-                $pid = $_GET['property'];
 
                 $stmt = $mysqli->stmt_init();
                 $stmt->prepare('SELECT `id`, `name`, `type` FROM `Rooms` WHERE property_id = ? AND available = 1 AND type != "Public"');
@@ -213,7 +213,7 @@
 
                 $stmt = $mysqli->stmt_init();
                 $stmt->prepare('SELECT `room_id` FROM `User_X_Room` WHERE user_id = ? AND pay=1');
-                $stmt->bind_param('i', $_GET['tenant']);
+                $stmt->bind_param('i', $tenant);
                 $stmt->execute();
                 $stmt->store_result();
                 $stmt->bind_result($user_room_id);

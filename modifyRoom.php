@@ -38,10 +38,11 @@
 
         $pid = $_GET['property'];
         $room_id = $_GET['room'];
+        $session_id = $_SESSION['id'];
 
         $stmt = $mysqli->stmt_init();
         $stmt->prepare("SELECT `id`, `landlord`, `landlord_id` FROM `ESF_users` WHERE sessionId = ?");
-        $stmt->bind_param('s', $_SESSION['id']);
+        $stmt->bind_param('s', $session_id);
         $stmt->execute();
         $stmt->store_result();
         $stmt->bind_result($user_id, $landlord, $landlord_id);
@@ -84,7 +85,7 @@
             $stmt->fetch();
             $stmt->close();
 
-
+            $user_id = 0;
             $stmt = $mysqli->stmt_init();
             $stmt->prepare("SELECT `user_id`, `view`, `modify`, `pay` FROM `User_X_Room` WHERE room_id = ? AND pay = 1");
             $stmt->bind_param('i', $room_id);
@@ -93,6 +94,8 @@
             $stmt->bind_result($user_id, $view, $modify, $pay);
             $stmt->fetch();
             $stmt->close();
+
+            $old_user_id = $user_id;
 
             $stmt = $mysqli->stmt_init();
             $stmt->prepare("SELECT `firstName`, `lastName` FROM `ESF_users` WHERE id = ?");
@@ -171,44 +174,47 @@
             <option value='Dorm'> Dorm
             <option value='Studio'> Studio
         </select>
-        <select style='text-align:center; display: block;' class='centered' id='user' name='user_id'>
-            
-            <?
-                $pid = $_GET['property'];
+        <div class='thin-wrapper'>
+            <select style='text-align:center; display: block;' class='centered' id='user' name='user_id'>
+                
+                <?
 
-                $stmt = $mysqli->stmt_init();
-                $stmt->prepare("SELECT `firstName`, `lastName`, `id` FROM `ESF_users` WHERE landlord_id = ? AND landlord = 0 AND property_id = ? AND has_room = 0");
-                $stmt->bind_param('ii', $landlord_id, $pid);
-                $stmt->execute();
-                $stmt->store_result();
-                $stmt->bind_result($_firstName, $_lastName, $_user_id);
+                    $stmt = $mysqli->stmt_init();
+                    $stmt->prepare("SELECT `firstName`, `lastName`, `id` FROM `ESF_users` WHERE landlord_id = ? AND landlord = 0 AND property_id = ? AND has_room = 0");
+                    $stmt->bind_param('ii', $landlord_id, $pid);
+                    $stmt->execute();
+                    $stmt->store_result();
+                    $stmt->bind_result($_firstName, $_lastName, $_user_id);
 
-                $count = 0;
-                while($stmt->fetch()) {
-                    echo("<option value='" . $_user_id ."'>" . $_firstName . ' ' . $_lastName . "</option>");
-                    $count++;
-                }
+                    $count = 0;
+                    while($stmt->fetch()) {
+                        echo("<option value='" . $_user_id ."'>" . $_firstName . ' ' . $_lastName . "</option>");
+                        $count++;
+                    }
 
-                $stmt->close();
+                    $stmt->close();
 
 
-                if ((int) $user_id != 0) {
-                    $count++;
-                    echo("<option value='" . $user_id ."'>" . $firstName . ' ' . $lastName . "</option>");  
-                }
+                    if ((int) $user_id != 0) {
+                        $count++;
+                        echo("<option value='" . $user_id ."'>" . $firstName . ' ' . $lastName . "</option>");  
+                    }
 
-                if ($count == 0) {
-                    echo("<option value='-1'>No Users Need Rooms</option>");
-                }
+                    if ($count == 0) {
+                        echo("<option value='-1'>No Users Need Rooms</option>");
+                    }
 
-            ?>
+                ?>
 
-            <option value='-1'>None</option>
-        </select>
+                <option value='-1'>None</option>
+            </select>
+        </div>
         <input type='submit' value='Submit' class='btn btn-success'>
         <input type='hidden' name='property_id' value=<? echo $_GET['property']; ?>>
-        <input type='hidden' name='old_user_id' value=<? echo $user_id; ?>>
+        <input type='hidden' name='old_user_id' value=<? echo $old_user_id; ?>>
         <input type='hidden' name='room_id' value=<? echo $room_id; ?>>
+        <input type='hidden' name='old_room_type' value=<? echo $room_type; ?>>
+
     </form>
     </div>
     <script>
@@ -222,6 +228,26 @@
             if (!window.available) {
                 $('#user').val(window.user_id);
             }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#room_type').change(function() {
+                if ($(this).val() === 'Public') {
+                    $('#user').val('-1');
+                    $('.thin-wrapper').css('display', 'none');
+                }  else {
+                    $('.thin-wrapper').css('display', 'block');   
+                }
+            });
+
+
+            $('.thin-wrapper').css('display', 'block');   
+            if (window.room_type === 'Public') {
+                $('#user').val('-1');
+                $('.thin-wrapper').css('display', 'none');
+            } 
         });
     </script>
 </body>

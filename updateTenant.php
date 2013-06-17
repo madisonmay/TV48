@@ -110,13 +110,11 @@
 				}
 			}
 
-			//funky errors still occuring here
-
 
 			if (!($stmt)) {
 			  	die('Invalid query: ' . mysql_error());
 			} else {
-				header ('Location: management.php');
+				header ('Location: editProperty.php');
 				exit(0);
 			}
 		}

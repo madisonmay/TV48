@@ -32,6 +32,7 @@
             $password = 'K5FBNbt34BAYCZ4W';
             $database = 'thinkcore_drupal';
             $server = 'localhost';
+            $session_id = $_SESSION['id'];
 
             $mysqli = new mysqli($server, $username, $password, $database);
 
@@ -41,9 +42,10 @@
                 exit();
             }
 
+            //move to external file
             $stmt = $mysqli->stmt_init();
             $stmt->prepare("SELECT `id`, `landlord`, `landlord_id` FROM `ESF_users` WHERE sessionId = ?");
-            $stmt->bind_param('s', $_SESSION['id']);
+            $stmt->bind_param('s', $session_id);
             $stmt->execute();
             $stmt->store_result();
             $stmt->bind_result($user_id, $landlord, $landlord_id);
