@@ -79,8 +79,8 @@
 				if ((int) $old_room_id != 0) {
 
 					$stmt = $mysqli->stmt_init();
-					$stmt->prepare("UPDATE `User_X_Room` SET view=0, pay=0, modify=0 WHERE room_id = ?");
-					$stmt->bind_param('i', $old_room_id);
+					$stmt->prepare("UPDATE `User_X_Room` SET view=0, pay=0, modify=0 WHERE room_id = ? AND user_id=?");
+					$stmt->bind_param('i', $old_room_id, $id);
 					$stmt->execute();
 					$stmt->store_result();
 					$stmt->close();

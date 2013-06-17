@@ -6,7 +6,7 @@
         include("check.php");
     ?>
 
-    <title>TV48 - Tenants</title>
+    <title>TV48 - Rooms</title>
     <title>TV48</title>
     <meta charset="utf-8">
     <? include('base.php'); ?>
@@ -23,9 +23,9 @@
 </head>
 <body>
     <? include('header.php'); ?>
-    Tenants
+    Rooms
     <? include('header2.php'); ?>
-    <select style='text-align: center; display: block;' class='centered' id='tenant'>
+    <select style='text-align: center; display: block;' class='centered' id='room'>
         <?
 
             echo "<script> var property = '" . $_GET['property'] . "'</script>";
@@ -54,13 +54,13 @@
             if ($landlord) {
 
                 $stmt = $mysqli->stmt_init();
-                $stmt->prepare("SELECT `firstName`, `lastName`, `id` FROM `ESF_users` WHERE landlord_id = ? AND landlord = 0 AND property_id = ?");
-                $stmt->bind_param('ii', $landlord_id, $_GET['property']);
+                $stmt->prepare("SELECT `id`, `name` FROM `Rooms` WHERE property_id = ?");
+                $stmt->bind_param('i', $_GET['property']);
                 $stmt->execute();
                 $stmt->store_result();
-                $stmt->bind_result($firstName, $lastName, $user_id);
+                $stmt->bind_result($room_id, $room_name);
                 while ($stmt->fetch()) {
-                    echo("<option value='" . $user_id ."'>" . $firstName . ' ' . $lastName . "</option>");
+                    echo("<option value='" . $room_id ."'>" . $room_name . "</option>");
                 }
                 $stmt->close();
 
@@ -77,9 +77,9 @@
     <script>
         $(document).ready(function() {
             $('.btn-success').click(function() {
-                var url = 'modifyTenant.php';
-                var tenant = $('#tenant').val();
-                window.location = url + '?tenant=' + tenant + '&property=' + property;
+                var url = 'modifyRoom.php';
+                var room = $('#room').val();
+                window.location = url + '?room=' + room + '&property=' + property;
             });
         });
     </script>

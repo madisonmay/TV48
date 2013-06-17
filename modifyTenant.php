@@ -54,7 +54,7 @@
             $authorized = 0;
             $stmt = $mysqli->stmt_init();
             $stmt->prepare("SELECT `property_id`, `property_name` FROM `Property_X_Landlord` WHERE landlord_id = ?");
-            $stmt->bind_param('s', $landlord_id);
+            $stmt->bind_param('i', $landlord_id);
             $stmt->execute();
             $stmt->store_result();
             $stmt->bind_result($property_id, $property_name);
@@ -75,7 +75,7 @@
 
             $stmt = $mysqli->stmt_init();
             $stmt->prepare("SELECT `firstName`, `lastName`, `tenant_id`, `has_room`, `email` FROM `ESF_users` WHERE id = ?");
-            $stmt->bind_param('s', $_GET['tenant']);
+            $stmt->bind_param('i', $_GET['tenant']);
             $stmt->execute();
             $stmt->store_result();
             $stmt->bind_result($firstName, $lastName, $tenant_id, $has_room, $email);
@@ -85,7 +85,7 @@
 
             $stmt = $mysqli->stmt_init();
             $stmt->prepare("SELECT `room_id`, `view`, `modify`, `pay` FROM `User_X_Room` WHERE user_id = ?");
-            $stmt->bind_param('s', $_GET['tenant']);
+            $stmt->bind_param('i', $_GET['tenant']);
             $stmt->execute();
             $stmt->store_result();
             $stmt->bind_result($room_id, $view, $modify, $pay);
@@ -103,7 +103,7 @@
 
             $stmt = $mysqli->stmt_init();
             $stmt->prepare("SELECT `start_date`, `end_date`, `balance` FROM `Tenants` WHERE user_id = ?");
-            $stmt->bind_param('s', $_GET['tenant']);
+            $stmt->bind_param('i', $_GET['tenant']);
             $stmt->execute();
             $stmt->store_result();
             $stmt->bind_result($startDate, $endDate, $balance);
@@ -197,7 +197,7 @@
 
                 $stmt = $mysqli->stmt_init();
                 $stmt->prepare('SELECT `id`, `name`, `type` FROM `Rooms` WHERE property_id = ? AND available = 1 AND type != "Public"');
-                $stmt->bind_param('s', $pid);
+                $stmt->bind_param('i', $pid);
                 $stmt->execute();
                 $stmt->store_result();
                 $stmt->bind_result($room_id, $room_name, $room_type);
@@ -213,7 +213,7 @@
 
                 $stmt = $mysqli->stmt_init();
                 $stmt->prepare('SELECT `room_id` FROM `User_X_Room` WHERE user_id = ? AND pay=1');
-                $stmt->bind_param('s', $_GET['tenant']);
+                $stmt->bind_param('i', $_GET['tenant']);
                 $stmt->execute();
                 $stmt->store_result();
                 $stmt->bind_result($user_room_id);
@@ -223,7 +223,7 @@
                     $count++;
                     $stmt = $mysqli->stmt_init();
                     $stmt->prepare('SELECT `name`, `type` FROM `Rooms` WHERE id = ?');
-                    $stmt->bind_param('s', $user_room_id);
+                    $stmt->bind_param('i', $user_room_id);
                     $stmt->execute();
                     $stmt->store_result();
                     $stmt->bind_result($room_name, $room_type);
