@@ -212,23 +212,23 @@
 
 
                 $stmt = $mysqli->stmt_init();
-                $stmt->prepare('SELECT `room_id` FROM `User_X_Room` WHERE user_id = ?');
+                $stmt->prepare('SELECT `room_id` FROM `User_X_Room` WHERE user_id = ? AND pay=1');
                 $stmt->bind_param('s', $_GET['tenant']);
                 $stmt->execute();
                 $stmt->store_result();
-                $stmt->bind_result($room_id);
+                $stmt->bind_result($user_room_id);
                 $stmt->fetch();
 
-                if ($room_id) {
+                if ((int) $user_room_id != 0) {
                     $count++;
                     $stmt = $mysqli->stmt_init();
                     $stmt->prepare('SELECT `name`, `type` FROM `Rooms` WHERE id = ?');
-                    $stmt->bind_param('s', $room_id);
+                    $stmt->bind_param('s', $user_room_id);
                     $stmt->execute();
                     $stmt->store_result();
                     $stmt->bind_result($room_name, $room_type);
                     $stmt->fetch();
-                    // echo("<option value='" . $room_id ."'>" . $room_name . "</option>");  
+                    echo("<option value='" . $user_room_id ."'>" . $room_name . "</option>");  
                 }
 
                 if ($count == 0) {
@@ -246,7 +246,7 @@
         <input type='submit' value='Submit' class='btn btn-success'>
         <input type='hidden' name='user_id' value=<? echo $_GET['tenant']; ?>>
         <input type='hidden' name='property_id' value=<? echo $_GET['property']; ?>>
-        <input type='hidden' name='old_room_id' value=<? echo $room_id; ?>>
+        <input type='hidden' name='old_room_id' value=<? echo $user_room_id; ?>>
     </form>
     </div>
     <script>
@@ -260,6 +260,7 @@
             $('#balance').val(window.balance);
 
             if (!window.has_room) {
+                console.log("No room");
                 $('#room').val('-1');
             } else {
                 console.log(window.room_name);

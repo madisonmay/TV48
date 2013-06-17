@@ -65,7 +65,7 @@
                 $stmt->store_result();
                 $stmt->close();   
 
-                if ($_POST['room_type'] == 'Dorm') {
+                if ($_POST['room_type'] != 'Public') {
                     $stmt = $mysqli->stmt_init();
                     $stmt->prepare("UPDATE `ESF_users` SET has_room=1 WHERE id=?");
                     $stmt->bind_param('i', $_POST["tenant"]);
