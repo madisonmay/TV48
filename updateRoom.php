@@ -163,7 +163,7 @@
 				} 
 				if (!$available) {
 					$stmt = $mysqli->stmt_init();
-					$stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, 1, 1, ?)");
+					$stmt->prepare("INSERT IGNORE INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, 1, 1, ?)");
 					$stmt->bind_param('iii', $id, $room_id, $property_id);
 					$stmt->execute();
 					$stmt->store_result();
@@ -212,7 +212,7 @@
 			while ($stmt->fetch()) {
 			    //for each user of the property, add view access by adding entry to the cross table
 			    $_stmt = $mysqli->stmt_init();
-			    $_stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, 1, 0, ?)");
+			    $_stmt->prepare("INSERT IGNORE INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, 1, 0, ?)");
 			    $_stmt->bind_param('iii', $_user_id, $room_id, $property_id);
 			    $_stmt->execute();
 			    $_stmt->store_result();

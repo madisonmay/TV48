@@ -136,7 +136,7 @@
 
 			while ($stmt->fetch()) {
 				$_stmt = $mysqli->stmt_init();
-				$_stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, ?, 0, ?)");
+				$_stmt->prepare("INSERT IGNORE INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, ?, 0, ?)");
 				$_stmt->bind_param('iiii', $new_user_id, $_room_id, $pay_public, $pid);
 				$_stmt->execute();
 				$_stmt->store_result();
@@ -147,7 +147,7 @@
 
 			if ($has_room) {
 				$stmt = $mysqli->stmt_init();
-				$stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, 1, 1, ?)");
+				$stmt->prepare("INSERT IGNORE INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, 1, 1, ?)");
 				$stmt->bind_param('iii', $new_user_id, $room_id, $pid);
 				$stmt->execute();
 				$stmt->store_result();

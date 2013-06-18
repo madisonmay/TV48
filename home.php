@@ -42,7 +42,7 @@ Add in link to management page(s) -->
     <? include('header.php'); ?>
     TV48
     <? include('header2.php'); ?>
-    <div class="row-fluid not-too-small">
+    <div class="row-fluid">
         <div class="span3">
             <a href='light.php'><div class="border">
                 <div id="light" class="circle">
