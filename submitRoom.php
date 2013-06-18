@@ -27,12 +27,28 @@
             exit();
         }
 
+        function addStudio($mysqli, $room_id, $user_id) {
+            $stmt = $mysqli->stmt_init();
+            $stmt->prepare("UPDATE `ESF_users` SET has_studio=1 WHERE id = ?");
+            $stmt->bind_param('i', $user_id);
+            $stmt->execute();
+            $stmt->store_result();
+            $stmt->close();
+
+            $stmt = $mysqli->stmt_init();
+            $stmt->prepare("UPDATE `User_X_Room` SET pay=0 WHERE user_id = ? AND pay=1 and modify=0");
+            $stmt->bind_param('i', $user_id);
+            $stmt->execute();
+            $stmt->store_result();
+            $stmt->close();
+        }
+
         $stmt = $mysqli->stmt_init();
-        $stmt->prepare("SELECT `id`, `landlord`, `landlord_id` FROM `ESF_users` WHERE sessionId = ?");
+        $stmt->prepare("SELECT `landlord`, `landlord_id` FROM `ESF_users` WHERE sessionId = ?");
         $stmt->bind_param('s', $session_id);
         $stmt->execute();
         $stmt->store_result();
-        $stmt->bind_result($user_id, $landlord, $landlord_id);
+        $stmt->bind_result($landlord, $landlord_id);
         $stmt->fetch();
         $stmt->close();
 
@@ -68,6 +84,16 @@
         $stmt->store_result();
         $stmt->close();
 
+        //get the id of the room that was just inserted into Rooms
+        $stmt = $mysqli->stmt_init();
+        $stmt->prepare('SELECT `id` FROM `Rooms` WHERE `property_id` = ? ORDER BY `id` DESC LIMIT 1');
+        $stmt->bind_param('i', $pid);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($room_id);
+        $stmt->fetch();
+        $stmt->close();  
+
         if (!($stmt)) {
             die('Invalid query: ' . mysql_error());
         } else {
@@ -97,27 +123,19 @@
                     $stmt->close();   
                 }
             } elseif ($room_type == 'Public') {
-                //add User_x_room permssions, set view to 1
-
-                //get the id of the room that was just inserted into Rooms
-                $stmt = $mysqli->stmt_init();
-                $stmt->prepare('SELECT `id` FROM `Rooms` WHERE `property_id` = ? ORDER BY `id` DESC LIMIT 1');
-                $stmt->bind_param('i', $pid);
-                $stmt->execute();
-                $stmt->store_result();
-                $stmt->bind_result($room_id);
-                $stmt->close();                
+                //add User_x_room permssions, set view to 1              
 
                 $stmt = $mysqli->stmt_init();
                 $stmt->prepare('SELECT `id`, `has_studio` FROM `ESF_users` WHERE landlord_id = ? AND landlord != 1 and property_id = ?');
                 $stmt->bind_param('ii', $landlord_id, $pid);
                 $stmt->execute();
                 $stmt->store_result();
-                $stmt->bind_result($_user_id, $_has_studio);
+                $stmt->bind_result($_user_id, $has_studio);
 
+                //should do our best to avoid for loops
                 while ($stmt->fetch()) {
                     //for each user of the property, add view access by adding entry to the cross table
-                    if ($_has_studio) {
+                    if ($has_studio) {
                         $pay_public = 0;
                     } else {
                         $pay_public = 1;
@@ -125,7 +143,7 @@
 
                     $_stmt = $mysqli->stmt_init();
                     $_stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, ?, 0, ?)");
-                    $_stmt->bind_param('iii', $_user_id, $room_id, $pay_public, $pid);
+                    $_stmt->bind_param('iiii', $_user_id, $room_id, $pay_public, $pid);
                     $_stmt->execute();
                     $_stmt->store_result();
                     $_stmt->close(); 
@@ -133,6 +151,10 @@
 
                 $stmt->close(); 
 
+            } 
+
+            if (($room_type == 'Studio') && $tenant != "-1"){
+                addStudio($mysqli, $room_id, $tenant);
             }
 
             header ('Location: editProperty.php');

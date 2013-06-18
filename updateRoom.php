@@ -11,37 +11,6 @@
 	include ("ESF_config.php");
 	include ("check.php");
 
-	function removeStudio($room_id, $user_id) {
-		$stmt = $mysqli->stmt_init();
-		$stmt->prepare("UPDATE `ESF_users` SET has_studio=0 WHERE id = ?");
-		$stmt->bind_param('i', $user_id);
-		$stmt->execute();
-		$stmt->store_result();
-		$stmt->close();
-
-		$stmt = $mysqli->stmt_init();
-		$stmt->prepare("UPDATE `User_X_Room` SET pay=1 WHERE room_id = ? AND user_id = ? AND view=1 AND pay=0");
-		$stmt->bind_param('ii', $room_id, $user_id);
-		$stmt->execute();
-		$stmt->store_result();
-		$stmt->close();
-	}
-
-	function addStudio($room_id, $user_id) {
-		$stmt = $mysqli->stmt_init();
-		$stmt->prepare("UPDATE `ESF_users` SET has_studio=1 WHERE id = ?");
-		$stmt->bind_param('i', $user_id);
-		$stmt->execute();
-		$stmt->store_result();
-		$stmt->close();
-
-		$stmt = $mysqli->stmt_init();
-		$stmt->prepare("UPDATE `User_X_Room` SET pay=0 WHERE room_id = ? AND user_id = ? AND pay=1 and modify=0");
-		$stmt->bind_param('ii', $room_id, $user_id);
-		$stmt->execute();
-		$stmt->store_result();
-		$stmt->close();
-	}
 
 	if ($_SERVER['REQUEST_METHOD'] == "POST")
 	{
@@ -56,6 +25,38 @@
 		if ($mysqli->connect_errno) {
 			printf("Connect failed: %s\n", $mysqli->connect_error);
 			exit();
+		}
+
+		function removeStudio($mysqli, $room_id, $user_id) {
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `ESF_users` SET has_studio=0 WHERE id = ?");
+			$stmt->bind_param('i', $user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `User_X_Room` SET pay=1 WHERE user_id = ? AND view=1 AND pay=0");
+			$stmt->bind_param('i', $user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+		}
+
+		function addStudio($mysqli, $room_id, $user_id) {
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `ESF_users` SET has_studio=1 WHERE id = ?");
+			$stmt->bind_param('i', $user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `User_X_Room` SET pay=0 WHERE user_id = ? AND pay=1 and modify=0");
+			$stmt->bind_param('i', $user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
 		}
 
 		$stmt = $mysqli->stmt_init();
@@ -105,6 +106,8 @@
 		$stmt->store_result();
 		$stmt->close();
 
+		//some of these variables may not be necessary, but they're convenient
+		//ternary statements?
 		if ($_POST['room_type'] == 'Studio') {
 			$is_studio = 1;
 		} else {
@@ -117,9 +120,20 @@
 			$was_studio = 0;
 		}
 
+		if ($old_user_id != 0) {
+			$old_user_exists = 1;
+		} else {
+			$old_user_exists = 0;
+		}
+
+		if ($id != "-1") {
+			$user_exists = 1;
+		} else {
+			$user_exists = 0;
+		}
+
 		//a mess of logic below -- should be simplified and streamlined
-		//there is no way this will work for production code
-		//so ugly -- fix this now
+		//there is no way this will cut it for production code
 		if($_POST['room_type'] != 'Public' && $_POST['old_room_type'] != 'Public') {
 			if ($user_id != $old_user_id) {	
 				if ((int) $old_user_id != 0) {
@@ -238,17 +252,17 @@
 		}
 
 		if ($is_studio && $was_studio && $old_user_id != $user_id) {
-			removeStudio($room_id, $old_user_id);
-			addStudio($room_id, $user_id);
+			if ($old_user_exists) {removeStudio($mysqli, $room_id, $old_user_id);} 
+			if ($user_exists) {addStudio($mysqli, $room_id, $user_id);}
 		} elseif (($old_user_id == $user_id) && $was_studio && !$is_studio) {
-			removeStudio($room_id, $user_id);
+			if ($user_exists) {removeStudio($room_id, $user_id);}
 		} elseif (($old_user_id == $user_id) && $is_studio && !$was_studio) {
-			addStudio($room_id, $user_id);
+			if ($user_exists) {addStudio($mysqli, $room_id, $user_id);}
 		} elseif(($old_user_id != $user_id) && $was_studio && !$is_studio) {
-			removeStudio($room_id, $old_user_id);
-			removeStudio($room_id, $user_id);
+			if ($old_user_exists) {removeStudio($mysqli, $room_id, $old_user_id);}
+			if ($user_exists) {removeStudio($mysqli, $room_id, $user_id);}
 		} elseif(($old_user_id != $user_id) && !$was_studio && $is_studio) {
-			addStudio($room_id, $user_id);
+			if ($user_exists) {addStudio($mysqli, $room_id, $user_id);}
 		}
 
 		header ('Location: editProperty.php');

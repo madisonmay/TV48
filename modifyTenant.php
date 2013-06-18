@@ -212,13 +212,14 @@
 
 
                 $stmt = $mysqli->stmt_init();
-                $stmt->prepare('SELECT `room_id` FROM `User_X_Room` WHERE user_id = ? AND pay=1');
+                $stmt->prepare('SELECT `room_id` FROM `User_X_Room` WHERE user_id = ? AND pay=1 and modify=1');
                 $stmt->bind_param('i', $tenant);
                 $stmt->execute();
                 $stmt->store_result();
                 $stmt->bind_result($user_room_id);
                 $stmt->fetch();
 
+                $old_room_type = '-1';
                 if ((int) $user_room_id != 0) {
                     $count++;
                     $stmt = $mysqli->stmt_init();
@@ -229,6 +230,7 @@
                     $stmt->bind_result($room_name, $room_type);
                     $stmt->fetch();
                     echo("<option value='" . $user_room_id ."'>" . $room_name . "</option>");  
+                    $old_room_type = $room_type;
                 }
 
                 if ($count == 0) {
@@ -247,6 +249,7 @@
         <input type='hidden' name='user_id' value=<? echo $tenant; ?>>
         <input type='hidden' name='property_id' value=<? echo $pid; ?>>
         <input type='hidden' name='old_room_id' value=<? echo $user_room_id; ?>>
+        <input type='hidden' name='old_room_type' value=<? echo $old_room_type; ?>>
     </form>
     </div>
     <script>

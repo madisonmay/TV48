@@ -60,19 +60,44 @@
 		  	die('Invalid query: ' . mysql_error());
 		} else {
 
-			if ($room_id >= 0 && $room_id != "None") {
+			if ($room_id != 0 && $room_id != "-1") {
 				$has_room = 1;
 			} else {
 				$has_room = 0;
 			}
 
+			$pay_public = 1;
+			$has_studio = 0;
+			if ($has_room) {
+				$stmt = $mysqli->stmt_init();
+				$stmt->prepare("SELECT `type` FROM `Rooms` WHERE id = ? ");
+				$stmt->bind_param('i', $room_id);
+				$stmt->execute();
+				$stmt->store_result();
+				$stmt->bind_result($room_type);
+				$stmt->fetch();
+				$stmt->close();
+
+				if ($room_type == 'Studio') {
+					$pay_public = 0;
+					$has_studio = 1;
+				}
+			}
+
+			// print_r($pay_public);
+			// print_r($has_room);
+			// print_r($has_studio);
+			// print_r($room_type);
+			// print_r($room_id);
+			// exit(0);
+
 			$code = rand(000000001,999999999);
 
 			//add in language later
 			$stmt = $mysqli->stmt_init();
-			$stmt->prepare("INSERT INTO `ESF_users` (firstName, lastName, email, confirmationCode, sessionId, landlord, landlord_id, tenant_id, has_room, property_id) 
-							VALUES (?, ?, ?, ?, NULL, 0, ?, LAST_INSERT_ID(), ?, ?)");
-			$stmt->bind_param('sssiibi', $firstName, $lastName, $email, $code, $landlord_id, $has_room, $pid);
+			$stmt->prepare("INSERT INTO `ESF_users` (firstName, lastName, email, confirmationCode, sessionId, landlord, landlord_id, tenant_id, has_room, property_id, has_studio) 
+							VALUES (?, ?, ?, ?, NULL, 0, ?, LAST_INSERT_ID(), ?, ?, ?)");
+			$stmt->bind_param('sssiiiii', $firstName, $lastName, $email, $code, $landlord_id, $has_room, $pid, $has_studio);
 			$stmt->execute();
 			$stmt->store_result();
 			$stmt->close();
@@ -103,42 +128,27 @@
 			// exit(0);
 
 			$stmt = $mysqli->stmt_init();
-			$stmt->prepare("SELECT `id` FROM `Rooms` WHERE type = 'Public' and property_id = ?");
+			$stmt->prepare("SELECT `id` FROM `Rooms` WHERE type = 'Public' AND property_id = ?");
 			$stmt->bind_param('i', $pid);
 			$stmt->execute();
 			$stmt->store_result();
 			$stmt->bind_result($_room_id);
 
-			$pay_public = 1;
-			if ($has_room) {
-				$stmt = $mysqli->stmt_init();
-				$stmt->prepare("SELECT `type` FROM `Rooms` WHERE id = ? ");
-				$stmt->bind_param('i', $room_id);
-				$stmt->execute();
-				$stmt->store_result();
-				$stmt->bind_result($room_type);
-				$stmt->close();
-
-				if ($room_type == 'Studio') {
-					$pay_public = 0;
-				}
-			}
-
-			while($stmt->fetch()) {
-				$stmt = $mysqli->stmt_init();
-				$stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, ?, 0, ?)");
-				$stmt->bind_param('iiii', $new_user_id, $_room_id, $pay_public, $pid);
-				$stmt->execute();
-				$stmt->store_result();
-				$stmt->close();
+			while ($stmt->fetch()) {
+				$_stmt = $mysqli->stmt_init();
+				$_stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, ?, 0, ?)");
+				$_stmt->bind_param('iiii', $new_user_id, $_room_id, $pay_public, $pid);
+				$_stmt->execute();
+				$_stmt->store_result();
+				$_stmt->close();
 			}
 			
 			$stmt->close();
 
 			if ($has_room) {
 				$stmt = $mysqli->stmt_init();
-				$stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (LAST_INSERT_ID(), ?, 1, 1, 1, ?)");
-				$stmt->bind_param('ii', $room_id, $pid);
+				$stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, 1, 1, ?)");
+				$stmt->bind_param('iii', $new_user_id, $room_id, $pid);
 				$stmt->execute();
 				$stmt->store_result();
 				$stmt->close();
