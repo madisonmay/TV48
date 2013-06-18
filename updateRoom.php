@@ -132,6 +132,24 @@
 			$user_exists = 0;
 		}
 
+		//More debuggin
+
+		// print('Old User Id: ');
+		// print_r($old_user_id);
+		// print('<br>');
+		// print('Old User Exists: ');
+		// print_r($old_user_exists);
+		// print('<br>');
+		// print('Current User Exists: ');
+		// print_r($user_exists);
+		// print('<br>');
+		// print('Was Studio: ');
+		// print($was_studio);
+		// print('<br>');
+		// print('Is Studio: ');
+		// print_r($is_studio);
+		// exit(0);
+
 		//a mess of logic below -- should be simplified and streamlined
 		//there is no way this will cut it for production code
 		if($_POST['room_type'] != 'Public' && $_POST['old_room_type'] != 'Public') {

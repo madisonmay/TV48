@@ -87,7 +87,7 @@
 
             $user_id = 0;
             $stmt = $mysqli->stmt_init();
-            $stmt->prepare("SELECT `user_id`, `view`, `modify`, `pay` FROM `User_X_Room` WHERE room_id = ? AND pay = 1");
+            $stmt->prepare("SELECT `user_id`, `view`, `modify`, `pay` FROM `User_X_Room` WHERE room_id = ? AND modify = 1");
             $stmt->bind_param('i', $room_id);
             $stmt->execute();
             $stmt->store_result();
