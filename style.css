@@ -92,6 +92,12 @@ body {
     background-repeat: no-repeat;
 }
 
+#management {
+    background-image: url('images/edit.png');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+}
+
 #power {
     background-image: url('images/electricity.png');
     background-position: 50% 50%;

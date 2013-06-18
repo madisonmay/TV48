@@ -82,9 +82,16 @@
                 $stmt->close();   
 
                 if ($room_type != 'Public') {
+
+                    if ($room_type == 'Studio') {
+                        $has_studio = 1;
+                    } else {
+                        $has_studio = 0;
+                    }
+
                     $stmt = $mysqli->stmt_init();
-                    $stmt->prepare("UPDATE `ESF_users` SET has_room=1 WHERE id=?");
-                    $stmt->bind_param('i', $tenant);
+                    $stmt->prepare("UPDATE `ESF_users` SET has_room=1, has_studio=? WHERE id=?");
+                    $stmt->bind_param('ii', $has_studio, $tenant);
                     $stmt->execute();
                     $stmt->store_result();
                     $stmt->close();   
@@ -102,21 +109,28 @@
                 $stmt->close();                
 
                 $stmt = $mysqli->stmt_init();
-                $stmt->prepare('SELECT `id` FROM `ESF_users` WHERE landlord_id = ? AND landlord != 1 and property_id = ?');
+                $stmt->prepare('SELECT `id`, `has_studio` FROM `ESF_users` WHERE landlord_id = ? AND landlord != 1 and property_id = ?');
                 $stmt->bind_param('ii', $landlord_id, $pid);
                 $stmt->execute();
                 $stmt->store_result();
-                $stmt->bind_result($_user_id);
+                $stmt->bind_result($_user_id, $_has_studio);
 
                 while ($stmt->fetch()) {
                     //for each user of the property, add view access by adding entry to the cross table
+                    if ($_has_studio) {
+                        $pay_public = 0;
+                    } else {
+                        $pay_public = 1;
+                    }
+
                     $_stmt = $mysqli->stmt_init();
-                    $_stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, 1, 0, ?)");
-                    $_stmt->bind_param('iii', $_user_id, $room_id, $pid);
+                    $_stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, ?, 0, ?)");
+                    $_stmt->bind_param('iii', $_user_id, $room_id, $pay_public, $pid);
                     $_stmt->execute();
                     $_stmt->store_result();
                     $_stmt->close(); 
                 }
+
                 $stmt->close(); 
 
             }

@@ -109,10 +109,25 @@
 			$stmt->store_result();
 			$stmt->bind_result($_room_id);
 
+			$pay_public = 1;
+			if ($has_room) {
+				$stmt = $mysqli->stmt_init();
+				$stmt->prepare("SELECT `type` FROM `Rooms` WHERE id = ? ");
+				$stmt->bind_param('i', $room_id);
+				$stmt->execute();
+				$stmt->store_result();
+				$stmt->bind_result($room_type);
+				$stmt->close();
+
+				if ($room_type == 'Studio') {
+					$pay_public = 0;
+				}
+			}
+
 			while($stmt->fetch()) {
 				$stmt = $mysqli->stmt_init();
-				$stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, 1, 0, ?)");
-				$stmt->bind_param('iii', $new_user_id, $_room_id, $pid);
+				$stmt->prepare("INSERT INTO `User_X_Room` (user_id, room_id, view, pay, modify, property_id) VALUES (?, ?, 1, ?, 0, ?)");
+				$stmt->bind_param('iiii', $new_user_id, $_room_id, $pay_public, $pid);
 				$stmt->execute();
 				$stmt->store_result();
 				$stmt->close();

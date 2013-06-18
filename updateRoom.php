@@ -73,6 +73,21 @@
 		$stmt->store_result();
 		$stmt->close();
 
+		if ($_POST['room_type'] == 'Studio') {
+			$is_studio = 1;
+		} else {
+			$is_studio = 0;
+		}
+
+		if ($_POST['old_room_type'] == 'Studio') {
+			$was_studio = 1;
+		} else {
+			$was_studio = 0;
+		}
+
+		//a mess of logic below -- should be simplified and streamlined
+		//there is no way this will work for production code
+		//so ugly -- fix this now
 		if($_POST['room_type'] != 'Public' && $_POST['old_room_type'] != 'Public') {
 			if ($user_id != $old_user_id) {	
 				if ((int) $old_user_id != 0) {
@@ -86,7 +101,7 @@
 
 					$stmt = $mysqli->stmt_init();
 					$stmt->prepare("UPDATE `ESF_users` SET has_room=0 WHERE and id = ?");
-					$stmt->bind_param('i', $old_user_id);
+					$stmt->bind_param('ii', $old_user_id);
 					$stmt->execute();
 					$stmt->store_result();
 					$stmt->close();
@@ -190,7 +205,113 @@
 		    }
 		}
 
-		//funky errors still occuring here
+		if ($is_studio && $was_studio && $old_user_id != $user_id) {
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `ESF_users` SET has_studio=0 WHERE id = ?");
+			$stmt->bind_param('i', $old_user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `User_X_Room` SET pay=1 WHERE room_id = ? AND user_id = ? AND view=1 AND pay=0");
+			$stmt->bind_param('ii', $room_id, $old_user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `ESF_users` SET has_studio=1 WHERE id = ?");
+			$stmt->bind_param('i', $user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `User_X_Room` SET pay=0 WHERE room_id = ? AND user_id = ? AND pay=1 and modify=0");
+			$stmt->bind_param('ii', $room_id, $old_user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+		} elseif (($old_user_id == $user_id) && $was_studio && !$is_studio) {
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `ESF_users` SET has_studio=0 WHERE id = ?");
+			$stmt->bind_param('i', $old_user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `User_X_Room` SET pay=1 WHERE room_id = ? AND user_id = ? AND view=1 AND pay=0");
+			$stmt->bind_param('ii', $room_id, $old_user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+		} elseif (($old_user_id == $user_id) && $is_studio && !$was_studio) {
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `ESF_users` SET has_studio=1 WHERE id = ?");
+			$stmt->bind_param('i', $user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `User_X_Room` SET pay=0 WHERE room_id = ? AND user_id = ? AND pay=1 and modify=0");
+			$stmt->bind_param('ii', $room_id, $old_user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+		} elseif(($old_user_id != $user_id) && $was_studio && !$is_studio) {
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `ESF_users` SET has_studio=0 WHERE id = ?");
+			$stmt->bind_param('i', $old_user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `User_X_Room` SET pay=1 WHERE room_id = ? AND user_id = ? AND view=1 AND pay=0");
+			$stmt->bind_param('ii', $room_id, $old_user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `ESF_users` SET has_studio=0 WHERE id = ?");
+			$stmt->bind_param('i', $user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `User_X_Room` SET pay=1 WHERE room_id = ? AND user_id = ? AND view=1 AND pay=0");
+			$stmt->bind_param('ii', $room_id, $old_user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+		} elseif(($old_user_id != $user_id) && !$was_studio && $is_studio) {
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `ESF_users` SET has_studio=1 WHERE id = ?");
+			$stmt->bind_param('i', $user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+
+			$stmt = $mysqli->stmt_init();
+			$stmt->prepare("UPDATE `User_X_Room` SET pay=0 WHERE room_id = ? AND user_id = ? AND pay=1 AND modify=0");
+			$stmt->bind_param('ii', $room_id, $old_user_id);
+			$stmt->execute();
+			$stmt->store_result();
+			$stmt->close();
+		}
 
 		header ('Location: editProperty.php');
 		exit(0);

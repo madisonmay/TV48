@@ -43,7 +43,7 @@ Add in link to management page(s) -->
     TV48
     <? include('header2.php'); ?>
     <div class="row-fluid not-too-small">
-        <div class="span4">
+        <div class="span3">
             <a href='light.php'><div class="border">
                 <div id="light" class="circle">
                     <div class="opaque">
@@ -54,7 +54,7 @@ Add in link to management page(s) -->
             <div class="description">
             </div>
         </div>
-        <div class="span4">
+        <div class="span3">
             <a href='heat.php'><div class="border">
                 <div id="heat" class="circle">
                     <div class="opaque">
@@ -65,11 +65,22 @@ Add in link to management page(s) -->
             <div class="description">
             </div>
         </div>
-        <div class="span4">
+        <div class="span3">
             <a href='power.php'><div class="border">
                 <div id="power" class="circle">
                     <div class="opaque">
                         <div class="label-text">Power</div>
+                    </div>
+                </div>
+            </div></a>
+            <div class="description">
+            </div>
+        </div>
+        <div class="span3">
+            <a href='management.php'><div class="border">
+                <div id="management" class="circle">
+                    <div class="opaque">
+                        <div class="label-text">Manage</div>
                     </div>
                 </div>
             </div></a>
