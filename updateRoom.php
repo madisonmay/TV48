@@ -60,11 +60,11 @@
 		}
 
 		$stmt = $mysqli->stmt_init();
-		$stmt->prepare("SELECT `id`, `landlord`, `landlord_id` FROM `ESF_users` WHERE sessionId = ?");
+		$stmt->prepare("SELECT `landlord`, `landlord_id` FROM `ESF_users` WHERE sessionId = ?");
 		$stmt->bind_param('s', $_SESSION["id"]);
 		$stmt->execute();
 		$stmt->store_result();
-		$stmt->bind_result($user_id, $landlord, $landlord_id);
+		$stmt->bind_result($landlord, $landlord_id);
 		$stmt->fetch();
 		$stmt->close();
 
@@ -73,7 +73,8 @@
 			exit(0);
 		}
 
-		$id = $_POST['user_id'];
+		$user_id = $_POST['user_id'];
+		$id = $user_id;
 		$property_id = $_POST['property_id'];
 		$old_user_id = $_POST['old_user_id'];
 		$room_id = $_POST['room_id'];
@@ -132,24 +133,6 @@
 			$user_exists = 0;
 		}
 
-		//More debuggin
-
-		// print('Old User Id: ');
-		// print_r($old_user_id);
-		// print('<br>');
-		// print('Old User Exists: ');
-		// print_r($old_user_exists);
-		// print('<br>');
-		// print('Current User Exists: ');
-		// print_r($user_exists);
-		// print('<br>');
-		// print('Was Studio: ');
-		// print($was_studio);
-		// print('<br>');
-		// print('Is Studio: ');
-		// print_r($is_studio);
-		// exit(0);
-
 		//a mess of logic below -- should be simplified and streamlined
 		//there is no way this will cut it for production code
 		if($_POST['room_type'] != 'Public' && $_POST['old_room_type'] != 'Public') {
@@ -164,8 +147,8 @@
 					$stmt->close();
 
 					$stmt = $mysqli->stmt_init();
-					$stmt->prepare("UPDATE `ESF_users` SET has_room=0 WHERE and id = ?");
-					$stmt->bind_param('ii', $old_user_id);
+					$stmt->prepare("UPDATE `ESF_users` SET has_room=0 WHERE id = ?");
+					$stmt->bind_param('i', $old_user_id);
 					$stmt->execute();
 					$stmt->store_result();
 					$stmt->close();
@@ -213,7 +196,7 @@
 			if ($user_id != "-1") {
 				$stmt = $mysqli->stmt_init();
 				$stmt->prepare("UPDATE `ESF_users` SET has_room=0 WHERE id = ?");
-				$stmt->bind_param('i', $old_user_id);
+				$stmt->bind_param('i', $user_id);
 				$stmt->execute();
 				$stmt->store_result();
 				$stmt->close();
@@ -255,7 +238,7 @@
 
 				$stmt = $mysqli->stmt_init();
 				$stmt->prepare("UPDATE `ESF_users` SET has_room=1 WHERE id = ?");
-				$stmt->bind_param('i', $old_user_id);
+				$stmt->bind_param('i', $user_id);
 				$stmt->execute();
 				$stmt->store_result();
 				$stmt->close();
@@ -269,18 +252,56 @@
 		    }
 		}
 
+
+		//More debuggin
+
+		print('Old User Id: ');
+		print_r($old_user_id);
+		print('<br>');
+		print('Old User Exists: ');
+		print_r($old_user_exists);
+		print('<br>');
+		print('Current User Id: ');
+		print_r($user_id);
+		print('<br>');
+		print('Current User Exists: ');
+		print_r($user_exists);
+		print('<br>');
+		print('Room Id: ');
+		print_r($room_id);
+		print('<br>');
+		print('Was Studio: ');
+		print($was_studio);
+		print('<br>');
+		print('Is Studio: ');
+		print_r($is_studio);
+		print('<br>');
+
 		if ($is_studio && $was_studio && $old_user_id != $user_id) {
+			print("Case 1");
+			// exit(0);
 			if ($old_user_exists) {removeStudio($mysqli, $room_id, $old_user_id);} 
 			if ($user_exists) {addStudio($mysqli, $room_id, $user_id);}
 		} elseif (($old_user_id == $user_id) && $was_studio && !$is_studio) {
+			print("Case 2");
+			// exit(0);
 			if ($user_exists) {removeStudio($room_id, $user_id);}
 		} elseif (($old_user_id == $user_id) && $is_studio && !$was_studio) {
+			print("Case 3");
+			// exit(0);
 			if ($user_exists) {addStudio($mysqli, $room_id, $user_id);}
 		} elseif(($old_user_id != $user_id) && $was_studio && !$is_studio) {
+			print("Case 4");
+			// exit(0);
 			if ($old_user_exists) {removeStudio($mysqli, $room_id, $old_user_id);}
 			if ($user_exists) {removeStudio($mysqli, $room_id, $user_id);}
 		} elseif(($old_user_id != $user_id) && !$was_studio && $is_studio) {
+			print("Case 5");
+			// exit(0);
 			if ($user_exists) {addStudio($mysqli, $room_id, $user_id);}
+		} else {
+			print("Case 6");
+			// exit(0);
 		}
 
 		header ('Location: editProperty.php');

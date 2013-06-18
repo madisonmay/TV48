@@ -133,13 +133,13 @@
 				$has_studio = 1;
 			}
 
-			print_r($room_id);
-			print('<br>');
-			print_r($user_id);
-			print('<br>');
-			print_r($has_studio);
-			print('<br>');
-			exit(0);
+			// print_r($room_id);
+			// print('<br>');
+			// print_r($user_id);
+			// print('<br>');
+			// print_r($has_studio);
+			// print('<br>');
+			// exit(0);
 
 			//add in language later
 			$stmt = $mysqli->stmt_init();
