@@ -13,7 +13,7 @@ Add in link to management page(s) -->
     <title>TV48 - Home</title>
     <title>TV48</title>
     <meta charset="utf-8">
-    <script src="http://d3js.org/d3.v2.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/2.10.0/d3.v2.min.js"></script>
     <script src="nv.d3.js"></script>
     <? include('base.php'); ?>
 
@@ -26,6 +26,18 @@ Add in link to management page(s) -->
         .hidden {
             display: none;
         }
+
+        
+        @media (min-width: 768px) {
+            .row-fluid {
+                min-width: 1000px;
+            } 
+
+            .hide-this {
+                min-width: 1000px;
+            }
+        }
+
     </style>
     <!--[if lt IE 9]>
         <style>

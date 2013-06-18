@@ -20,18 +20,6 @@ body {
     text-align: center;
 }
 
-
-
-@media (min-width: 768px) {
-    .row-fluid {
-        min-width: 1000px;
-    } 
-
-    .hide-this {
-        min-width: 1000px;
-    }
-}
-
 .large-text {
     font-size: 50px;
     margin-bottom: -5px;

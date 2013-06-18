@@ -3,51 +3,13 @@
 <head>
 
     <?
-        include("../check.php");
+        include("check_admin.php");
     ?>
 
-    <title>TV48 - Administration</title>
+    <title>TV48 - Properties</title>
     <title>TV48</title>
     <meta charset="utf-8">
-    <script src="../scripts/jquery.min.js"></script>
-    <script src="../scripts/bootstrap.min.js"></script>
-    <script src="../scripts/jquery-ui.min.js"></script>
-    <script src="../scripts/combobox.js"></script>
-    <link rel="stylesheet" type='text/css' href="../stylesheets/bootstrap-combined.min.css">
-    <link rel="stylesheet" type='text/css' href="../stylesheets/jquery-ui.css">
-    <link rel='stylesheet' type='text/css' href='../stylesheets/nv.d3.css'>
-    <link rel='stylesheet' type='text/css' href='../stylesheets/combobox.css'>
-    <link rel="stylesheet" type='text/css' href="../style.css">
-    <?
-
-        $username = 'thinkcore';
-        $password = 'K5FBNbt34BAYCZ4W';
-        $database = 'thinkcore_drupal';
-        $server = 'localhost';
-
-        $mysqli = new mysqli($server, $username, $password, $database);
-
-        /* check connection */
-        if ($mysqli->connect_errno) {
-            printf("Connect failed: %s\n", $mysqli->connect_error);
-            exit();
-        }
-
-        $stmt = $mysqli->stmt_init();
-        $stmt->prepare("SELECT `admin` FROM `ESF_users` WHERE sessionId = ?");
-        $stmt->bind_param('s', $_SESSION['id']);
-        $stmt->execute();
-        $stmt->store_result();
-        $stmt->bind_result($admin);
-        $stmt->fetch();
-        $stmt->close();
-
-        if (!$admin) {
-            echo('<p>' . $admin . '</p>');
-        }
-
-    ?>
-
+    <? include('base_admin.php'); ?>
 
     <!--[if lt IE 9]>
         <style>
@@ -60,28 +22,68 @@
     <![endif]-->
 </head>
 <body>
-    <!--[if lt IE 9]>
-        <div style='text-align: center; border: 5px solid #333333;'>We're sorry.  We do not currently support versions of Internet Explorer earlier than 9.0.  Please either upgrade to a<a href='http://windows.microsoft.com/en-us/internet-explorer/ie-10-worldwide-languages'> more recent version of Internet Explorer </a> or view this site in a <a href='www.google.com/chrome'>different browser</a>.  Thanks!</div>
-    <![endif]-->
-    <div class="hide-this">
-    <a href='../home.php' id='home'><img src='../images/home.png' class='home-button'></a>
-    <a href='../logout.php' id='logout'><img src='../images/power.png' class='logout-button'></a>
-    <div class="full-width px100 center-text dark-text min-width">
-        <h1 class="large-text" id='home'>
-            Administration
-        </h1>
-        <hr class="fade_line">
-    </div>
+    <? include('header_admin.php'); ?>
+    Properties
+    <? include('header2_admin.php'); ?>
+    <select style='text-align: center; display: block;' class='centered' id='property'>
+        <?
+
+            $username = 'thinkcore';
+            $password = 'K5FBNbt34BAYCZ4W';
+            $database = 'thinkcore_drupal';
+            $server = 'localhost';
+            $session_id = $_SESSION['id'];
+
+            $mysqli = new mysqli($server, $username, $password, $database);
+
+            /* check connection */
+            if ($mysqli->connect_errno) {
+                printf("Connect failed: %s\n", $mysqli->connect_error);
+                exit();
+            }
+
+            //move to external file
+            $stmt = $mysqli->stmt_init();
+            $stmt->prepare("SELECT `admin`, `landlord_id` FROM `ESF_users` WHERE sessionId = ?");
+            $stmt->bind_param('s', $session_id);
+            $stmt->execute();
+            $stmt->store_result();
+            $stmt->bind_result($admin, $landlord_id);
+            $stmt->fetch();
+            $stmt->close();
+
+            if ($admin) {
+
+                $stmt = $mysqli->stmt_init();
+                $stmt->prepare("SELECT `property_id`, `property_name` FROM `Property_X_Landlord` WHERE landlord_id = ?");
+                $stmt->bind_param('s', $landlord_id);
+                $stmt->execute();
+                $stmt->store_result();
+                $stmt->bind_result($property_id, $property_name);
+                while ($stmt->fetch()) {
+                    echo("<option value='" . $property_id ."'>" . $property_name . "</option>");
+                }
+                $stmt->close();
+
+            } else {
+                header ('Location: ../home.php');
+                exit();
+            }
+
+        ?>
+
+    </select>
     <div style='text-align: center;'>
-        <button type='button' class='btn redirect' url='addLandlord.php'>Add Landlord</button>
-        <button type='button' class='btn redirect' url='editLandlord.php'>Edit Landlords</button>
+        <button type='button' class='btn redirect' url='connectDevice.php'>Connect Device</button>
+        <button type='button' class='btn redirect' url='editDevices.php'>Edit Devices</button>
     </div>
     </div>
     <script>
         $(document).ready(function() {
             $('.redirect').click(function() {
                 var url = $(this).attr('url');
-                window.location = url;
+                var property = $('#property').val();
+                window.location = url + '?property=' + property;
             });
         });
     </script>
