@@ -16,6 +16,14 @@ body {
     min-width: 375px;
 }
 
+select {
+    text-align: center;
+}
+
+.button-fixed-width {
+    margin: 5px;
+    width: 200px;
+}
 .center-text {
     text-align: center;
 }

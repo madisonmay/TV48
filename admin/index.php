@@ -74,8 +74,8 @@
 
     </select>
     <div style='text-align: center;'>
-        <button type='button' class='btn redirect' url='connectDevice.php'>Connect Device</button>
-        <button type='button' class='btn redirect' url='editDevices.php'>Edit Devices</button>
+        <button type='button' class='btn redirect button-fixed-width' url='addSensor.php'>Add Sensor</button>
+        <button type='button' class='btn redirect button-fixed-width' url='editSensors.php'>Edit Sensors</button>
     </div>
     </div>
     <script>
