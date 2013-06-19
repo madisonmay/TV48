@@ -130,7 +130,7 @@
         </div>
         <div class='span4' style='text-align:center;'>
             <h2>Electric</h2>
-            <select style='display: block;' class='centered' id='room' name='room_id'>
+            <select style='display: block;' class='centered' id='sensor' name='sensor_id'>
 
                     <?
 
@@ -160,5 +160,15 @@
         </div>
     </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            $('.btn-success').click(function() {
+                var url = 'updateSensor.php';
+                var sensor = $('#sensor').val();
+                //not totally necessary -- could simply use the post data instead
+                window.location = url + '?sensor=' + sensor + '&property=' + property;
+            });
+        });
+    </script>
 </body>
 </html>
