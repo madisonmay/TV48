@@ -42,7 +42,7 @@
     <script>
         nv.dev = false;
         var average = [36, 35, 34, 21, 28, 28, 6, 9, 15, 31, 35, 24];
-        var actual = [40, 42, 36, 30];
+        var actual = [40, 36, 45];
 
         function sum(array) {
             var sum = 0;
@@ -172,7 +172,7 @@
 
         function co2(percent) {
             var cloud = "<div class='remove-me' style='display: inline-block; padding: 15px;'>" +
-                             "<div id='gray%count%' style='width: 512px; height: 305px; margin-right: auto; margin-left: auto; background-color: #333333; padding-bottom: 0px; padding-top: 30px;'>" + 
+                             "<div class='gray-box' id='gray%count%' style='width: 512px; height: 305px; margin-right: auto; margin-left: auto; background-color: #333333; color: rgb(%red%, %green%, 0); font-size: 40px; padding-bottom: 0px; padding-top: 30px;'>" + 
                              "</div>" +
                              "<div style='text-align: center;'>" + 
                                 "<img src='images/cloud3.png' style='margin-right: auto; margin-left: auto; margin-top: -397px;'>" +
@@ -181,13 +181,28 @@
 
             $('.remove-me').remove();
             var count = 1;
+            var original_percent = percent;
+            if (percent > 1 && percent < 1.25) {
+                var red = 180;
+                var green = 90;
+            } else if (percent > 1.25) {
+                var red = 220;
+                var green = 20;
+            } else if (percent < 1 && percent > .75) {
+                var green = 130;
+                var red = 90;                
+            } else {
+                var green = 200;
+                var red = 90;
+            }
+
             while (percent > 1) { 
                 percent = percent - 1;
-                $('body').append(template(cloud, {'count': count}));
+                $('body').append(template(cloud, {'count': count, 'red': parseInt(red), 'green': parseInt(green)}));
                 count++;
             }
 
-            $('body').append(template(cloud, {'count': count}));
+            $('body').append(template(cloud, {'count': count, 'red': parseInt(red), 'green': parseInt(green)}));
 
             var height = percent * 305;
             var offset = 305 - height;
@@ -195,6 +210,9 @@
             $('#gray' + count).css('height', height + 'px');
             $('#gray' + count).css('margin-top', offset + 'px');
             $('#gray' + count).css('display', 'block');
+
+            height = $('.gray-box').first().height() - 30; 
+            $('.gray-box').first().append('<div style="margin-top:' + height/2 + 'px; font-size: 80px;">' + (original_percent * 100).toFixed() + '%</div>')
         }
     </script>
 </head>
