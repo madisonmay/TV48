@@ -122,7 +122,7 @@
             setTimeout(function() {co2(expected_yearly/average_yearly);}, 500);
 
             nv.addGraph(function() {
-              var chart = nv.models.lineChart();
+              var chart = nv.models.multiBarChart();
 
               chart.xAxis
                   .axisLabel('Month')
@@ -181,6 +181,8 @@
 
             $('.remove-me').remove();
             var count = 1;
+
+            //color text to match the expected performance of the household
             var original_percent = percent;
             if (percent > 1 && percent < 1.25) {
                 var red = 180;

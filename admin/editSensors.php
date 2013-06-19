@@ -70,7 +70,7 @@
     <div class='row-fluid'>
         <div class='span4' style='text-align: center;'>
             <h2>Lighting</h2>
-            <select style='display: block;' class='centered' id='room' name='room_id'>
+            <select style='display: block;' class='centered' class='sensor' name='sensor_id'>
                     
                 <?
 
@@ -100,7 +100,7 @@
         </div>
         <div class='span4' style='text-align: center;'>
             <h2>Heating</h2>
-            <select style='display: block;' class='centered' id='room' name='room_id'>
+            <select style='display: block;' class='centered' class='sensor' name='sensor_id'>
                     
                 <?
 
@@ -130,7 +130,7 @@
         </div>
         <div class='span4' style='text-align:center;'>
             <h2>Electric</h2>
-            <select style='display: block;' class='centered' id='sensor' name='sensor_id'>
+            <select style='display: block;' class='centered' class='sensor' name='sensor_id'>
 
                     <?
 
@@ -164,9 +164,10 @@
         $(document).ready(function() {
             $('.btn-success').click(function() {
                 var url = 'updateSensor.php';
-                var sensor = $('#sensor').val();
-                //not totally necessary -- could simply use the post data instead
-                window.location = url + '?sensor=' + sensor + '&property=' + property;
+                var property = 'NULL' // will fix later -- requires modifying db to add extra column to all sensors
+                var sensor = $(this).prev().val();
+                var type = $(this).prev().prev().html();
+                window.location = url + '?sensor=' + sensor + '&property=' + property + '&type=' + type;
             });
         });
     </script>
