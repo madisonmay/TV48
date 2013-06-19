@@ -1,10 +1,10 @@
-/**  {
-
-border:  2px black solid;
-
+/**   {
+    
+border:   2px black solid;
+    
 }
 
-*/
+ */
 html {
     background-color: #eeeeee;
 }
@@ -24,6 +24,7 @@ select {
     margin: 5px;
     width: 200px;
 }
+
 .center-text {
     text-align: center;
 }
@@ -284,55 +285,55 @@ select {
 }
 
 .text-block {
-    width: 90%; 
-    height: 45px; 
-    max-height: 45px; 
-    margin-left: 0px; 
-    font-size: 20px; 
-    line-height: 45px; 
+    width: 90%;
+    height: 45px;
+    max-height: 45px;
+    margin-left: 0px;
+    font-size: 20px;
+    line-height: 45px;
     display: inline-block;
 }
 
 .text-block-block {
     margin-top: -5px;
-    width: 90%; 
-    height: 45px; 
-    max-height: 45px; 
+    width: 90%;
+    height: 45px;
+    max-height: 45px;
     margin-left: auto;
-    margin-right: auto; 
+    margin-right: auto;
     padding-left: 3.5%;
     margin-top: 20px;
     margin-bottom: -5px;
-    font-size: 20px; 
-    line-height: 45px; 
+    font-size: 20px;
+    line-height: 45px;
     display: block;
 }
 
 .vert-text-align {
-    display: inline-block; 
-    vertical-align: middle; 
+    display: inline-block;
+    vertical-align: middle;
     line-height: normal;
     max-height: 45px;
 }
 
 #settings-block {
     display: inline-block;
-    text-align: center; 
-    width: 8%; 
-    font-size: 20px; 
-    color: #46a564; 
+    text-align: center;
+    width: 8%;
+    font-size: 20px;
+    color: #46a564;
     cursor: pointer;
 }
 
 .thin-hr {
     border-color: #333333;
-    width: 80%; 
-    margin-left: 5%; 
-    margin-right: 5%; 
-    margin-top: 10px; 
-    margin-bottom: 10px; 
-    height: 1px; 
-    border: none; 
+    width: 80%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 1px;
+    border: none;
     background-color: #333333;
 }
 
@@ -368,6 +369,10 @@ select {
     display: block;
 }
 
-/** {
-    border: 2px black solid;
-}*/
+/**  {
+    
+border:  2px black solid;
+    
+}
+
+*/
