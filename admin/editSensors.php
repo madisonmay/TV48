@@ -163,7 +163,7 @@
     <script>
         $(document).ready(function() {
             $('.btn-success').click(function() {
-                var url = 'updateSensor.php';
+                var url = 'modifySensor.php';
                 var property = 'NULL' // will fix later -- requires modifying db to add extra column to all sensors
                 var sensor = $(this).prev().val();
                 var type = $(this).prev().prev().html();
