@@ -99,7 +99,7 @@
         function paired(array) {
             var result = [];
             for (var i = 0; i < array.length; i++) {
-                result.push({x: i+1, y: array[i]});
+                result.push({x: i + 1, y: array[i]});
             }
             return result;
         }
@@ -132,6 +132,8 @@
                   .axisLabel('Energy Expenditure (KWh)')
                   .tickFormat(d3.format('.02f'));
 
+              chart.showControls(false).stacked(false);
+
               d3.select('#chart svg')
                   .datum([
                             {
@@ -157,6 +159,7 @@
                          ])
                   .transition().duration(500)
                   .call(chart);
+
 
               nv.utils.windowResize(chart.update);
 
