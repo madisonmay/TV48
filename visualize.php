@@ -174,6 +174,7 @@
         }
 
         function co2(percent) {
+            //could also switch templating like this to PHP code
             var cloud = "<div class='remove-me' style='display: inline-block; padding: 15px;'>" +
                              "<div class='gray-box' id='gray%count%' style='width: 512px; height: 305px; margin-right: auto; margin-left: auto; background-color: #333333; color: rgb(%red%, %green%, 0); font-size: 40px; padding-bottom: 0px; padding-top: 30px;'>" + 
                              "</div>" +
@@ -181,6 +182,14 @@
                                 "<img src='images/cloud3.png' style='margin-right: auto; margin-left: auto; margin-top: -397px;'>" +
                             "</div>" + 
                         "</div>";
+
+            // var person = "<div class='remove-me' style='display: inline-block; padding: 15px;'>" +
+            //                  "<div class='gray-box' id='gray%count%' style='width: 512px; height: 400px; margin-right: auto; margin-left: auto; background-color: #333333; color: rgb(%red%, %green%, 0); font-size: 40px; padding-bottom: 0px; padding-top: 30px;'>" + 
+            //                  "</div>" +
+            //                  "<div style='text-align: center;'>" + 
+            //                     "<img src='images/person.png' style='margin-right: auto; margin-left: auto; margin-top: -397px;'>" +
+            //                 "</div>" + 
+            //             "</div>";
 
             $('.remove-me').remove();
             var count = 1;
