@@ -27,10 +27,8 @@
 
     <?
 
-        $username = 'thinkcore';
-        $password = 'K5FBNbt34BAYCZ4W';
-        $database = 'thinkcore_drupal';
-        $server = 'localhost';
+        session_start();
+        include('ESF_config.php');
 
         $mysqli = new mysqli($server, $username, $password, $database);
 
@@ -40,20 +38,14 @@
             exit();
         }
 
-        $stmt = $mysqli->stmt_init();
-        $stmt->prepare("SELECT `streamId`, `location`  FROM `lightStreams` WHERE pwm >= 0");
-        $stmt->execute();
-        $stmt->store_result();
-        $stmt->bind_result($streamId, $location);
-        $lights = array();
 
-        while ($stmt->fetch()) {
-            $light = array("streamId" => $streamId, "location" => $location);
-            array_push($lights, $light);
+        function sendVariable($variable, $varname, $global = 1) {
+            if ($global) {
+                echo("<script> window" . $varname . " = " . json_encode($variable) . "</script>");
+            } else {
+                echo("<script> var " . $varname . " = " . json_encode($variable) . "</script>");
+            }
         }
-
-        $stmt->close();
-        echo "<script> window.lights = " . json_encode($lights) . "</script>";
 
         $stmt = $mysqli->stmt_init();
         $stmt->prepare("SELECT `firstName`, `lastName`, `id`, `rooms` FROM `ESF_users` WHERE `landlord` = 0");
@@ -68,7 +60,7 @@
         }
 
         $stmt->close();
-        echo "<script> window.tenants = " . json_encode($tenants) . "</script>";
+        sendVariable($tenants, "tenants");
 
     ?>
 </head>

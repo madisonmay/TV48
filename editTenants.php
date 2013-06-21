@@ -27,14 +27,18 @@
     <? include('header2.php'); ?>
     <select style='text-align: center; display: block;' class='centered' id='tenant'>
         <?
-
-            $username = 'thinkcore';
-            $password = 'K5FBNbt34BAYCZ4W';
-            $database = 'thinkcore_drupal';
-            $server = 'localhost';
             $pid = $_GET['property'];
 
-            echo "<script> var property = '" . $pid . "'</script>";
+            function sendVariable($variable, $varname, $global = 1) {
+                if ($global) {
+                    echo("<script> window" . $varname . " = " . json_encode($variable) . "</script>");
+                } else {
+                    echo("<script> var " . $varname . " = " . json_encode($variable) . "</script>");
+                }
+            }
+
+            sendVariable($pid, "property", 0);
+            
             $mysqli = new mysqli($server, $username, $password, $database);
 
             /* check connection */

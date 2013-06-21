@@ -1,13 +1,4 @@
 <? 
-
-	error_reporting(E_ALL);
-	ini_set('display_errors', 1);
-
-	//There should really be a way to link new users to existing objects in the databse
-	//If this could be created, the landlord would not have to wait for all of the tenants
-		//to register in the system for he/she to be able to set the permissions for each of the 
-		//rooms.  The question is how can this be done in a secure manner?
-	include ("ESF_config.php");
 	include ("check.php");
 
 

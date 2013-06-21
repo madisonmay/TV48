@@ -21,12 +21,7 @@ Todo:
       <?
 
           session_start();
-          error_reporting(E_ALL);
-          ini_set('display_errors', 1);
-          $username = 'thinkcore';
-          $password = 'K5FBNbt34BAYCZ4W';
-          $database = 'thinkcore_drupal';
-          $server = 'localhost';
+          include('ESF_config.php');
 
           $landlord = 0;
           if( isset($_SESSION['id']) ) {

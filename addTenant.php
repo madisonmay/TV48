@@ -27,10 +27,6 @@
 
     <?
 
-        $username = 'thinkcore';
-        $password = 'K5FBNbt34BAYCZ4W';
-        $database = 'thinkcore_drupal';
-        $server = 'localhost';
         $session_id = $_SESSION['id'];
 
         $mysqli = new mysqli($server, $username, $password, $database);

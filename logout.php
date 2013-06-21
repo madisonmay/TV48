@@ -8,9 +8,9 @@
 <body>
 	<div class="contentWrapper">
 		<?
+			session_start();
 			include ("ESF_config.php");
 
-			session_start();
 
 			// Opens a connection
 			$mysqli = new mysqli($server, $username, $password, $database);

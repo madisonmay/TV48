@@ -27,11 +27,6 @@
     <? include('header2.php'); ?>
     <select style='text-align: center; display: block;' class='centered' id='property'>
         <?
-
-            $username = 'thinkcore';
-            $password = 'K5FBNbt34BAYCZ4W';
-            $database = 'thinkcore_drupal';
-            $server = 'localhost';
             $session_id = $_SESSION['id'];
 
             $mysqli = new mysqli($server, $username, $password, $database);

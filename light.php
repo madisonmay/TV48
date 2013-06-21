@@ -5,6 +5,7 @@
     <title>TV48</title>
     <meta charset="utf-8">
     <? include('base.php'); ?>
+    <? include('check.php'); ?>
     <!--[if lt IE 9]>
         <style>
 
@@ -22,11 +23,6 @@
 
     </style>
     <?
-
-        $username = 'thinkcore';
-        $password = 'K5FBNbt34BAYCZ4W';
-        $database = 'thinkcore_drupal';
-        $server = 'localhost';
 
         $mysqli = new mysqli($server, $username, $password, $database);
 
@@ -47,7 +43,17 @@
             $light = array("streamId" => $streamId, "pwm" => $pwm, "location" => $location, "request" => $request);
             array_push($lights, $light);
         }
-        echo "<script> window.lights = " . json_encode($lights) . "</script>";
+        
+
+        function sendVariable($variable, $varname, $global = 1) {
+            if ($global) {
+                echo("<script> window" . $varname . " = " . json_encode($variable) . "</script>");
+            } else {
+                echo("<script> var " . $varname . " = " . json_encode($variable) . "</script>");
+            }
+        }
+
+        sendVariable($lights, "lights");
 
     ?>
     <script src='scripts/light.js'></script>

@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-    <?
-        include("check.php");
-    ?>
-
     <title>TV48 - Add Room</title>
     <title>TV48</title>
     <meta charset="utf-8">
@@ -43,11 +38,7 @@
 
     <?
 
-        $username = 'thinkcore';
-        $password = 'K5FBNbt34BAYCZ4W';
-        $database = 'thinkcore_drupal';
-        $server = 'localhost';
-        $session_id = $_SESSION['id'];
+        include("check.php");
 
         $mysqli = new mysqli($server, $username, $password, $database);
 

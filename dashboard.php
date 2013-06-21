@@ -7,7 +7,7 @@
 
 </head>
 <?
-include ("ESF_config.php");
+
 include ("check.php");
 
 // Opens a connection to a MySQL server.

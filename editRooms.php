@@ -29,10 +29,6 @@
     <select style='text-align: center; display: block;' class='centered' id='room'>
         <?
 
-            $username = 'thinkcore';
-            $password = 'K5FBNbt34BAYCZ4W';
-            $database = 'thinkcore_drupal';
-            $server = 'localhost';
             $pid = $_GET['property'];
             $session_id = $_SESSION['id'];
 
