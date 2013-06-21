@@ -38,23 +38,23 @@
 		$room_id = $_POST['room_id'];
 		$channel = $_POST['channel'];
 		$name = $_POST['name'];
-		// Check if id exist?
+		$sensor_id = $_POST['sensor_id'];
 
 		$stmt = $mysqli->stmt_init();
 
 		if ($type == 'Lighting') {
-			$stmt->prepare("INSERT INTO `lightStreams` (location, roomId, channel) VALUES (?, ?, ?)");	
+			$stmt->prepare("UPDATE `lightStreams` SET location = ?, roomId = ?, channel = ? WHERE streamId = ?");	
 		} elseif ($type == 'Heating') {
-			$stmt->prepare("INSERT INTO `Heat` (name, room_id, channel) VALUES (?, ?, ?)");		
+			$stmt->prepare("UPDATE `Heat` SET name = ?, room_id = ?, channel = ? WHERE streamId = ?");		
 		} elseif ($type == 'Electric') {
-			$stmt->prepare("INSERT INTO `Power` (name, room_id, channel) VALUES (?, ?, ?)");					
+			$stmt->prepare("UPDATE `Power` SET name = ?, room_id = ?, channel = ? WHERE streamId = ?");					
 		} else {
 			print('Type: ');
 			print_r($type);
 			exit(0);
 		}
 
-		$stmt->bind_param('sii', $name, $room_id, $channel);
+		$stmt->bind_param('siii', $name, $room_id, $channel, $sensor_id);
 		$stmt->execute();
 		$stmt->store_result();
 		$stmt->close();
@@ -67,7 +67,7 @@
 		}
 
 	} else {
-		header ('Location: index.php');
+		header ('Location: ../home.php');
 		exit(0);
 	}
 

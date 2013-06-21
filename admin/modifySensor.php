@@ -159,6 +159,8 @@
 
         </select>
         <input type='submit' value='Submit' class='btn btn-success' style='margin-top: 15px;'>
+        <input type='hidden' value=<? echo json_encode($_GET['type']); ?>name='type'>
+        <input type='hidden' value=<? echo json_encode($_GET['sensor']); ?>name='sensor_id'>
     </form>
     </div>
 </body>
