@@ -80,7 +80,7 @@
 
 
             $stmt = $mysqli->stmt_init();
-            $stmt->prepare("SELECT `room_id`, `view`, `modify`, `pay` FROM `User_X_Room` WHERE user_id = ?");
+            $stmt->prepare("SELECT `room_id`, `view`, `modify`, `pay` FROM `User_X_Room` WHERE user_id = ? AND pay=1");
             $stmt->bind_param('i', $tenant);
             $stmt->execute();
             $stmt->store_result();
@@ -106,42 +106,6 @@
             $stmt->fetch();
             $stmt->close();
 
-            // print('First name: ');
-            // print_r($firstName);
-            // print('<br>');
-            // print('Last name: ');
-            // print_r($lastName);
-            // print('<br>');
-            // print('Tenant id: ');
-            // print_r($tenant_id);
-            // print('<br>');
-            // print('Has room: ');
-            // print_r($has_room);
-            // print('<br>');
-            // print('Room id: ');
-            // print_r($room_id);
-            // print('<br>');
-            // print('Can view: ');
-            // print_r($view);
-            // print('<br>');
-            // print('Can modify: ');
-            // print_r($modify);
-            // print('<br>');
-            // print('Must pay: ');
-            // print_r($pay);
-            // print('<br>');
-            // print('Room name: ');
-            // print_r($room_name);
-            // print('<br>');
-            // print('Room type: ');
-            // print_r($room_type);
-            // print('<br>');
-            // print_r('Start date: ');
-            // print_r($startDate);
-            // print('<br>');
-            // print_r('End date: ');
-            // print_r($endDate);
-            // exit(0);
 
             echo "<script>" . 
                     "window.firstName = " . json_encode($firstName) . ";" .
@@ -215,7 +179,7 @@
                 $stmt->fetch();
 
                 $old_room_type = '-1';
-                if ((int) $user_room_id != 0) {
+                if ($has_room != 0) {
                     $count++;
                     $stmt = $mysqli->stmt_init();
                     $stmt->prepare('SELECT `name`, `type` FROM `Rooms` WHERE id = ?');
