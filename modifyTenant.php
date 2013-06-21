@@ -44,6 +44,7 @@
 
         echo('<script> var pid = ' . json_encode($pid) . '</script>');
 
+        //should probably be refactored to external file
         if ($landlord) {
 
             $authorized = 0;
