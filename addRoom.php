@@ -40,6 +40,8 @@
 
         include("check.php");
 
+        $session_id = $_SESSION['id'];
+
         $mysqli = new mysqli($server, $username, $password, $database);
 
         /* check connection */
@@ -48,17 +50,17 @@
             exit();
         }
 
-        $pid = $_GET['property'];
 
         $stmt = $mysqli->stmt_init();
-        $stmt->prepare("SELECT `id`, `landlord`, `landlord_id` FROM `ESF_users` WHERE sessionId = ?");
+        $stmt->prepare("SELECT `landlord`, `landlord_id` FROM `ESF_users` WHERE sessionId = ?");
         $stmt->bind_param('s', $session_id);
         $stmt->execute();
         $stmt->store_result();
-        $stmt->bind_result($user_id, $landlord, $landlord_id);
+        $stmt->bind_result($landlord, $landlord_id);
         $stmt->fetch();
         $stmt->close();
 
+        $pid = $_GET['property'];
         echo('<script> var pid = ' . json_encode($pid) . '</script>');
 
         if ($landlord) {
