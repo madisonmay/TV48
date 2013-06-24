@@ -37,15 +37,16 @@
 	    </style>
 	<![endif]-->
 
-
+	<!-- Should eventually be moved to local file -->
 	<link href='http://fonts.googleapis.com/css?family=Lato:300' rel='stylesheet' type='text/css'>
 	<?	
-		//boilerplate includes
-		echo $this->element('check'); 
+		// //boilerplate includes
+		// echo $this->element('check'); 
 		echo $this->Html->script('jquery.min');
 		echo $this->Html->script('bootstrap.min');
 		echo $this->Html->script('http://code.jquery.com/ui/1.10.2/jquery-ui.min.js');
 		echo $this->Html->script('combobox');
+		echo $this->Html->script('global');
 		echo $this->Html->css('bootstrap-combined.min.css');
 		echo $this->Html->css('http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css');
 		echo $this->Html->css('nv.d3');
@@ -66,8 +67,17 @@
 		    }
 		}
 	?>
+
+	<script>
+		function disappear(btn) {
+			$(btn).stop(true).animate({'opacity': '0', '-moz-opacity': '0', 'filter': 'Alpha(Opacity=0)',
+		               					'-ms-filter': '"progid:DXImageTransform.Microsoft.Alpha(Opacity=0}"'}, 500);
+		    setTimeout(function() {$(btn).stop(true).animate({'height': '0px', 'padding': '0px'}, 100);}, 1200);
+		}
+	</script>
 </head>
 <body>
+	<!-- Site navigation -->
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner" style='background-color: #333333; color: #eeeeee;'>
 		    <div class="container"> 
@@ -76,16 +86,38 @@
 		        </a>
 		        <ul class="nav">
 		            <li class="divider-vertical" style='margin-top: 18px;'></li>
-		            <li><a href='light.php' style='color: #eeeeee'>Light</a></li>
-		            <li><a href='heat.php' style='color: #eeeeee'>Heat</a></li>
-		            <li><a href='power.php' style='color: #eeeeee'>Power</a></li>
-		            <li><a href='management.php' style='color: #eeeeee'>Manage</a></li>
-		            <li><a href='admin.php' style='color: #eeeeee'>Admin</a></li>
+		            <li><a href='light' style='color: #eeeeee'>Light</a></li>
+		            <li><a href='heat' style='color: #eeeeee'>Heat</a></li>
+		            <li><a href='power' style='color: #eeeeee'>Power</a></li>
+		            <li><a href='management' style='color: #eeeeee'>Manage</a></li>
+		            <li><a href='admin' style='color: #eeeeee'>Admin</a></li>
+		        </ul>
+		        <ul class="nav pull-right">
+		        	<li><a href='/users/add' style='color: #eeeeee'>Register</a></li>
+		        	<li><a href='/users/login' style='color: #eeeeee'>Log In</a></li>
 		        </ul>
 		    </div>
 		</div>
 	</div>
-	<div style='margin-bottom: 50px;'></div>
+
+	<!-- Container for flash messages -->
+	<div style='margin-bottom: 75px;'></div>
+	<? if($this->Session->check('Message.flash')): ?>
+		<div style='text-align: center;'>
+			<button onclick='disappear(this);' class='btn alert <? if ($this->Session->flashWarning) {echo 'btn-danger';} else {echo 'btn-success';} ?>' style='text-align: center; margin-bottom: 10px; padding: 10px;'>
+				<?php echo $this->Session->flash(); ?>
+			</button>
+		</div>
+	<? endif; ?>
+
+	<!-- Main content -->
 	<?php echo $this->fetch('content'); ?>
+
+	<!-- SQL for debugging purposes -->
+	<div style='text-align: center;'>
+		<button class='btn' style='text-align: center; margin-bottom: 10px;'>
+			<?php echo $this->element('sql_dump'); ?>
+		</button>
+	</div>
 </body>
 </html>

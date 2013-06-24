@@ -21,6 +21,7 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 App::uses('Controller', 'Controller');
+App::uses('CakeEmail', 'Network/Email');
 
 /**
  * Application Controller
@@ -35,10 +36,13 @@ class AppController extends Controller {
 	public $helpers = array('Html', 'Form', 'Session');
 	public $components = array('Session', 'DebugKit.Toolbar', 'Auth' => array(
         'loginRedirect' => array('controller' => 'home', 'action' => 'index'),
-        'logoutRedirect' => array('controller' => 'login', 'action' => 'index')
-    ));
+        'logoutRedirect' => array('controller' => 'users', 'action' => 'login'))
+	);
 
-	public function beforeFilter() {
-	    $this->Auth->allow();
+	function beforeFilter() {
+	    parent::__construct();
+	    // Your app-wide beforeFilter code, if any
+	    $this->Auth->allow(array('controller' => 'users', 'action' => 'login'), 
+	    	array('controller' => 'users', 'action' => 'login'));
 	}
 }
