@@ -1,0 +1,29 @@
+.home-button {
+    opacity: 0;
+    cursor: default;
+}
+
+.hidden {
+    display: none;
+}
+
+
+@media (min-width: 768px) {
+    .row-fluid {
+        min-width: 1000px;
+    } 
+
+    .hide-this {
+        min-width: 1000px;
+    }
+}
+
+a {
+	text-decoration: none;
+	color: #eeeeee;
+}
+
+a:hover {
+	color: #46a546;
+}
+

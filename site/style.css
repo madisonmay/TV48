@@ -1,0 +1,378 @@
+/**   {
+    
+border:   2px black solid;
+    
+}
+
+ */
+html {
+    background-color: #eeeeee;
+}
+
+body {
+    background-color: #eeeeee;
+    font-family: 'Lato', sans-serif;
+    padding: 25px;
+    min-width: 375px;
+}
+
+select {
+    text-align: center;
+}
+
+.button-fixed-width {
+    margin: 5px;
+    width: 200px;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.large-text {
+    font-size: 50px;
+    margin-bottom: -5px;
+    cursor: pointer;
+    cursor: hand;
+}
+
+.dark-text {
+    color: #333333;
+}
+
+.centered {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.px100 {
+    height: 100px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.full-height {
+    height: 100%;
+}
+
+.center {
+    float: none;
+    margin-left: auto 0px;
+    margin-right: auto 0px;
+}
+
+.circle {
+    border-radius: 200px;
+    width: 200px;
+    height: 200px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    background-color: #eeeeee;
+    z-index: 2;
+}
+
+.border {
+    border: 20px #333333 solid;
+    background-color: transparent;
+    border-radius: 200px;
+    width: 200px;
+    height: 200px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    z-index: 100;
+}
+
+.main-icon {
+    width: 175px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#light {
+    background-image: url('images/small-light.png');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+}
+
+#management {
+    background-image: url('images/edit.png');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+}
+
+#power {
+    background-image: url('images/electricity.png');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+}
+
+#heat {
+    background-image: url('images/heat-small.png');
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+}
+
+.fade_line {
+    display: block;
+    border: none;
+    color: white;
+    height: 2px;
+    background: black;
+    background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 1000, from(#333), to(#fff));
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.opaque {
+    display: block;
+    position: absolute;
+    margin-left: -1px;
+    margin-top: -1px;
+    width: 202px;
+    height: 202px;
+    background-color: #000000;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+    opacity: 0;
+    -moz-opacity: 0;
+    border-radius: 150px;
+    z-index: 2;
+    text-align: center;
+    color: #eeeeee;
+    cursor: pointer;
+}
+
+.label-text {
+    font-size: 50px;
+    margin-top: 90px;
+}
+
+.description {
+    font-size: 20px;
+    text-align: center;
+}
+
+.up {
+    z-index: 1000;
+    margin-top: -128px;
+    margin-bottom: -128px;
+}
+
+.op50 {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+    filter: alpha(opacity=50);
+    opacity: .5;
+    -moz-opacity: .5;
+}
+
+.op25 {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=25)";
+    filter: alpha(opacity=25);
+    opacity: .25;
+    -moz-opacity: .25;
+}
+
+.op75 {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=75)";
+    filter: alpha(opacity=75);
+    opacity: .75;
+    -moz-opacity: .75;
+}
+
+.labels {
+    text-align: center;
+    margin-top: -10px;
+    font-size: 20px;
+    margin-top: 15px;
+}
+
+.amount {
+    border: 0;
+    color: #46a564;
+    width: 25px;
+    display: inline-block;
+    text-align: center;
+    margin-top: 6px;
+    margin-bottom: 20px;
+}
+
+.brightness {
+    display: inline-block;
+    margin-right: 0px;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Lato Light'), local('Lato-Light'), url('lato.woff') format('woff');
+}
+
+.top_group {
+    text-align: center;
+    margin-top: -20px;
+}
+
+.sort-by {
+    width: 168px;
+    margin-top: 30px;
+    margin-right: 5px;
+    margin-left: -5px;
+}
+
+.update {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.toggle-sort {
+    margin-top: 20px;
+}
+
+.large-text {
+    margin-top: -20px;
+    font-size: 50px;
+    max-width: 800px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
+.home-button {
+    width: 50px;
+    float: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+#register {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#login {
+    width: 300px;
+}
+
+.logout-button {
+    width: 40px;
+    float: right;
+    margin-top: 5px;
+}
+
+.room-settings {
+    border: 5px solid #333333;
+    border-radius: 15px;
+    padding: 10px;
+    text-align: center;
+    min-width: 300px;
+    max-width: 500px;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.text-block {
+    width: 90%;
+    height: 45px;
+    max-height: 45px;
+    margin-left: 0px;
+    font-size: 20px;
+    line-height: 45px;
+    display: inline-block;
+}
+
+.text-block-block {
+    margin-top: -5px;
+    width: 90%;
+    height: 45px;
+    max-height: 45px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 3.5%;
+    margin-top: 20px;
+    margin-bottom: -5px;
+    font-size: 20px;
+    line-height: 45px;
+    display: block;
+}
+
+.vert-text-align {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+    max-height: 45px;
+}
+
+#settings-block {
+    display: inline-block;
+    text-align: center;
+    width: 8%;
+    font-size: 20px;
+    color: #46a564;
+    cursor: pointer;
+}
+
+.thin-hr {
+    border-color: #333333;
+    width: 80%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 1px;
+    border: none;
+    background-color: #333333;
+}
+
+.room-wrapper {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.assigned-user {
+    float: none;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+    cursor: pointer;
+    padding: 5px;
+}
+
+input {
+    font-family: Lato;
+    text-align: center;
+}
+
+select {
+    font-family: Lato;
+    text-align: center;
+}
+
+.maintain-size {
+    min-width: 1300px;
+}
+
+.block {
+    display: block;
+}
+
+/**  {
+    
+border:  2px black solid;
+    
+}
+
+*/
