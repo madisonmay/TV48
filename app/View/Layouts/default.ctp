@@ -74,6 +74,17 @@
 		               					'-ms-filter': '"progid:DXImageTransform.Microsoft.Alpha(Opacity=0}"'}, 500);
 		    setTimeout(function() {$(btn).stop(true).animate({'height': '0px', 'padding': '0px'}, 100);}, 1200);
 		}
+
+		$(document).ready(function() {
+			$('a').mouseover(function() {
+			  $(this).css("color", "#46a546");
+			});
+
+			$('a').mouseout(function() {
+			  $(this).css("color", "#eeeeee");
+			});
+		})
+
 	</script>
 </head>
 <body>
@@ -89,7 +100,7 @@
 		            <li><a href='light' style='color: #eeeeee'>Light</a></li>
 		            <li><a href='heat' style='color: #eeeeee'>Heat</a></li>
 		            <li><a href='power' style='color: #eeeeee'>Power</a></li>
-		            <li><a href='management' style='color: #eeeeee'>Manage</a></li>
+		            <li><a href='manage' style='color: #eeeeee'>Manage</a></li>
 		            <li><a href='admin' style='color: #eeeeee'>Admin</a></li>
 		        </ul>
 		        <ul class="nav pull-right">

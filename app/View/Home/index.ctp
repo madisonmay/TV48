@@ -1,6 +1,6 @@
 <div class="row-fluid">
     <div class="span3">
-        <a href='light.php'><div class="border">
+        <a href='light'><div class="border">
             <div id="light" class="circle">
                 <div class="opaque">
                     <div class="label-text">Light</div>
@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="span3">
-        <a href='heat.php'><div class="border">
+        <a href='heat'><div class="border">
             <div id="heat" class="circle">
                 <div class="opaque">
                     <div class="label-text">Heat</div>
@@ -22,7 +22,7 @@
         </div>
     </div>
     <div class="span3">
-        <a href='power.php'><div class="border">
+        <a href='power'><div class="border">
             <div id="power" class="circle">
                 <div class="opaque">
                     <div class="label-text">Power</div>
@@ -33,7 +33,7 @@
         </div>
     </div>
     <div class="span3">
-        <a href='management.php'><div class="border">
+        <a href='manage'><div class="border">
             <div id="management" class="circle">
                 <div class="opaque">
                     <div class="label-text">Manage</div>

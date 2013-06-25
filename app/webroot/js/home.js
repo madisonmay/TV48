@@ -144,12 +144,4 @@ $(document).ready(function() {
       .animate({'opacity': '0', '-moz-opacity': '0', 'filter': 'Alpha(Opacity=0)',
                '-ms-filter': '"progid:DXImageTransform.Microsoft.Alpha(Opacity=0}"'}, 500);
   });
-
-  $('a').mouseover(function() {
-    $(this).css("color", "#46a546");
-  });
-
-  $('a').mouseout(function() {
-    $(this).css("color", "#eeeeee");
-  });
 });
