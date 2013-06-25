@@ -44,14 +44,15 @@
 		// echo $this->element('check'); 
 		echo $this->Html->script('jquery.min');
 		echo $this->Html->script('bootstrap.min');
-		echo $this->Html->script('http://code.jquery.com/ui/1.10.2/jquery-ui.min.js');
+		echo $this->Html->script('bootstrap-select');
 		echo $this->Html->script('combobox');
 		echo $this->Html->script('global');
+		echo $this->Html->script("//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js");
 		echo $this->Html->css('bootstrap-combined.min.css');
-		echo $this->Html->css('http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css');
+		echo $this->Html->css('flat-ui');
+		echo $this->Html->css('http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/smoothness/jquery-ui.css');
 		echo $this->Html->css('nv.d3');
 		echo $this->Html->css('combobox');
-		echo $this->Html->css('flat-ui');
 		echo $this->Html->css('style');
 
 		//Include page specific css and js files
@@ -125,7 +126,7 @@
 	<?php echo $this->fetch('content'); ?>
 
 	<!-- SQL for debugging purposes -->
-	<div style='text-align: center;'>
+	<div style='text-align: center; margin-top: 10px;'>
 		<button class='btn' style='text-align: center; margin-bottom: 10px;'>
 			<?php echo $this->element('sql_dump'); ?>
 		</button>

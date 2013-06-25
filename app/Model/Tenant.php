@@ -3,7 +3,7 @@
     App::uses('AuthComponent', 'Controller/Component');
     class User extends AppModel {
 
-        public $hasOne = 'Tenant';
+        public $belongsTo = 'User';
 
         public function beforeSave($options = array()) {
             if (isset($this->data[$this->alias]['password'])) {
@@ -13,35 +13,22 @@
         }
 
         public $validate = array(
-            'first_name' => array(
+            'start_date' => array(
                 'required' => array(
                     'rule' => array('notEmpty'),
-                    'message' => 'A first name is required'
+                    'message' => 'A start date is required'
                 )
             ),
-            'last_name' => array(
+            'end_date' => array(
                 'required' => array(
                     'rule' => array('notEmpty'),
-                    'message' => 'A last name is required'
+                    'message' => 'An end date is required'
                 )
             ),
-            'username' => array(
+            'property_id' => array(
                 'required' => array(
                     'rule' => array('notEmpty'),
-                    'message' => 'A username is required'
-                )
-            ),
-            'password' => array(
-                'required' => array(
-                    'rule' => array('notEmpty'),
-                    'message' => 'A password is required'
-                )          
-            ),
-            'confirm_password' => array(
-                'notempty' => array(
-                    'rule' => array('notEmpty'),
-                    'allowEmpty' => false,
-                    'message' => 'Confirm password'
+                    'message' => 'Propery id is required'
                 )
             )
         );
