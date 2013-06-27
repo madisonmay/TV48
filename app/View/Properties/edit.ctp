@@ -17,7 +17,7 @@
 <div style='text-align: center;'>
     <button type='button' class='btn redirect btn-success' url='/tenants/add'>Add Tenant</button>
     <button type='button' class='btn redirect btn-success' url='/rooms/add'>Add Room</button>
-    <button type='button' class='btn redirect btn-success' url='/tenants/edit'>Edit Tenants</button>
+    <button type='button' class='btn redirect btn-success' url='/tenants'>Edit Tenants</button>
     <button type='button' class='btn redirect btn-success' url='/rooms/edit'>Edit Rooms</button>
 </div>
 </div>

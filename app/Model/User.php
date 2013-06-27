@@ -3,7 +3,11 @@
     App::uses('AuthComponent', 'Controller/Component');
     class User extends AppModel {
 
-        public $hasOne = 'Tenant';
+        public $hasOne = array('Tenant', 'Landlord');
+
+        public $virtualFields = array(    
+            'full_name' => 'CONCAT(User.first_name, " ", User.last_name)'
+        );
 
         public function beforeSave($options = array()) {
             if (isset($this->data[$this->alias]['password'])) {
