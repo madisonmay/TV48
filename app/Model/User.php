@@ -4,7 +4,6 @@
     class User extends AppModel {
 
         public $hasOne = 'Tenant';
-        public $belongsTo = 'User';
 
         public function beforeSave($options = array()) {
             if (isset($this->data[$this->alias]['password'])) {
