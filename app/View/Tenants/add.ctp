@@ -19,14 +19,13 @@
             $start_date = array('class' => 'span3 date', 'placeholder' => 'Start date...', 'label' => '');
             $end_date = array('class' => 'span3 date', 'placeholder' => 'End date...', 'label' => '');
             $balance = array('class' => 'span3', 'placeholder' => 'Balance...', 'label' => '', 'type' => 'text');
-            echo $this->Form->input('first_name', $first_name);
-            echo $this->Form->input('last_name', $last_name);
-            echo $this->Form->input('username', $username);
+            echo $this->Form->input('User.first_name', $first_name);
+            echo $this->Form->input('User.last_name', $last_name);
+            echo $this->Form->input('User.username', $username);
             echo $this->Form->input('start_date', $start_date);
             echo $this->Form->input('end_date', $end_date);
             echo $this->Form->input('balance', $balance);
             $end = array('label' => 'Add', 'class' => 'btn btn-success');
-            echo $this->Form->input('property_id', array('value' => $this->request->query, 'style' => 'display: none;', 'label'=>''));
         ?>
     </fieldset>
 <?php echo $this->Form->end($end); ?>

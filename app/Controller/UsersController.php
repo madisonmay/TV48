@@ -25,6 +25,7 @@
 
                     // If flashWarning is set to 0, the btn-success class is added to the resultant message.
                     // Otherwise, the btn-danger class is added.
+                    $code = rand();
                     $this->Session->write('flashWarning', 0);
                     $this->Session->setFlash(__('Thanks for registering! Please check your inbox for a confirmation email.'));
 

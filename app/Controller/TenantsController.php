@@ -10,9 +10,26 @@
 		public function add() {
 		    if ($this->request->is('post')) {
 		        $this->Tenant->create();
+		        $this->request->data['Tenant']['property_id'] = $this->request->query['property']; 
 		        if ($this->Tenant->save($this->request->data)) {
-		        	$this->Session->write('flashWarning', 1);
-		        	$this->Session->setFlash(__('An internal error occurred.  Please try again.'));
+		            // Redirect user to hompage
+		            $this->request->data['User']['tenant_id'] = $this->Tenant->id;
+		            $this->request->data['User']['landlord_id'] = $this->Auth->user('id');
+		            $this->Tenant->User->create();
+		            if ($this->Tenant->User->save($this->request->data)) {
+		            	$this->request->data['Tenant']['user_id'] = $this->Tenant->User->id;
+		            	if ($this->Tenant->save($this->request->data)) {
+				            $this->Session->write('flashWarning', 0);
+				            $this->Session->setFlash(__('Tenant added!'));
+				            $this->redirect('/properties/edit?Properties=' . $this->request->query['property']);
+				        } else {
+				        	$this->Session->write('flashWarning', 1);
+				        	$this->Session->setFlash(__('An internal error occurred.  Please try again.'));	
+				        }
+			        } else {
+			        	$this->Session->write('flashWarning', 1);
+			        	$this->Session->setFlash(__('An internal error occurred.  Please try again.'));
+			        }
 		        } else {
 		            $this->Session->write('flashWarning', 1);
 		            $this->Session->setFlash(__('An internal error occurred.  Please try again.'));

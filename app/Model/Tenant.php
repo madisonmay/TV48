@@ -1,9 +1,10 @@
 <?php
 
     App::uses('AuthComponent', 'Controller/Component');
-    class User extends AppModel {
+    class Tenant extends AppModel {
 
-        public $belongsTo = 'User';
+        public $belongsTo = array('User', 'Property');
+        public $hasOne = array('User', 'Property');
 
         public function beforeSave($options = array()) {
             if (isset($this->data[$this->alias]['password'])) {
