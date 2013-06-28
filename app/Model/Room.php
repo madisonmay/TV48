@@ -3,7 +3,8 @@
     App::uses('AuthComponent', 'Controller/Component');
     class Room extends AppModel {
 
-        public $belongsTo = array('Property', 'Tenant');
+        public $belongsTo = array('Property');
+        public $hasAndBelongsToMany = array('Tenant');
 
         public $validate = array(
             'name' => array(

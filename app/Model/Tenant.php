@@ -4,6 +4,7 @@
     class Tenant extends AppModel {
 
         public $belongsTo = array('User', 'Property');
+        public $hasAndBelongsToMany = array('Room');
 
         public function beforeSave($options = array()) {
             if (isset($this->data[$this->alias]['password'])) {

@@ -3,7 +3,7 @@
     App::uses('AuthComponent', 'Controller/Component');
     class User extends AppModel {
 
-        public $hasOne = array('Tenant', 'Landlord');
+        public $hasOne = array('Tenant');
 
         public $virtualFields = array(    
             'full_name' => 'CONCAT(User.first_name, " ", User.last_name)'

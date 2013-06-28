@@ -7,9 +7,8 @@
 			$tenant_opts = array('conditions' => array('Tenant.property_id' => $this->request->query['property']),
 								 'fields' => array('Tenant.id')); 
 			$tenant_ids = array_values($this->Tenant->find('list', $tenant_opts));
-			$opts   = array(
-			         'fields' => array('id', 'full_name'),
-			         'conditions' => array('User.tenant_id' => $tenant_ids)
+			$opts = array('fields' => array('id', 'full_name'),
+			              'conditions' => array('User.tenant_id' => $tenant_ids)
 			);
 			$this->set('tenants', $this->Tenant->User->find('list', $opts)); 
 		}
@@ -19,9 +18,14 @@
 		        $this->Tenant->create();
 		        $this->request->data['Tenant']['property_id'] = $this->request->query['property']; 
 		        if ($this->Tenant->save($this->request->data)) {
-		            // Redirect user to hompage
+		          
+		          	//These variables have to be set by hand, because they aren't provided by the form
+		          	//In fact, tenant id is not known until creation (unless you find the max id of the previous entry
+		          	//and increment by 1, but that's kind of cheating.)
+
 		            $this->request->data['User']['tenant_id'] = $this->Tenant->id;
 		            $this->request->data['User']['landlord_id'] = $this->Auth->user('id');
+		            
 		            $this->Tenant->User->create();
 		            if ($this->Tenant->User->save($this->request->data)) {
 		            	$this->request->data['Tenant']['user_id'] = $this->Tenant->User->id;

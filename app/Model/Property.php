@@ -2,7 +2,7 @@
 
     class Property extends AppModel {
 
-        public hasMany = array("Room", "Tenant", "Landlord");
+        public $hasMany = array("Room", "Tenant");
 
         public $validate = array(
             'name' => array(
