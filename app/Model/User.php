@@ -3,7 +3,8 @@
     App::uses('AuthComponent', 'Controller/Component');
     class User extends AppModel {
 
-        public $hasOne = array('Tenant');
+        public $hasAndBelongsToMany = array('Room');
+        public $hasMany = array('Contract');
 
         public $virtualFields = array(    
             'full_name' => 'CONCAT(User.first_name, " ", User.last_name)'
@@ -29,7 +30,7 @@
                     'message' => 'A last name is required'
                 )
             ),
-            'username' => array(
+            'email' => array(
                 'required' => array(
                     'rule' => array('notEmpty'),
                     'message' => 'A username is required'

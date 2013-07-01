@@ -33,7 +33,7 @@
         </div>
     </div>
     <div class="span3">
-        <a href='properties'><div class="border">
+        <a href='/home/manage'><div class="border">
             <div id="management" class="circle">
                 <div class="opaque">
                     <div class="label-text">Manage</div>

@@ -36,7 +36,13 @@ class AppController extends Controller {
 	public $helpers = array('Html', 'Form', 'Session');
 	public $components = array('Session', 'DebugKit.Toolbar', 'Auth' => array(
         'loginRedirect' => array('controller' => 'home', 'action' => 'index'),
-        'logoutRedirect' => array('controller' => 'users', 'action' => 'login'))
+        'logoutRedirect' => array('controller' => 'users', 'action' => 'login'),
+        'authenticate' => array(
+	            'Form' => array(
+	                'fields' => array('username' => 'email')
+	            )
+	        )
+        )
 	);
 
 	function beforeFilter() {

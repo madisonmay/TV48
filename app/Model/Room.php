@@ -3,20 +3,14 @@
     App::uses('AuthComponent', 'Controller/Component');
     class Room extends AppModel {
 
-        public $belongsTo = array('Property');
-        public $hasAndBelongsToMany = array('Tenant');
+        public $hasAndBelongsToMany = array('User');
+        public $hasMany = array('Contract');
 
         public $validate = array(
             'name' => array(
                 'required' => array(
                     'rule' => array('notEmpty'),
                     'message' => 'A room name is required'
-                )
-            ),
-            'property_id' => array(
-                'required' => array(
-                    'rule' => array('notEmpty'),
-                    'message' => 'A property_id is required'
                 )
             ),
             'type' => array(

@@ -93,16 +93,16 @@
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner" style='background-color: #333333; color: #eeeeee;'>
 		    <div class="container"> 
-		    	<a class="brand" href="#" style='color: #eeeeee'>
+		    	<a class="brand" href="/" style='color: #eeeeee'>
 		            TV48
 		        </a>
 		        <ul class="nav">
 		            <li class="divider-vertical" style='margin-top: 18px;'></li>
-		            <li><a href='light' style='color: #eeeeee'>Light</a></li>
-		            <li><a href='heat' style='color: #eeeeee'>Heat</a></li>
-		            <li><a href='power' style='color: #eeeeee'>Power</a></li>
-		            <li><a href='manage' style='color: #eeeeee'>Manage</a></li>
-		            <li><a href='admin' style='color: #eeeeee'>Admin</a></li>
+		            <li><a href='/light' style='color: #eeeeee'>Light</a></li>
+		            <li><a href='/heat' style='color: #eeeeee'>Heat</a></li>
+		            <li><a href='/power' style='color: #eeeeee'>Power</a></li>
+		            <li><a href='/home/manage' style='color: #eeeeee'>Manage</a></li>
+		            <li><a href='/admin' style='color: #eeeeee'>Admin</a></li>
 		        </ul>
 		        <ul class="nav pull-right">
 		        	<li><a href='/users/add' style='color: #eeeeee'>Register</a></li>
@@ -116,7 +116,7 @@
 	<div style='margin-bottom: 75px;'></div>
 	<? if($this->Session->check('Message.flash')): ?>
 		<div style='text-align: center;'>
-			<button onclick='disappear(this);' class='btn alert <? if ($this->Session->flashWarning) {echo 'btn-danger';} else {echo 'btn-success';} ?>' style='text-align: center; margin-bottom: 10px; padding: 10px;'>
+			<button onclick='disappear(this);' class='btn alert <? if ($this->Session->read("flashWarning")) {echo 'btn-danger';} else {echo 'btn-success';} ?>' style='text-align: center; margin-bottom: 10px; padding: 10px;'>
 				<?php echo $this->Session->flash(); ?>
 			</button>
 		</div>
