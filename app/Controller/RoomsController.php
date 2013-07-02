@@ -17,7 +17,7 @@
 		        	// check if room is public
 		        	// ******************** UNTESTED ************************
 		        	// Must add contract for each user that does not have a studio here
-		        	
+
 		        } else {
 		        	//room has tenant
 		        	$user_id = $this->request->data['Room']['Users'];
@@ -30,53 +30,21 @@
 		        	$user = $this->Room->User->find('first', array('conditions' => array('User.id' => $user_id)));
 
 		        	// ************************ IMPORTANT *********************
-		        	// Previous contract objects should be made deactivated if they are primary
-		        	// Contracts which the user had pay permissions should be flipped if the new 
-		        	// room is a studio.
-
-		        	//search for active room set as primary for new room user
-		        	$opts = array('conditions' => array('primary' => 1, 'user_id' => $user_id, 'deactivated' => 0));
-		        	$old_contract = $this->Room->Contract->find('first', $opts);
-
-		        	if ($old_contract) {
-		        		date_default_timezone_set('Europe/Brussels');
-		        		$datetime = date('F j, Y', time());
-		        		$this->Room->Contract->id = $old_contract['Contract']['id'];
-		        		$this->Room->Contract->saveField('deactivated', $datetime);
-
-		        		$this->Room->id = $old_contract['Contract']['room_id'];
-		        		$this->Room->saveField('available', 1);
-		        	}
-
+		        	// Previous contract objects should be deactivated if they are primary
+		        	$this->removeOldUserContract($user_id);
+		        	
 		        	//indicate that user has room
 		        	$this->Room->User->id = $user_id;
 		        	$this->Room->User->saveField('has_room', 1);
 
 		        	//if the newly added room is a studio, also update that property
 		        	if ($this->request->data['Room']['type'] == 'studio') {
-		        		$this->Room->User->saveField('has_studio', 1);
+		        		$this->addRole($user_id, 'studio_owner');
 		        	} else {
-		        		$this->Room->User->saveField('has_studio', 0);
+		        		$this->addRole($user_id, 'dorm_owner');
 		        	}
 
-		        	$opts = array('conditions' => array('user_id' => $user_id, 'active' => 1, 'primary' => 0));
-		        	$contracts = $this->User->Contract->find('all', $opts);
-
-
-		        	// ********************* UNTESTED ************************************
-		        	//make sure studio owners are not paying for public rooms, but dorm owners are
-		        	if ($this->request->data['User']['has_studio']) {
-		        	    foreach ($contracts as $contract) {
-		        	        $this->User->Contract->id = $contract['Contract']['id'];
-		        	        $this->User->Contract->saveField('pay', 0);
-		        	    }                            
-		        	} else {
-		        	    foreach ($contracts as $contract) {
-		        	        $this->User->Contract->id = $contract['Contract']['id'];
-		        	        $this->User->Contract->saveField('pay', 1);
-		        	    }  
-		        	}
-		        	// *******************************************************************
+		        	$this->updateSecondaryContracts($user_id);
 
 		        }
 
@@ -85,7 +53,6 @@
 		        	//addition of new room successful
 
 		        	//if user submitted with room, add a new contract
-
 		        	if ($this->request->data['Room']['Users']) {
 
 		        		//set contract variables to values stored in user object

@@ -122,6 +122,7 @@
         }
 
         public function tenant() {
+            $this->permissions(99);
             if ($this->request->is('post')) {
                 $code = rand();
 
@@ -135,78 +136,58 @@
                 $this->request->data['User']['property_name'] = $user['property_name'];
                 $this->request->data['User']['confirmation_code'] = $code;
 
+                //initialize user roles
+                $this->request->data['User']['roles'] = array();
+
                 if ($this->request->data['User']['Rooms']) {
+                    //if the user has been assigned a room
+
+                    //toggle has_room flag and retreive room_id
                     $this->request->data['User']['has_room'] = 1;
                     $room_id = $this->request->data['User']['Rooms'];
+
+                    //retrieve room data
                     $room = $this->User->Room->find('first', array('conditions' => array('Room.id' => $room_id)));
 
-                    //update room to reflect occupancy
-                    $this->User->Room->id = $room_id;
-                    $this->User->Room->saveField('available', 0);
-
-                    //check for studio status and update user object
+                    //check for studio status and update user roles
                     if ($room['Room']['type'] == 'studio') {
-                        $this->request->data['User']['has_studio'] = 1;
+                        array_push($this->request->data['User']['roles'], "studio_owner");
+
                     } else {
-                        $this->request->data['User']['has_studio'] = 0;
+                        array_push($this->request->data['User']['roles'], "dorm_owner");
                     }
 
                     //start preparing contract object
                     $this->request->data['Contract']['room_id'] =  $room['Room']['id'];
 
-                    //if the room had a previous user, deactivate old contract
-                    $opts = array('conditions' => array('primary' => 1, 'room_id' => $room_id, 'deactivated' => 0));
-                    $old_contract = $this->Room->Contract->find('first', $opts);
-
-                    if ($old_contract) {
-                        //deactivate old contract
-                        date_default_timezone_set('Europe/Brussels');
-                        $datetime = date('F j, Y', time());
-                        $this->User->Contract->id = $old_contract['Contract']['id'];
-                        $this->User->Contract->saveField('deactivated', $datetime);
-                    }
+                    $this->removeOldRoomContract($room_id);
 
                 } else {
                     //no room found in HTTP Post
                     $this->request->data['User']['has_room'] = 0;
                 }
 
+                //encode data as string for saving to DB -- could also be done as X table
+                $this->request->data['User']['roles'] = json_encode($this->request->data['User']['roles']);
+
                 $this->User->create();
                 if ($this->User->save($this->request->data)) {
                     if ($this->request->data['User']['Rooms']) {
 
                         //if room was submitted with user, update contract table
-                        $this->request->data['Contract']['user_id'] =  $this->User->getInsertID();
-                        $this->request->data['Contract']['start_date'] =  $this->request->data['User']['start_date'];
-                        $this->request->data['Contract']['end_date'] =  $this->request->data['User']['end_date'];
+                        $user_id = $this->User->getInsertID;
+                        $this->request->data['Contract']['user_id'] = $user_id;
+                        $this->request->data['Contract']['start_date'] = $this->request->data['User']['start_date'];
+                        $this->request->data['Contract']['end_date'] = $this->request->data['User']['end_date'];
 
                         //could be abstracted to configuration file
                         $this->request->data['Contract']['view'] = 1;
                         $this->request->data['Contract']['pay'] = 1;
                         $this->request->data['Contract']['modify'] = 1;
                         $this->request->data['Contract']['primary'] = 1;
-
-                        // update all current contracts to reflect change
-                        // only need to modify "public" contracts now when changed from studio -> dorm
-                        // or from dorm -> studio since code above handled primary case
-                        // ********************* UNTESTED **************************
-                        $opts = array('conditions' => array('user_id' => $this->request->data['Contract']['user_id'], 'active' => 1, 'primary' => 0));
-                        $contracts = $this->User->Contract->find('all', $opts);
-
-
-                        //make sure studio owners are not paying for public rooms, but dorm owners are
-                        if ($this->request->data['User']['has_studio']) {
-                            foreach ($contracts as $contract) {
-                                $this->User->Contract->id = $contract['Contract']['id'];
-                                $this->User->Contract->saveField('pay', 0);
-                            }                            
-                        } else {
-                            foreach ($contracts as $contract) {
-                                $this->User->Contract->id = $contract['Contract']['id'];
-                                $this->User->Contract->saveField('pay', 1);
-                            }  
-                        }
-                        // **********************************************************
+                        
+                        //update contracts that are not primary
+                        $this->updateSecondaryContracts($user_id);
 
                         if (!$this->User->Contract->save($this->request->data)) {
                             $this->Session->write('flashWarning', 1);
