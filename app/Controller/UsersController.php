@@ -173,7 +173,7 @@
                     if ($this->request->data['User']['Rooms']) {
 
                         //if room was submitted with user, update contract table
-                        $user_id = $this->User->getInsertID;
+                        $user_id = $this->User->getInsertID();
                         $this->request->data['Contract']['user_id'] = $user_id;
                         $this->request->data['Contract']['start_date'] = $this->request->data['User']['start_date'];
                         $this->request->data['Contract']['end_date'] = $this->request->data['User']['end_date'];
@@ -187,12 +187,14 @@
                         //update contracts that are not primary
                         $this->updateSecondaryContracts($user_id);
 
-                        if (!$this->User->Contract->save($this->request->data)) {
-                            $this->Session->write('flashWarning', 1);
-                            $this->Session->setFlash(__('An internal error occurred.  Please try again.')); 
-                        } else {
+                        $this->User->Contract->create();
+                        if ($this->User->Contract->save($this->request->data)) {
                             $this->Session->write('flashWarning', 0);
                             $this->Session->setFlash(__('Tenant added!'));
+                            $this->redirect(array('controller' => 'home', 'action' => 'manage'));
+                        } else {
+                            $this->Session->write('flashWarning', 1);
+                            $this->Session->setFlash(__('An internal error occurred.  Please try again.')); 
                             $this->redirect(array('controller' => 'home', 'action' => 'manage'));
                         }
                     }
