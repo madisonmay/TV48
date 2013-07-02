@@ -76,8 +76,18 @@ class AppController extends Controller {
 				}
 			}
 		}
-		pr($permissions);
-		exit(0);
+		return $permissions;
+	}
+
+
+	public function filterByRole($users, $role) {
+		$result = array();
+		foreach ($users as $user) {
+			if (in_array($role, json_decode($user['User']['roles']))) {
+				array_push($result, $user);
+			}
+		}
+		return $result;
 	}
 
 	public function removeOldRoomContract($room_id) {
@@ -130,7 +140,7 @@ class AppController extends Controller {
 		// update all current contracts to reflect change
 		// only need to modify "public" contracts now when changed from studio -> dorm
 		// or from dorm -> studio since code above handled primary case
-		$opts = array('conditions' => array('user_id' => $user_id, 'active' => 1, 'primary' => 0));
+		$opts = array('conditions' => array('user_id' => $user_id, 'deactivated' => 0, 'primary' => 0));
 		$contracts = $this->Contract->find('all', $opts); //public contracts
 
 		//retrieve array of permissions
@@ -154,7 +164,9 @@ class AppController extends Controller {
 		$user = $this->User->find('first', $opts);
 
 		$roles = json_decode($user['User']['roles']);
-		array_push($roles, $role_name);
+		if (!in_array($role_name, $roles)) {
+			array_push($roles, $role_name);
+		}
 
 		$this->User->id = $user_id;
 		$this->User->saveField('roles', json_encode($roles));

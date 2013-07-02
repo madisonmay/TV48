@@ -89,8 +89,17 @@
 		        }		   
 		    } else {
 		    	//get request -- render input form
-				$opts = array('fields' => array('id', 'full_name'), 'conditions' => array('User.tenant' => 1));
-				$this->set('users', $this->Room->User->find('list', $opts)); 
+
+				$users = $this->Room->User->find('all');
+				$users = $this->filterByRole($users, "tenant");
+
+				$user_list = array();
+
+				foreach ($users as $user) {
+					$user_list[$user['User']['id']] = $user['User']['full_name'];
+				}
+
+				$this->set('users', $user_list); 
 		    }
 
 		}

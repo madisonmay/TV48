@@ -22,7 +22,7 @@
             if ($this->request->is('post')) {
                 $this->User->create();
                 $code = rand();
-                $this->request->data['User']['landlord'] = 1;
+                $this->request->data['User']['roles'] = json_encode(array("landlord"));
                 $this->request->data['User']['confirmation_code'] = $code;
                 if ($this->User->save($this->request->data)) {
 
@@ -122,7 +122,6 @@
         }
 
         public function tenant() {
-            $this->permissions(99);
             if ($this->request->is('post')) {
                 $code = rand();
 
@@ -132,12 +131,11 @@
                 // and choose a password
 
                 $user = $this->Session->read("Auth.User");
-                $this->request->data['User']['tenant'] = 1;
                 $this->request->data['User']['property_name'] = $user['property_name'];
                 $this->request->data['User']['confirmation_code'] = $code;
 
                 //initialize user roles
-                $this->request->data['User']['roles'] = array();
+                $this->request->data['User']['roles'] = array("tenant");
 
                 if ($this->request->data['User']['Rooms']) {
                     //if the user has been assigned a room
@@ -185,7 +183,7 @@
                         $this->request->data['Contract']['pay'] = 1;
                         $this->request->data['Contract']['modify'] = 1;
                         $this->request->data['Contract']['primary'] = 1;
-                        
+
                         //update contracts that are not primary
                         $this->updateSecondaryContracts($user_id);
 
