@@ -9,13 +9,10 @@
 		public function add() {
 		    if ($this->request->is('post')) {
 		        if (!$this->request->data['Room']['Users']) {
-		        	//room does not have tenant -- therefore is available
-		        	$this->request->data['Room']['available'] = 1;
-
-		        	// check if room is public
-		        	// ******************** UNTESTED ************************
-		        	// Must add contract for each user that does not have a studio here
-
+		        	//room does not have tenant -- therefore is available if not public
+		        	if ($this->request->data['Room']['type'] != 'public') {
+		        		$this->request->data['Room']['available'] = 1;
+		        	}
 		        } else {
 		        	//room has tenant
 		        	$user_id = $this->request->data['Room']['Users'];
@@ -74,6 +71,11 @@
 		        			//raise error
 		        			$this->Session->write('flashWarning', 1);
 		        			$this->Session->setFlash(__('An internal error occurred.  Please try again.'));	
+		        		}
+		        	} else {
+		        		if ($this->request->data['Room']['type'] === 'public') {
+		        			// check if room is public and add contracts between existing users
+		        			$this->addPublicContracts($this->Room->getInsertID());
 		        		}
 		        	}
 

@@ -1,6 +1,17 @@
 <script>
     $(document).ready(function() {
+
         $("select").selectpicker();
+
+        $('#thin-wrapper').css('display', 'none');
+        $('#RoomType').change(function() {
+            if ($(this).val() === 'public' || $(this).val() === '') {
+                $('#RoomUsers').val('');
+                $('#thin-wrapper').css('display', 'none');
+            }  else {
+                $('#thin-wrapper').css('display', 'block');   
+            }
+        });
     });
 </script>
 
@@ -12,9 +23,6 @@
         <?php 
             $name = array('class' => 'span3', 'placeholder' => 'Name...', 'label' => '', 'required' => true);
             echo $this->Form->input('name', $name);
-            echo '<div style="margin-right: auto; margin-left: auto; float: none;" class="span3" required>';
-            echo $this->Form->select('Users', $users, array('class' => 'span3 select', 'label' => ''));
-            echo '</div>';
         ?>
             <div style="margin-right: auto; margin-left: auto; float: none;" class="span3">
             <? 
@@ -25,11 +33,17 @@
                     ),
                     array(
                         'class' => 'span3 select',
-                        'label' => ''
+                        'label' => '',
+                        'required' => true
                     )
                 );
             ?>
             </div>
+        <?
+            echo '<div style="margin-right: auto; margin-left: auto; float: none;" id="thin-wrapper" class="span3" required>';
+            echo $this->Form->select('Users', $users, array('class' => 'span3 select', 'label' => ''));
+            echo '</div>';
+        ?>
         <?
             $end = array('label' => 'Add', 'class' => 'btn btn-success');
         ?>

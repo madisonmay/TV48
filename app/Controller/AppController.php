@@ -79,16 +79,30 @@ class AppController extends Controller {
 		return $permissions;
 	}
 
+	public function hasRole($role, $user) {
+		return in_array($role, json_decode($user['User']['roles']));
+	}
 
 	public function filterByRole($users, $role) {
 		$result = array();
 		foreach ($users as $user) {
-			if (in_array($role, json_decode($user['User']['roles']))) {
+			if ($this->hasRole($role, $user)) {
 				array_push($result, $user);
 			}
 		}
 		return $result;
 	}
+
+	public function removeByRole($users, $role) {
+		$result = array();
+		foreach ($users as $user) {
+			if (!$this->hasRole($role, $user)) {
+				array_push($result, $user);
+			}
+		}
+		return $result;
+	}
+
 
 	public function removeOldRoomContract($room_id) {
 		//load models
@@ -152,6 +166,43 @@ class AppController extends Controller {
 	        $this->Contract->saveField('modify', $permissions['modify_public']);
 	        $this->Contract->saveField('view', $permissions['view_public']);
 	    }                            
+	}
+
+	public function addPublicContracts($room_id) {
+		//load models
+		//could be tricky -- requires using User start and end date.
+		$this->loadModel('User');
+		$this->loadModel('Contract');
+
+		$users = $this->User->find('all');
+
+		foreach ($users as $user) {
+			//array for storing contract values
+			$fields = array();
+
+			//convention
+			$user_id = $user['User']['id'];
+
+			$fields['user_id'] = $user_id;
+			$fields['room_id'] = $room_id;
+			$fields['start_date'] = $user['User']['start_date'];
+			$fields['end_date'] = $user['User']['end_date'];
+			
+			//generic approach
+			$permissions = $this->permissions($user_id);
+			$fields['view'] = $permissions['view_public'];
+			$fields['pay'] = $permissions['pay_public'];
+			$fields['modify'] = $permissions['modify_public'];
+			//deactivated and primary both default to zero
+
+			$this->Contract->create();
+			if($this->Contract->save($fields)) {
+				//success
+			} else {
+				echo $this->Contract->getLastQuery();
+				exit(0);
+			}
+		}
 	}
 
 
