@@ -35,11 +35,13 @@
 		        	//if the newly added room is a studio, also update that property
 		        	if ($this->request->data['Room']['type'] == 'studio') {
 		        		$this->addRole($user_id, 'studio_owner');
+		        		$this->removeRole($user_id, 'dorm_owner');
 		        	} else {
 		        		$this->addRole($user_id, 'dorm_owner');
+		        		$this->removeRole($user_id, 'studio_owner');
 		        	}
 
-		        	$this->updateSecondaryContracts($user_id);
+		        	$this->updateUserSecondaryContracts($user_id);
 
 		        }
 
@@ -64,6 +66,7 @@
 		        		$this->Room->Contract->create();
 		        		if ($this->Room->Contract->save($this->request->data)) {
 	        				//if save successful, send positive response
+
 		        			$this->Session->write('flashWarning', 0);
 		        			$this->Session->setFlash(__('Room added!'));
 		        			$this->redirect('/home/manage');
@@ -105,20 +108,7 @@
 		}
 
 		public function edit() {
-			if ($this->request->is('post')) {
-				if ($this->Room->save($this->request->data)) {
-					//room updated			
-					$this->Session->write('flashWarning', 0);
-					$this->Session->setFlash(__('Room added!'));
-					$this->redirect('/home/manage');
-				} else {
-					//something has gone horrible wrong
-					$this->Session->write('flashWarning', 1);
-					$this->Session->setFlash(__('An internal error occurred.  Please try again.'));	
-				}
-
-
-			} else {
+			if ($this->request->is('get')) {
 				//get request
 				$users = $this->Room->User->find('all');
 				$users = $this->filterByRole($users, "tenant");
@@ -133,6 +123,81 @@
 
 				$room_id = $this->request->query['Rooms'];
 			    $this->data = $this->Room->find('first', array('conditions' => array('Room.id' => $room_id)));
+				
+			} else {
+				//post request
+				$room_id = $this->request->data['Room']['id'];
+				$this->Room->id = $room_id;
+
+				//if room is assigned to a tenant or the room is public, it is not available
+				if ($this->request->data['Room']['Users'] || $this->request->data['Room']['type'] === 'public') {
+					$this->request->data['Room']['available'] = 0;
+				} else {
+					//room is available
+					$this->request->data['Room']['available'] = 1;
+				}
+
+				if ($this->Room->save($this->request->data)) {
+					//room updated			
+		        	//if user submitted with room, add a new contract
+
+
+		        	// ***************** IMPORTANT ****************
+		        	// refactor into a method 
+
+		        	if ($this->request->data['Room']['Users']) {
+
+		        		$user_id = $this->request->data['Room']['Users'];
+		        		$user = $this->Room->User->find('first', array('conditions' => array('id' => $user_id)));
+		        		//set contract variables to values stored in user object
+		        		$this->request->data['Contract']['room_id'] =  $room_id;
+		        		$this->request->data['Contract']['start_date'] =  $user['User']['start_date'];
+		        		$this->request->data['Contract']['end_date'] =  $user['User']['end_date'];
+
+		        		//could be abstracted to configuration file
+		        		$this->request->data['Contract']['view'] = 1;
+		        		$this->request->data['Contract']['pay'] = 1;
+		        		$this->request->data['Contract']['modify'] = 1;
+		        		$this->request->data['Contract']['primary'] = 1;
+
+		        		//update user object
+		        		if ($this->request->data['Room']['type'] == 'studio') {
+		        			$this->addRole($user_id, 'studio_owner');
+		        			$this->removeRole($user_id, 'dorm_owner');
+		        		} else {
+		        			$this->addRole($user_id, 'dorm_owner');
+		        			$this->removeRole($user_id, 'studio_owner');
+		        		}
+
+		        		$this->updateUserSecondaryContracts($user_id);
+
+		        		$this->Room->Contract->create();
+		        		if ($this->Room->Contract->save($this->request->data)) {
+	        				//if save successful, send positive response
+
+	        				$this->updateSecondaryContracts($room_id, $this->request->data['Room']['type']);
+		        			$this->Session->write('flashWarning', 0);
+		        			$this->Session->setFlash(__('Room added!'));
+		        			$this->redirect('/home/manage');
+		        		} else {
+		        			//raise error
+		        			exit(0);
+		        			$this->Session->write('flashWarning', 1);
+		        			$this->Session->setFlash(__('An internal error occurred.  Please try again.'));	
+		        		}
+		        	}
+
+		        	// *******************************************
+
+					$this->updateSecondaryContracts($room_id, $this->request->data['Room']['type']);
+					$this->Session->write('flashWarning', 0);
+					$this->Session->setFlash(__('Room saved!'));
+					$this->redirect('/home/manage');
+				} else {
+					//something has gone horrible wrong
+					$this->Session->write('flashWarning', 1);
+					$this->Session->setFlash(__('An internal error occurred.  Please try again.'));	
+				}
 			}
 		}
 	}

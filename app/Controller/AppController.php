@@ -147,7 +147,7 @@ class AppController extends Controller {
 	}
 
 
-	//these three functions are too similar -- should be refactored
+	//these three functions are too similar -- should be refactored into one or two more general functions
 	public function addUserSecondaryContracts($user_id) {
 
 		$this->loadModel('Room');
@@ -183,8 +183,6 @@ class AppController extends Controller {
 			if ($this->Contract->save($fields)) {
 				//success
 			} else {
-				pr($fields);
-				exit(0);
 				$this->Session->write('flashWarning', 1);
 				$this->Session->setFlash(__('An internal error occurred.  Please try again.')); 
 			}
@@ -192,7 +190,7 @@ class AppController extends Controller {
                     
 	}
 
-	public function updateSecondaryContracts($user_id) {
+	public function updateUserSecondaryContracts($user_id) {
 
 		//load contract Model
 		$this->loadModel('Contract');
@@ -226,10 +224,44 @@ class AppController extends Controller {
 	        if($this->Contract->save($fields)) {
 	        	//success
 	        } else {
-	        	echo $this->Contract->getLastQuery();
-	        	exit(0);
+	        	//error out
 	        }
 	    }                            
+	}
+
+	public function updateSecondaryContracts($room_id, $room_type) {
+
+		//load contract Model
+		$this->loadModel('Contract');
+
+		// update all current contracts to reflect change
+		// only need to modify "public" contracts now when changed from studio -> dorm
+		// or from dorm -> studio since code above handled primary case
+		$opts = array('conditions' => array('room_id' => $room_id, 'deactivated' => 0));
+		$contracts = $this->Contract->find('all', $opts); //public contracts
+
+		//eventually users home timezone should be selected
+	    date_default_timezone_set('Europe/Brussels');
+	    foreach ($contracts as $contract) {
+	    	//deactivate old contracts
+	        $datetime = date('F j, Y', time());
+	        $this->Contract->id = $contract['Contract']['id'];
+	        if ($this->Contract->saveField('deactivated', $datetime)) {
+	        	//success
+	        } else {
+	        	echo $this->getLastQuery();
+	        }
+
+	        //retrieve array of permissions
+	        $user_id = $contract['Contract']['user_id'];
+	        $permissions = $this->permissions($user_id);
+
+	        //add new contracts -- this way it is simpler to keep track of payments
+	    }        
+
+	    if ($room_type === 'public')  {
+	    	$this->addSecondaryContracts($room_id);
+	    }                 
 	}
 
 	public function addSecondaryContracts($room_id) {
@@ -283,6 +315,30 @@ class AppController extends Controller {
 			array_push($roles, $role_name);
 		}
 
+		$this->User->id = $user_id;
+		$this->User->saveField('roles', json_encode($roles));
+	}
+
+
+	public function removeRole($user_id, $role_name) {
+		//load models
+		$this->loadModel('User');
+
+		//find user object
+		$opts = array('conditions' => array('id' => $user_id));
+		$user = $this->User->find('first', $opts);
+
+		$roles = json_decode($user['User']['roles']);
+
+		//find index of role in roles
+		$role_index = array_search($role_name, $roles);
+
+		//if found, splice array and remove desired role
+		if ($role_index) {
+			array_splice($role_index, 1);
+		}
+
+		//update user
 		$this->User->id = $user_id;
 		$this->User->saveField('roles', json_encode($roles));
 	}
