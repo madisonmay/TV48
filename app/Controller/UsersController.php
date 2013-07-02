@@ -78,25 +78,6 @@
             }
         }
 
-        public function edit($id = null) {
-            $this->User->id = $id;
-            if (!$this->User->exists()) {
-                throw new NotFoundException(__('Invalid user'));
-            }
-            if ($this->request->is('post') || $this->request->is('put')) {
-                if ($this->User->save($this->request->data)) {
-                    $this->Session->write('flashWarning', 0);
-                    $this->Session->setFlash(__('Profile saved'));
-                    $this->redirect(array('action' => 'index'));
-                } else {
-                    $this->Session->write('flashWarning', 1);
-                    $this->Session->setFlash(__('Your profile could not be saved. Please try again.'));
-                }
-            } else {
-                $this->request->data = $this->User->read(null, $id);
-                unset($this->request->data['User']['password']);
-            }
-        }
 
         public function delete($id = null) {
             if (!$this->request->is('post')) {
@@ -227,6 +208,24 @@
 
             $opts = array('conditions' => array('available' => 1, 'type !=' => 'public'));
             $this->set('rooms', $this->User->Room->find('list', $opts));
+        }
+
+        public function edit() {
+            if ($this->request->is('get')) {
+                //get request
+
+                //find all non-public rooms
+                $rooms = $this->User->Room->find('list', array('conditions' => array('type !=' => 'public')));
+                $this->set('rooms', $rooms);
+
+                //retrieve user data
+                $user_id = $this->request->query['Users'];
+                $this->data = $this->User->find('first', array('conditions' => array('User.id' => $user_id)));
+                
+            } else {
+                //post request
+            }
+
         }
     }
 ?>
