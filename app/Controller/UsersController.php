@@ -8,6 +8,16 @@
         }
 
         public function index() {
+            $users = $this->User->find('all');
+            $users = $this->filterByRole($users, "tenant");
+
+            $user_list = array();
+
+            foreach ($users as $user) {
+                $user_list[$user['User']['id']] = $user['User']['full_name'];
+            }
+
+            $this->set('users', $user_list); 
         }
 
         public function view($id = null) {
