@@ -32,6 +32,7 @@
         <div class="description">
         </div>
     </div>
+    
     <div class="span3">
         <a href='/home/manage'><div class="border">
             <div id="management" class="circle">

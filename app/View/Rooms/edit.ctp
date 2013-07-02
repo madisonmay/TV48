@@ -13,7 +13,7 @@
             $name = array('class' => 'span3', 'placeholder' => 'Name...', 'label' => '');
             echo $this->Form->input('name', $name);
             echo '<div style="margin-right: auto; margin-left: auto; float: none;" class="span3">';
-            echo $this->Form->select('Users', $tenants, array('class' => 'span3 select', 'label' => ''));
+            echo $this->Form->select('Users', $users, array('class' => 'span3 select', 'label' => ''));
             echo '</div>';
         ?>
             <div style="margin-right: auto; margin-left: auto; float: none;" class="span3">

@@ -180,10 +180,13 @@
 
                 $this->User->create();
                 if ($this->User->save($this->request->data)) {
+
+                    //similar to SQL's lastInsertID();
+                    $user_id = $this->User->getInsertID();
+
                     if ($this->request->data['User']['Rooms']) {
 
                         //if room was submitted with user, update contract table
-                        $user_id = $this->User->getInsertID();
                         $this->request->data['Contract']['user_id'] = $user_id;
                         $this->request->data['Contract']['start_date'] = $this->request->data['User']['start_date'];
                         $this->request->data['Contract']['end_date'] = $this->request->data['User']['end_date'];
@@ -194,11 +197,13 @@
                         $this->request->data['Contract']['modify'] = 1;
                         $this->request->data['Contract']['primary'] = 1;
 
-                        //update contracts that are not primary
-                        $this->updateSecondaryContracts($user_id);
 
                         $this->User->Contract->create();
                         if ($this->User->Contract->save($this->request->data)) {
+
+                            //add secondary contracts with public rooms
+                            $this->addUserSecondaryContracts($user_id);
+
                             $this->Session->write('flashWarning', 0);
                             $this->Session->setFlash(__('Tenant added!'));
                             $this->redirect(array('controller' => 'home', 'action' => 'manage'));
@@ -208,6 +213,9 @@
                             $this->redirect(array('controller' => 'home', 'action' => 'manage'));
                         }
                     }
+                    //add secondary contracts with public rooms
+                    $this->addUserSecondaryContracts($user_id);
+
                     $this->Session->write('flashWarning', 0);
                     $this->Session->setFlash(__('Tenant added!'));
                     $this->redirect(array('controller' => 'home', 'action' => 'manage'));
@@ -217,7 +225,7 @@
                 }
             }
 
-            $opts = array('conditions' => array('available' => 1));
+            $opts = array('conditions' => array('available' => 1, 'type !=' => 'public'));
             $this->set('rooms', $this->User->Room->find('list', $opts));
         }
     }

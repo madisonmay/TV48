@@ -146,6 +146,52 @@ class AppController extends Controller {
 		}
 	}
 
+
+	//these three functions are too similar -- should be refactored
+	public function addUserSecondaryContracts($user_id) {
+
+		$this->loadModel('Room');
+		$this->loadModel('Contract');
+		$this->loadModel('User');
+
+		$user = $this->User->find('first', array('conditions' => array('id' => $user_id)));
+
+		$rooms = $this->Room->find('all', array('conditions' => array('type' => 'public')));
+
+		date_default_timezone_set('Europe/Brussels');
+		foreach ($rooms as $room) {
+			//array for storing contract values
+			$fields = array();
+
+			//convention
+			$room_id = $room['Room']['id'];
+
+			$fields['user_id'] = $user_id;
+			$fields['room_id'] = $room_id;
+			$datetime = date('F j, Y', time());
+			$fields['start_date'] = $user['User']['start_date'];
+			$fields['end_date'] = $user['User']['end_date'];
+			
+			//generic approach
+			$permissions = $this->permissions($user_id);
+			$fields['view'] = $permissions['view_public'];
+			$fields['pay'] = $permissions['pay_public'];
+			$fields['modify'] = $permissions['modify_public'];
+			//deactivated and primary both default to zero
+
+			$this->Contract->create();
+			if ($this->Contract->save($fields)) {
+				//success
+			} else {
+				pr($fields);
+				exit(0);
+				$this->Session->write('flashWarning', 1);
+				$this->Session->setFlash(__('An internal error occurred.  Please try again.')); 
+			}
+		}
+                    
+	}
+
 	public function updateSecondaryContracts($user_id) {
 
 		//load contract Model
@@ -160,22 +206,39 @@ class AppController extends Controller {
 		//retrieve array of permissions
 		$permissions = $this->permissions($user_id);
 
+	    date_default_timezone_set('Europe/Brussels');
 	    foreach ($contracts as $contract) {
+
+	    	//deactivate old contracts
+	        $datetime = date('F j, Y', time());
 	        $this->Contract->id = $contract['Contract']['id'];
-	        $this->Contract->saveField('pay', $permissions['pay_public']);
-	        $this->Contract->saveField('modify', $permissions['modify_public']);
-	        $this->Contract->saveField('view', $permissions['view_public']);
+	        $this->Contract->saveField('deactivated', $datetime);
+
+	        //add new contracts -- this way it is simpler to keep track of payments
+	        $fields = $contract['Contract'];
+	        $fields['id'] = '';
+	        $fields['start_date'] = $datetime;
+	        $fields['view'] = $permissions['view_public'];
+	        $fields['pay'] = $permissions['pay_public'];
+	        $fields['modify'] = $permissions['modify_public'];
+
+	        $this->Contract->create();
+	        if($this->Contract->save($fields)) {
+	        	//success
+	        } else {
+	        	echo $this->Contract->getLastQuery();
+	        	exit(0);
+	        }
 	    }                            
 	}
 
-	public function addPublicContracts($room_id) {
+	public function addSecondaryContracts($room_id) {
 		//load models
-		//could be tricky -- requires using User start and end date.
 		$this->loadModel('User');
 		$this->loadModel('Contract');
 
 		$users = $this->User->find('all');
-
+		date_default_timezone_set('Europe/Brussels');
 		foreach ($users as $user) {
 			//array for storing contract values
 			$fields = array();
@@ -185,7 +248,8 @@ class AppController extends Controller {
 
 			$fields['user_id'] = $user_id;
 			$fields['room_id'] = $room_id;
-			$fields['start_date'] = $user['User']['start_date'];
+			$datetime = date('F j, Y', time());
+			$fields['start_date'] = $datetime;
 			$fields['end_date'] = $user['User']['end_date'];
 			
 			//generic approach

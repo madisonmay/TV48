@@ -75,7 +75,7 @@
 		        	} else {
 		        		if ($this->request->data['Room']['type'] === 'public') {
 		        			// check if room is public and add contracts between existing users
-		        			$this->addPublicContracts($this->Room->getInsertID());
+		        			$this->addSecondaryContracts($this->Room->getInsertID());
 		        		}
 		        	}
 
@@ -105,10 +105,33 @@
 		}
 
 		public function edit() {
-			if ($this->request->is('get')) {
-				//select tenant by user_id
+			if ($this->request->is('post')) {
+				if ($this->Room->save($this->request->data)) {
+					//room updated			
+					$this->Session->write('flashWarning', 0);
+					$this->Session->setFlash(__('Room added!'));
+					$this->redirect('/home/manage');
+				} else {
+					//something has gone horrible wrong
+					$this->Session->write('flashWarning', 1);
+					$this->Session->setFlash(__('An internal error occurred.  Please try again.'));	
+				}
+
+
+			} else {
+				//get request
+				$users = $this->Room->User->find('all');
+				$users = $this->filterByRole($users, "tenant");
+
+				$user_list = array();
+
+				foreach ($users as $user) {
+					$user_list[$user['User']['id']] = $user['User']['full_name'];
+				}
+
+				$this->set('users', $user_list); 
+
 				$room_id = $this->request->query['Rooms'];
-				$this->set('tenants', $this->Room->Tenant->User->find('list', $opts)); 
 			    $this->data = $this->Room->find('first', array('conditions' => array('Room.id' => $room_id)));
 			}
 		}
