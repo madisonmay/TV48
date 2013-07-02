@@ -2,9 +2,7 @@
 	class RoomsController extends AppController {
 
 		public function index() {
-			$opts = array('fields' => array('id', 'name'),
-			              'conditions' => array('Room.property_id' => $this->request->query['property'])
-			);
+			$opts = array('fields' => array('id', 'name'));
 			$this->set('rooms', $this->Room->find('list', $opts)); 
 		}
 
