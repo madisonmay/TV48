@@ -8,12 +8,8 @@
 
 		public function add() {
 		    if ($this->request->is('post')) {
-		        if (!$this->request->data['Room']['Users']) {
-		        	//room does not have tenant -- therefore is available if not public
-		        	if ($this->request->data['Room']['type'] != 'public') {
-		        		$this->request->data['Room']['available'] = 1;
-		        	}
-		        } else {
+		        if ($this->request->data['Room']['Users']) {
+
 		        	//room has tenant
 		        	$user_id = $this->request->data['Room']['Users'];
 
@@ -27,10 +23,6 @@
 		        	// ************************ IMPORTANT *********************
 		        	// Previous contract objects should be deactivated if they are primary
 		        	$this->removeOldUserContract($user_id);
-		        	
-		        	//indicate that user has room
-		        	$this->Room->User->id = $user_id;
-		        	$this->Room->User->saveField('has_room', 1);
 
 		        	//if the newly added room is a studio, also update that property
 		        	if ($this->request->data['Room']['type'] == 'studio') {
@@ -57,7 +49,7 @@
 		        		$this->request->data['Contract']['start_date'] =  $user['User']['start_date'];
 		        		$this->request->data['Contract']['end_date'] =  $user['User']['end_date'];
 
-		        		//could be abstracted to configuration file
+		        		//could be abstracted to configuration file (or at least compacted)
 		        		$this->request->data['Contract']['view'] = 1;
 		        		$this->request->data['Contract']['pay'] = 1;
 		        		$this->request->data['Contract']['modify'] = 1;
@@ -110,16 +102,7 @@
 		public function edit() {
 			if ($this->request->is('get')) {
 				//get request
-				$users = $this->Room->User->find('all');
-				$users = $this->filterByRole($users, "tenant");
-
-				$user_list = array();
-
-				foreach ($users as $user) {
-					$user_list[$user['User']['id']] = $user['User']['full_name'];
-				}
-
-				$this->set('users', $user_list); 
+				$this->set('users', $this->findByRole('tenant')); 
 
 				$room_id = $this->request->query['Rooms'];
 			    $this->data = $this->Room->find('first', array('conditions' => array('Room.id' => $room_id)));
@@ -129,15 +112,8 @@
 				$room_id = $this->request->data['Room']['id'];
 				$this->Room->id = $room_id;
 
-				//if room is assigned to a tenant or the room is public, it is not available
-				if ($this->request->data['Room']['Users'] || $this->request->data['Room']['type'] === 'public') {
-					$this->request->data['Room']['available'] = 0;
-				} else {
-					//room is available
-					$this->request->data['Room']['available'] = 1;
-				}
-
 				if ($this->Room->save($this->request->data)) {
+
 					//room updated			
 		        	//if user submitted with room, add a new contract
 
@@ -148,7 +124,7 @@
 		        	if ($this->request->data['Room']['Users']) {
 
 		        		$user_id = $this->request->data['Room']['Users'];
-		        		$user = $this->Room->User->find('first', array('conditions' => array('id' => $user_id)));
+		        		$user = $this->Room->User->findById($user_id);
 		        		//set contract variables to values stored in user object
 		        		$this->request->data['Contract']['room_id'] =  $room_id;
 		        		$this->request->data['Contract']['start_date'] =  $user['User']['start_date'];
@@ -164,7 +140,7 @@
 		        		if ($this->request->data['Room']['type'] == 'studio') {
 		        			$this->addRole($user_id, 'studio_owner');
 		        			$this->removeRole($user_id, 'dorm_owner');
-		        		} else {
+		        		} else {		        			
 		        			$this->addRole($user_id, 'dorm_owner');
 		        			$this->removeRole($user_id, 'studio_owner');
 		        		}
@@ -177,10 +153,10 @@
 
 	        				$this->updateSecondaryContracts($room_id, $this->request->data['Room']['type']);
 		        			$this->Session->write('flashWarning', 0);
-		        			$this->Session->setFlash(__('Room added!'));
+		        			$this->Session->setFlash(__('Room saved!'));
 		        			$this->redirect('/home/manage');
 		        		} else {
-		        			//raise error
+		        			//raise error and exit (exit will be remove eventually)
 		        			exit(0);
 		        			$this->Session->write('flashWarning', 1);
 		        			$this->Session->setFlash(__('An internal error occurred.  Please try again.'));	

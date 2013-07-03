@@ -8,16 +8,7 @@
         }
 
         public function index() {
-            $users = $this->User->find('all');
-            $users = $this->filterByRole($users, "tenant");
-
-            $user_list = array();
-
-            foreach ($users as $user) {
-                $user_list[$user['User']['id']] = $user['User']['full_name'];
-            }
-
-            $this->set('users', $user_list); 
+            $this->set('users', $this->findByRole('tenant')); 
         }
 
         public function view($id = null) {
@@ -100,6 +91,9 @@
         public function login() {
             if ($this->request->is('post')) {
                 if ($this->Auth->login()) {
+                    $user_id = $this->Auth->user('id');
+                    $user = $this->User->findById($user_id);
+                    $this->Session->write('User.roles', json_decode($user['User']['roles']));
                     $this->redirect($this->Auth->redirect());
                 } else {
                     $this->Session->write('flashWarning', 1);
@@ -109,6 +103,7 @@
         }
 
         public function logout() {
+            $this->Session->destroy();
             $this->redirect($this->Auth->logout());
         }
 
@@ -131,8 +126,7 @@
                 if ($this->request->data['User']['Rooms']) {
                     //if the user has been assigned a room
 
-                    //toggle has_room flag and retreive room_id
-                    $this->request->data['User']['has_room'] = 1;
+                    //retreive room_id
                     $room_id = $this->request->data['User']['Rooms'];
 
                     //retrieve room data
@@ -151,10 +145,7 @@
 
                     $this->removeOldRoomContract($room_id);
 
-                } else {
-                    //no room found in HTTP Post
-                    $this->request->data['User']['has_room'] = 0;
-                }
+                } 
 
                 //encode data as string for saving to DB -- could also be done as X table
                 $this->request->data['User']['roles'] = json_encode($this->request->data['User']['roles']);
@@ -206,8 +197,7 @@
                 }
             }
 
-            $opts = array('conditions' => array('available' => 1, 'type !=' => 'public'));
-            $this->set('rooms', $this->User->Room->find('list', $opts));
+            $this->set('rooms', $this->findAvailableRooms());
         }
 
         public function edit() {
@@ -224,6 +214,60 @@
                 
             } else {
                 //post request
+                $user_id = $this->request->data['User']['id'];
+                $this->User->id = $user_id;
+
+                if ($this->User->save($this->request->data)) {
+
+                    //user updated
+                    //if room submitted with user, add a new contract
+
+                    if ($this->request->data['User']['Rooms']) {
+
+                        $room_id = $this->request->data['Room']['Users'];
+                        $room = $this->User->Room->findById($room_id);
+
+                        //set contract variables to values stored in user object
+                        $this->request->data['Contract']['room_id'] =  $room_id;
+                        $this->request->data['Contract']['start_date'] =  $this->request->data['User']['start_date'];
+                        $this->request->data['Contract']['end_date'] =  $this->request->data['User']['end_date'];
+
+                        //could be abstracted to configuration file
+                        $this->request->data['Contract']['view'] = 1;
+                        $this->request->data['Contract']['pay'] = 1;
+                        $this->request->data['Contract']['modify'] = 1;
+                        $this->request->data['Contract']['primary'] = 1;
+
+                        //update user object
+                        if ($room['Room']['type'] == 'studio') {
+                            $this->addRole($user_id, 'studio_owner');
+                            $this->removeRole($user_id, 'dorm_owner');
+                        } else {
+                            $this->addRole($user_id, 'dorm_owner');
+                            $this->removeRole($user_id, 'studio_owner');
+                        }
+
+                        $this->removeOldUserContract($user_id);
+                        $this->updateUserSecondaryContracts($user_id);
+
+                        $this->User->Contract->create();
+                        if ($this->Room->Contract->save($this->request->data)) {
+                            //if save successful, send positive response
+
+                            // I don't think this bit is needed while updating user
+                            // In this case, I believe removeOldUserContract() takes care of the needed work
+                            // $this->updateSecondaryContracts($room_id, $room['Room']['type']);
+                            $this->Session->write('flashWarning', 0);
+                            $this->Session->setFlash(__('Room saved!'));
+                            $this->redirect('/home/manage');
+                        } else {
+                            // exit only during debugging test
+                            exit(0);
+                            $this->Session->write('flashWarning', 1);
+                            $this->Session->setFlash(__('An internal error occurred.  Please try again.')); 
+                        }
+                    }
+                }
             }
 
         }

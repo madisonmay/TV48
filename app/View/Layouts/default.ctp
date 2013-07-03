@@ -101,12 +101,33 @@
 		            <li><a href='/light' style='color: #eeeeee'>Light</a></li>
 		            <li><a href='/heat' style='color: #eeeeee'>Heat</a></li>
 		            <li><a href='/power' style='color: #eeeeee'>Power</a></li>
-		            <li><a href='/home/manage' style='color: #eeeeee'>Manage</a></li>
-		            <li><a href='/admin' style='color: #eeeeee'>Admin</a></li>
+                	<?php 
+                		if ($this->Session->read('Auth.User')) {
+		                	if (in_array('landlord', $this->Session->read('User.roles'))) {
+		                		echo "<li><a href='/home/manage' style='color: #eeeeee'>Manage</a></li>";
+		                	}
+		                	if (in_array('admin', $this->Session->read('User.roles'))) {
+		                		echo "<li><a href='/admin' style='color: #eeeeee'>Admin</a></li>";
+		                	}                	
+                		}
+	                ?>
 		        </ul>
 		        <ul class="nav pull-right">
-		        	<li><a href='/users/add' style='color: #eeeeee'>Register</a></li>
-		        	<li><a href='/users/login' style='color: #eeeeee'>Log In</a></li>
+		        	<?php if (!$this->Session->read('Auth.User')): ?>
+			        	<li>
+			        		<a href="/users/add" style='color: #eeeeee'>Register</a>
+			        	</li>
+		        	<?php endif; ?>
+    	        	<?php if (!$this->Session->read('Auth.User')): ?>
+    		        	<li>
+    		        		<a href="/users/login" style='color: #eeeeee'>Login</a>
+    		        	</li>
+    	        	<?php endif; ?>
+    	        	<?php if ($this->Session->read('Auth.User')): ?>
+    		        	<li>
+    		        		<a href="/users/logout" style='color: #eeeeee'>Logout</a>
+    		        	</li>
+    	        	<?php endif; ?>
 		        </ul>
 		    </div>
 		</div>

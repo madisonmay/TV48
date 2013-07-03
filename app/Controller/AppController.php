@@ -93,6 +93,21 @@ class AppController extends Controller {
 		return $result;
 	}
 
+	public function findByRole($role) {
+		$this->loadModel('User');
+
+		$users = $this->User->find('all');
+		$users = $this->filterByRole($users, "tenant");
+
+		$user_list = array();
+
+		foreach ($users as $user) {
+			$user_list[$user['User']['id']] = $user['User']['full_name'];
+		}
+
+		return $user_list;
+	}
+
 	public function removeByRole($users, $role) {
 		$result = array();
 		foreach ($users as $user) {
@@ -103,6 +118,55 @@ class AppController extends Controller {
 		return $result;
 	}
 
+	public function has_room($user_id) {
+		//replaces has_room attribute in database
+		$this->loadModel('Contract');	
+		$opts = array('conditions' => array('primary' => 1, 'user_id' => $user_id, 'deactivated' => 0));
+		$primary_contract = $this->Contract->find('first', $opts);
+		if ($primary_contract) {
+			return true;
+		}
+		return false;
+	}
+
+	public function room_available($room_id) {
+		//replace 'available' attribute in database
+		$this->loadModel('Contract');
+		$opts = array('conditions' => array('primary' => 1, 'room_id' => $room_id, 'deactivated' => 0));
+		$primary_contract = $this->Contract->find('first', $opts);
+		if ($primary_contract) {
+			return false;
+		}
+		else {
+			$room = $this->Room->findById($room_id);
+			if ($room['Room']['type'] == 'public') {
+				return false;
+			}
+
+			//room is not public and is not occupied
+			return true;
+		}
+	}
+
+	public function findAvailableRooms() {
+		$this->loadModel('Room');
+		$rooms = $this->Room->find('all');
+
+		$result = array();
+		foreach ($rooms as $room) {
+			if ($this->room_available($room['Room']['id'])) {
+				array_push($result, $room);
+			}
+		}
+
+		$room_list = array();
+
+		foreach ($result as $room) {
+			$room_list[$room['Room']['id']] = $room['Room']['name'];
+		}
+
+		return $room_list;
+	}
 
 	public function removeOldRoomContract($room_id) {
 		//load models
