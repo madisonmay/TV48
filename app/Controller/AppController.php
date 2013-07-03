@@ -348,7 +348,7 @@ class AppController extends Controller {
 
 			//don't add a second entry for landlords or admins
 			//this has already been taken care of by addAdminsAndLandlords()
-			if (!$this->has_role('landlord', $user) && !$this->has_role('admin', $user) {
+			if (!$this->has_role('landlord', $user) && !$this->has_role('admin', $user)) {
 				$fields['user_id'] = $user_id;
 				$fields['room_id'] = $room_id;
 				$datetime = date('F j, Y', time());
