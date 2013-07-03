@@ -7,6 +7,10 @@
 		}
 
 		public function add() {
+			// ***********************************************************************
+			// Make sure that admins and landlords are always given access 
+			// Write a method that creates a contract between new room and those roles
+			// ***********************************************************************
 		    if ($this->request->is('post')) {
 		        if ($this->request->data['Room']['Users']) {
 
@@ -109,6 +113,7 @@
 				
 			} else {
 				//post request
+
 				$room_id = $this->request->data['Room']['id'];
 				$this->Room->id = $room_id;
 
@@ -126,6 +131,7 @@
 		        		$user_id = $this->request->data['Room']['Users'];
 		        		$user = $this->Room->User->findById($user_id);
 		        		//set contract variables to values stored in user object
+		        		$this->request->data['Contract']['user_id'] = $user_id;
 		        		$this->request->data['Contract']['room_id'] =  $room_id;
 		        		$this->request->data['Contract']['start_date'] =  $user['User']['start_date'];
 		        		$this->request->data['Contract']['end_date'] =  $user['User']['end_date'];
@@ -146,12 +152,12 @@
 		        		}
 
 		        		$this->updateUserSecondaryContracts($user_id);
+	        			$this->updateSecondaryContracts($room_id, $this->request->data['Room']['type']);
 
 		        		$this->Room->Contract->create();
 		        		if ($this->Room->Contract->save($this->request->data)) {
 	        				//if save successful, send positive response
 
-	        				$this->updateSecondaryContracts($room_id, $this->request->data['Room']['type']);
 		        			$this->Session->write('flashWarning', 0);
 		        			$this->Session->setFlash(__('Room saved!'));
 		        			$this->redirect('/home/manage');

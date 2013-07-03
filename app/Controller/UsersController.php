@@ -228,7 +228,8 @@
                         $room = $this->User->Room->findById($room_id);
 
                         //set contract variables to values stored in user object
-                        $this->request->data['Contract']['room_id'] =  $room_id;
+                        $this->request->data['Contract']['room_id'] = $room_id;
+                        $this->request->data['Contract']['user_id'] = $user_id;
                         $this->request->data['Contract']['start_date'] =  $this->request->data['User']['start_date'];
                         $this->request->data['Contract']['end_date'] =  $this->request->data['User']['end_date'];
 

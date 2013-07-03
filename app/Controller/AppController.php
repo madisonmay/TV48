@@ -210,8 +210,9 @@ class AppController extends Controller {
 		}
 	}
 
-
+	//****************************************************************************************************
 	//these three functions are too similar -- should be refactored into one or two more general functions
+	//****************************************************************************************************
 	public function addUserSecondaryContracts($user_id) {
 
 		$this->loadModel('Room');
