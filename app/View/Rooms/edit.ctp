@@ -17,7 +17,7 @@
     });
 </script>
 
-<div class="rooms form" style='text-align: center;'>
+<div class="rooms form text-center">
 <?php echo $this->Session->flash('auth'); ?>
 <?php echo $this->Form->create('Room'); ?>
     <fieldset>
@@ -26,7 +26,7 @@
             $name = array('class' => 'span3', 'placeholder' => 'Name...', 'label' => '', 'required' => true);
             echo $this->Form->input('name', $name);
         ?>
-        <div style="margin-right: auto; margin-left: auto; float: none;" class="span3">
+        <div class="span3 select-wrapper">
         <? 
             echo $this->Form->select('type', array(
                     'dorm' => 'Dorm',
@@ -42,7 +42,7 @@
         ?>
         </div>
         <?
-            echo '<div style="margin-right: auto; margin-left: auto; float: none;" id="thin-wrapper" class="span3" required>';
+            echo '<div id="thin-wrapper" class="span3 select-wrapper" required>';
             echo $this->Form->select('Users', $users, array('class' => 'span3 select', 'label' => ''));
             echo '</div>';
             echo $this->Form->input('id');

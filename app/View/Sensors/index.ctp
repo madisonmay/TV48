@@ -20,13 +20,13 @@
 
 </style>
 
-<div class="form" style='text-align: center;'>
+<div class="form text-center">
 <?php echo $this->Session->flash('auth'); ?>
 <?php echo $this->Form->create('Sensor', array('action' => 'edit', 'type' => 'get')); ?>
     <fieldset>
         <legend><?php echo ('Manage Sensors'); ?></legend>
         <? 
-            echo '<div style="margin-right: auto; margin-left: auto; float: none;" class="span3 type" >';
+            echo '<div class="span3 type select-wrapper" >';
             echo $this->Form->select('type', array(
                     'lighting' => 'Lighting',
                     'heating' => 'Heating',
@@ -39,12 +39,12 @@
                 )
             );
             echo '</div>';
-            echo '<div style="margin-right: auto; margin-left: auto; float: none;" class="span3">';
+            echo '<div class="span3 select-wrapper hidden">';
             echo $this->Form->select('Sensors', $lighting, array('class' => 'span3 select lighting', 'label' => ''));
             echo '</div>';
-            echo '<div style="margin-right: auto; margin-left: auto; float: none;" class="span3 hidden">';
+            echo '<div class="span3 select-wrapper hidden">';
             echo $this->Form->select('Sensors', $heating, array('class' => 'span3 select heating', 'label' => ''));
-            echo '<div style="margin-right: auto; margin-left: auto; float: none;" class="span3 hidden">';
+            echo '<div class="span3 select-wrapper hidden">';
             echo $this->Form->select('Sensors', $electricity, array('class' => 'span3 select electricity', 'label' => ''));
             echo '</div>';
             $end = array('label' => 'Edit','class' => 'btn btn-success');
@@ -53,3 +53,6 @@
 <?php echo $this->Form->end($end); ?>
 
 </div>
+
+<hr>
+<a href='/sensors/add' class='centered text-center'><button class='btn btn-success'>Add a new sensor</button></a>

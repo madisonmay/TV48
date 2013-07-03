@@ -9,7 +9,7 @@
     })
 </script>
 <? echo $this->Html->script('date'); ?>
-<div class="users form" style='text-align: center;'>
+<div class="users form text-center">
 <?php echo $this->Session->flash('auth'); ?>
 <?php echo $this->Form->create('User'); ?>
     <fieldset>
@@ -27,7 +27,7 @@
             echo $this->Form->input('start_date', $start_date);
             echo $this->Form->input('end_date', $end_date);
             echo $this->Form->input('balance', $balance);
-            echo '<div style="margin-right: auto; margin-left: auto; float: none; margin-top: 6px; margin-bottom: 6px;" class="span3">';
+            echo '<div class="span3 select-wrapper">';
             echo $this->Form->select('Rooms', $rooms, array('class' => 'span3 select', 'label' => ''));
             echo '</div>';
             $end = array('label' => 'Add', 'class' => 'btn btn-success');

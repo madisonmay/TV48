@@ -4,13 +4,13 @@
     });
 </script>
 
-<div class="form" style='text-align: center;'>
+<div class="form text-center">
 <?php echo $this->Session->flash('auth'); ?>
 <?php echo $this->Form->create('User', array('action' => 'edit', 'type' => 'get')); ?>
     <fieldset>
         <legend><?php echo ('Manage Tenants'); ?></legend>
         <?
-            echo '<div style="margin-right: auto; margin-left: auto; float: none;" class="span3">';
+            echo '<div class="span3 select-wrapper">';
             echo $this->Form->select('Users', $users, array('class' => 'span3 select', 'label' => ''));
             echo '</div>';
             $end = array('label' => 'Edit','class' => 'btn btn-success');

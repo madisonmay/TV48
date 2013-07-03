@@ -9,7 +9,7 @@
     })
 </script>
 <? echo $this->Html->script('date'); ?>
-<div class="sensors form" style='text-align: center;'>
+<div class="sensors form text-center">
 <?php echo $this->Session->flash('auth'); ?>
 <?php echo $this->Form->create('Sensor'); ?>
     <fieldset>
@@ -34,10 +34,10 @@
             echo $this->Form->input('name', $name);
             echo $this->Form->input('channel', $channel);
             echo $this->Form->input('xively_id', $xively_id);
-            echo '<div style="margin-right: auto; margin-left: auto; float: none; margin-top: 6px; margin-bottom: 6px;" class="span3">';
+            echo '<div class="span3 select-wrapper">';
             echo $this->Form->select('Rooms', $rooms, array('class' => 'span3 select', 'label' => ''));
             echo '</div>';
-            $end = array('label' => 'Add', 'class' => 'btn btn-success');
+            $end = array('label' => 'Add', 'class' => 'btn btn-success centered');
         ?>
     </fieldset>
 <?php echo $this->Form->end($end); ?>
