@@ -11,5 +11,10 @@
 			$this->set('heating', $this->Sensor->find('all', $heating)); 
 			$this->set('electricity', $this->Sensor->find('all', $electricity)); 
 		}
+
+		public function add() {
+			$rooms = $this->Sensor->Room->find('list');
+			$this->set('rooms', $rooms);
+		}
 	}
 ?>
