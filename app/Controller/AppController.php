@@ -97,7 +97,7 @@ class AppController extends Controller {
 		$this->loadModel('User');
 
 		$users = $this->User->find('all');
-		$users = $this->filterByRole($users, "tenant");
+		$users = $this->filterByRole($users, $role);
 
 		$user_list = array();
 
@@ -346,26 +346,31 @@ class AppController extends Controller {
 			//convention
 			$user_id = $user['User']['id'];
 
-			$fields['user_id'] = $user_id;
-			$fields['room_id'] = $room_id;
-			$datetime = date('F j, Y', time());
-			$fields['start_date'] = $datetime;
-			$fields['end_date'] = $user['User']['end_date'];
-			
-			//generic approach
-			$permissions = $this->permissions($user_id);
-			$fields['view'] = $permissions['view_public'];
-			$fields['pay'] = $permissions['pay_public'];
-			$fields['modify'] = $permissions['modify_public'];
-			//deactivated and primary both default to zero
+			//don't add a second entry for landlords or admins
+			//this has already been taken care of by addAdminsAndLandlords()
+			if (!$this->has_role('landlord', $user) && !$this->has_role('admin', $user) {
+				$fields['user_id'] = $user_id;
+				$fields['room_id'] = $room_id;
+				$datetime = date('F j, Y', time());
+				$fields['start_date'] = $datetime;
+				$fields['end_date'] = $user['User']['end_date'];
+				
+				//generic approach
+				$permissions = $this->permissions($user_id);
+				$fields['view'] = $permissions['view_public'];
+				$fields['pay'] = $permissions['pay_public'];
+				$fields['modify'] = $permissions['modify_public'];
+				//deactivated and primary both default to zero
 
-			$this->Contract->create();
-			if($this->Contract->save($fields)) {
-				//success
-			} else {
-				echo $this->Contract->getLastQuery();
-				exit(0);
+				$this->Contract->create();
+				if($this->Contract->save($fields)) {
+					//success
+				} else {
+					echo $this->Contract->getLastQuery();
+					exit(0);
+				}
 			}
+			
 		}
 	}
 
@@ -415,8 +420,8 @@ class AppController extends Controller {
 		$this->loadModel('User');
 		$this->loadModel('Contract');
 
-		$landlords = $this->filterByRole('landlord');
-		$admins = $this->filterByRole('admin');
+		$landlords = $this->findByRole('landlord');
+		$admins = $this->findByRole('admin');
 
 		$users = $landlords + $admins;
 		foreach ($users as $user_id => $user_name) {

@@ -45,7 +45,7 @@
 		        if ($this->Room->save($this->request->data)) {
 		        	//addition of new room successful
 
-		        	$this->addAdminsAndLandlords($this->Room->getInsertID());
+	        		$this->addAdminsAndLandlords($this->Room->getInsertID());
 
 		        	//if user submitted with room, add a new contract
 		        	if ($this->request->data['Room']['Users']) {
@@ -76,6 +76,9 @@
 		        	} else {
 		        		if ($this->request->data['Room']['type'] === 'public') {
 		        			// check if room is public and add contracts between existing users
+
+		        			// only handles users who are not landlords or admins 
+		        			// those role types have already been handled by addAdminsAndLandlords()
 		        			$this->addSecondaryContracts($this->Room->getInsertID());
 		        		}
 		        	}
