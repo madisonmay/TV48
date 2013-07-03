@@ -4,7 +4,7 @@
     class Room extends AppModel {
 
         public $hasAndBelongsToMany = array('User');
-        public $hasMany = array('Contract');
+        public $hasMany = array('Contract', 'Sensor');
 
         public $validate = array(
             'name' => array(
