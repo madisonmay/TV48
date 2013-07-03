@@ -28,7 +28,7 @@
                 )
             );
             echo '</div>';
-            $name = array('class' => 'span3', 'placeholder' => 'Sensor name...', 'label' => '', 'required' => true);
+            $name = array('class' => 'span3 t5', 'placeholder' => 'Sensor name...', 'label' => '', 'required' => true);
             $channel = array('class' => 'span3', 'placeholder' => 'Arduino channel...', 'label' => '', 'type'=>'text');
             $xively_id = array('class' => 'span3', 'placeholder' => 'Xively id...', 'label' => '', 'type' => 'text');
             echo '<div class="span3 type select-wrapper">';
