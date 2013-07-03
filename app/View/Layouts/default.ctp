@@ -107,7 +107,7 @@
 		                		echo "<li><a href='/home/manage' style='color: #eeeeee'>Manage</a></li>";
 		                	}
 		                	if (in_array('admin', $this->Session->read('User.roles'))) {
-		                		echo "<li><a href='/admin' style='color: #eeeeee'>Admin</a></li>";
+		                		echo "<li><a href='/sensors' style='color: #eeeeee'>Admin</a></li>";
 		                	}                	
                 		}
 	                ?>
