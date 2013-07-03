@@ -4,7 +4,12 @@
 		public function index() {
 			$this->set('cssIncludes', array());
 			$this->set('jsIncludes', array());
-			$this->set('sensors', $this->Sensor->find('all')); 
+			$lighting = array("conditions" => array("Sensor.type" => "lighting"));
+			$heating = array("conditions" => array("Sensor.type" => "heating"));
+			$electricity = array("conditions" => array("Sensor.type" => "electricity"));
+			$this->set('lighting', $this->Sensor->find('all', $lighting)); 
+			$this->set('heating', $this->Sensor->find('all', $heating)); 
+			$this->set('electricity', $this->Sensor->find('all', $electricity)); 
 		}
 	}
 ?>
