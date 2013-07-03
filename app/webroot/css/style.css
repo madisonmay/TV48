@@ -309,6 +309,8 @@ select {
     margin-right: auto; 
     margin-left: auto; 
     float: none;
+    margin-bottom: 5px;
+    margin-top: 5px;
  }
 
 .sort-by {
