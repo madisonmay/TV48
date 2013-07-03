@@ -7,6 +7,7 @@
             $('.heating').addClass('hidden');
             $('.electricity').addClass('hidden');
             var selected = $(this).find(':selected').val();
+            console.log('selected)')
             $('.' + selected).removeClass('hidden');
         });
     });
@@ -39,12 +40,12 @@
                 )
             );
             echo '</div>';
-            echo '<div class="span3 select-wrapper hidden">';
+            echo '<div class="span3 select-wrapper hidden lighting">';
             echo $this->Form->select('Sensors', $lighting, array('class' => 'span3 select lighting', 'label' => ''));
             echo '</div>';
-            echo '<div class="span3 select-wrapper hidden">';
+            echo '<div class="span3 select-wrapper hidden heating">';
             echo $this->Form->select('Sensors', $heating, array('class' => 'span3 select heating', 'label' => ''));
-            echo '<div class="span3 select-wrapper hidden">';
+            echo '<div class="span3 select-wrapper hidden electricity">';
             echo $this->Form->select('Sensors', $electricity, array('class' => 'span3 select electricity', 'label' => ''));
             echo '</div>';
             $end = array('label' => 'Edit','class' => 'btn btn-success');

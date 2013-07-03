@@ -211,7 +211,7 @@
 
                 //retrieve user data
                 $user_id = $this->request->query['Users'];
-                $this->data = $this->User->find('first', array('conditions' => array('User.id' => $user_id)));
+                $this->data = $this->User->findById($user_id);
                 
             } else {
                 //post request
