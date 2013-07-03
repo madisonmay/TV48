@@ -27,6 +27,7 @@
                 $this->request->data['User']['confirmation_code'] = $code;
                 if ($this->User->save($this->request->data)) {
 
+                    $this->addAllRooms($this->User->getInsertID());
                     // If flashWarning is set to 0, the btn-success class is added to the resultant message.
                     // Otherwise, the btn-danger class is added.
                     $this->Session->write('flashWarning', 0);
@@ -258,6 +259,7 @@
                             // I don't think this bit is needed while updating user
                             // In this case, I believe removeOldUserContract() takes care of the needed work
                             // $this->updateSecondaryContracts($room_id, $room['Room']['type']);
+
                             $this->Session->write('flashWarning', 0);
                             $this->Session->setFlash(__('Room saved!'));
                             $this->redirect('/home/manage');
@@ -268,6 +270,15 @@
                             $this->Session->setFlash(__('An internal error occurred.  Please try again.')); 
                         }
                     }
+
+                    $this->Session->write('flashWarning', 0);
+                    $this->Session->setFlash(__('Room saved!'));
+                    $this->redirect('/home/manage');
+                } else {
+                    // exit only during debugging test
+                    exit(0);
+                    $this->Session->write('flashWarning', 1);
+                    $this->Session->setFlash(__('An internal error occurred.  Please try again.')); 
                 }
             }
 

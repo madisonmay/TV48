@@ -30,6 +30,7 @@
             echo '<div style="margin-right: auto; margin-left: auto; float: none; margin-top: 6px; margin-bottom: 6px;" class="span3">';
             echo $this->Form->select('Rooms', $rooms, array('class' => 'span3 select', 'label' => ''));
             echo '</div>';
+            echo $this->Form->input('id');
             $end = array('label' => 'Save', 'class' => 'btn btn-success');
         ?>
     </fieldset>

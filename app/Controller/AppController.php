@@ -257,8 +257,9 @@ class AppController extends Controller {
 
 	public function updateUserSecondaryContracts($user_id) {
 
-		//load contract Model
+		//load contract and user models
 		$this->loadModel('Contract');
+		$this->loadModel('User');
 
 		// update all current contracts to reflect change
 		// only need to modify "public" contracts now when changed from studio -> dorm
@@ -295,10 +296,11 @@ class AppController extends Controller {
 	}
 
 	public function updateSecondaryContracts($room_id, $room_type) {
+		//handle case of landlord and admin -- they should not be restricted
 
 		//load contract Model
 		$this->loadModel('Contract');
-
+		$this->loadModel('User');
 		// update all current contracts to reflect change
 		// only need to modify "public" contracts now when changed from studio -> dorm
 		// or from dorm -> studio since code above handled primary case
@@ -308,20 +310,21 @@ class AppController extends Controller {
 		//eventually users home timezone should be selected
 	    date_default_timezone_set('Europe/Brussels');
 	    foreach ($contracts as $contract) {
-	    	//deactivate old contracts
-	        $datetime = date('F j, Y', time());
-	        $this->Contract->id = $contract['Contract']['id'];
-	        if ($this->Contract->saveField('deactivated', $datetime)) {
-	        	//success
-	        } else {
-	        	echo $this->getLastQuery();
-	        }
 
-	        //retrieve array of permissions
-	        $user_id = $contract['Contract']['user_id'];
-	        $permissions = $this->permissions($user_id);
+	    	$user_id = $contract['Contract']['user_id'];
+	    	$user = $this->findById($user_id);
+	    	if (!has_role('admin', $user) && !has_role('landlord', $user)) {
+	    		//ensure landlords and admins do not have room access restricted
 
-	        //add new contracts -- this way it is simpler to keep track of payments
+		    	//deactivate old contracts
+		        $datetime = date('F j, Y', time());
+		        $this->Contract->id = $contract['Contract']['id'];
+		        if ($this->Contract->saveField('deactivated', $datetime)) {
+		        	//success
+		        } else {
+		        	echo $this->getLastQuery();
+		        }	
+	    	}
 	    }        
 
 	    if ($room_type === 'public')  {
@@ -406,5 +409,73 @@ class AppController extends Controller {
 		//update user
 		$this->User->id = $user_id;
 		$this->User->saveField('roles', json_encode($roles));
+	}
+
+	public function addAdminsAndLandlords($room_id) {
+		$this->loadModel('User');
+		$this->loadModel('Contract');
+
+		$landlords = $this->filterByRole('landlord');
+		$admins = $this->filterByRole('admin');
+
+		$users = $landlords + $admins;
+		foreach ($users as $user_id => $user_name) {
+			//array for storing contract values
+			$fields = array();
+
+			//convention
+			$fields['user_id'] = $user_id;
+			$fields['room_id'] = $room_id;
+			$datetime = date('F j, Y', time());
+			$fields['start_date'] = $datetime;
+			
+			//generic approach
+			$permissions = $this->permissions($user_id);
+			$fields['view'] = $permissions['view_public'];
+			$fields['pay'] = $permissions['pay_public'];
+			$fields['modify'] = $permissions['modify_public'];
+			//deactivated and primary both default to zero
+
+			$this->Contract->create();
+			if($this->Contract->save($fields)) {
+				//success
+			} else {
+				echo $this->Contract->getLastQuery();
+				exit(0);
+			}
+		}
+	}
+
+	public function addAllRooms($user_id) {
+		$this->loadModel('Room');
+		$this->loadModel('Contract');
+
+		$rooms = $this->Room->find('all');
+
+		foreach ($rooms as $room) {
+			//array for storing contract values
+			$fields = array();
+
+			//convention
+			$fields['user_id'] = $user_id;
+			$fields['room_id'] = $room['Room']['id'];
+			$datetime = date('F j, Y', time());
+			$fields['start_date'] = $datetime;
+			
+			//generic approach
+			$permissions = $this->permissions($user_id);
+			$fields['view'] = $permissions['view_public'];
+			$fields['pay'] = $permissions['pay_public'];
+			$fields['modify'] = $permissions['modify_public'];
+			//deactivated and primary both default to zero
+
+			$this->Contract->create();
+			if($this->Contract->save($fields)) {
+				//success
+			} else {
+				echo $this->Contract->getLastQuery();
+				exit(0);
+			}
+		}
 	}
 }

@@ -45,6 +45,8 @@
 		        if ($this->Room->save($this->request->data)) {
 		        	//addition of new room successful
 
+		        	$this->addAdminsAndLandlords($this->Room->getInsertID());
+
 		        	//if user submitted with room, add a new contract
 		        	if ($this->request->data['Room']['Users']) {
 
