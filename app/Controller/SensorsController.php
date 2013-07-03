@@ -34,20 +34,37 @@
 
 		public function edit() {
 			if ($this->request->is('get')) {
-				$sensor_id = $this->request->query['Sensors'];
-				$this->data = $this->Sensor->findByID($sensor_id);
+				$rooms = $this->Sensor->Room->find('list');
+				$this->set('rooms', $rooms);
+				$lighting = $this->request->query['Lighting'];
+				$heating = $this->request->query['Heating'];
+				$electricity = $this->request->query['Electricity'];
+				$found = 0;
+				foreach (array($lighting, $heating, $electricity) as $sensor_id) {
+
+					if ($sensor_id) {
+						$sensor = $this->Sensor->findById($sensor_id);
+						$this->set('room_id', $sensor['Sensor']['room_id']);
+						$found++;
+						$this->data = $sensor;
+					}
+				}
+
+				if (!$found) {
+					$this->redirect(array('controller' => 'sensors', 'action' => 'index'));
+				}
 			} else {
 				//post request
 				$this->request->data['Sensor']['room_id'] = $this->request->data['Sensor']['Rooms'];
-				$this->Sensor->create();
+				$this->Sensor->id = $this->request->data['Sensor']['id'];
 				if ($this->Sensor->save($this->request->data())) {
 					$this->Session->write('flashWarning', 0);
-					$this->Session->setFlash(__('Sensor added!'));
-					$this->redirect(array('controller' => 'sensors', 'action' => 'add'));
+					$this->Session->setFlash(__('Sensor saved!'));
+					$this->redirect(array('controller' => 'sensors', 'action' => 'index'));
 				} else {
 					$this->Session->write('flashWarning', 1);
 					$this->Session->setFlash(__('An internal error occurred.  Please try again.')); 
-					$this->redirect(array('controller' => 'sensors', 'action' => 'add'));
+					$this->redirect(array('controller' => 'sensors', 'action' => 'index'));
 				}
 			}
 		}

@@ -2,12 +2,18 @@
     $(document).ready(function() {
         $("select").selectpicker();
 
+        var types = ['lighting', 'heating', 'electricity'];
+
         $('.type').change(function() {
             $('.lighting').addClass('hidden');
             $('.heating').addClass('hidden');
             $('.electricity').addClass('hidden');
             var selected = $(this).find(':selected').val();
-            console.log('selected)')
+            for (var i=0; i<types.length; i++) {
+                if (types[i] != selected) {
+                    $('.' + selected).val('');
+                }
+            }
             $('.' + selected).removeClass('hidden');
         });
     });
@@ -41,12 +47,12 @@
             );
             echo '</div>';
             echo '<div class="span3 select-wrapper hidden lighting">';
-            echo $this->Form->select('Sensors', $lighting, array('class' => 'span3 select lighting', 'label' => ''));
+            echo $this->Form->select('Lighting', $lighting, array('class' => 'span3 select lighting', 'label' => ''));
             echo '</div>';
             echo '<div class="span3 select-wrapper hidden heating">';
-            echo $this->Form->select('Sensors', $heating, array('class' => 'span3 select heating', 'label' => ''));
+            echo $this->Form->select('Heating', $heating, array('class' => 'span3 select heating', 'label' => ''));
             echo '<div class="span3 select-wrapper hidden electricity">';
-            echo $this->Form->select('Sensors', $electricity, array('class' => 'span3 select electricity', 'label' => ''));
+            echo $this->Form->select('Electricity', $electricity, array('class' => 'span3 select electricity', 'label' => ''));
             echo '</div>';
             $end = array('label' => 'Edit','class' => 'btn btn-success');
         ?>
