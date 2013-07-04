@@ -1,10 +1,11 @@
 nv.dev = false;
 var convert_time = {'seconds': 1, 'minutes': 60, 'hours': 3600, 'days': 86400,
-    'weeks': 604800, 'months': 86400*30, 'years': 365*86400}
+    'weeks': 604800, 'months': 86400*30, 'years': 365*86400};
 
 var convert_cost = {'Euro cents per Hour': .0085, 'Euros per Month': 8765 / 1200 * .0085, 'Euros per Year': 8765 / 100 * .0085,
                     'Grams of CO2 per Hour': .76,  'Kg of CO2 per Day': .76*24/1000, 'Kg of CO2 per Month': .76*24*30/1000, 
-                    'Kg of CO2 per Year': .76*24*365/1000, 'Watts': 1}
+                    'Kg of CO2 per Year': .76*24*365/1000, 'Watts': 1};
+
 function update_values(svg_id, ratio) {
   for (var i = 0; i < window.data[svg_id].length; i++) {
     window.data[svg_id][i]['y'] *= ratio; 
@@ -57,7 +58,6 @@ function next_chart(svg_id) {
 
 //simple wrapper for plotting
 function populate_graph(svg_id) {
-
   //for live updating -- only happens when duration of window is < 10 minutes
   window.new_time = window.times[svg_id][0];
   window.new_point = window.data[svg_id][0];

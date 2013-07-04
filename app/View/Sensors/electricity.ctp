@@ -3,7 +3,7 @@
     $("select").selectpicker();
 
     $('#duration').bind('keypress', function (event) {
-        var regex = new RegExp("[0-9]+");
+        var regex = new RegExp("[0-9\.]+");
         var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
         if (!regex.test(key)) {
            event.preventDefault();
@@ -19,29 +19,32 @@
     </div>
 </div>
 
+
 <!-- simple gui for user interaction -- change time plotted or dataset -->
 <!-- eventually should also allow for datasets that do not contain the current value -->
 
 <div id="edit">
-  <select id='feed'>
-  </select>
-  <input id='duration' type='text' pattern='[0-9]*' class='small-width'>
-  <select id='units'>
-    <option value="seconds">seconds</option>
-    <option value="minutes">minutes</option>
-    <option value="hours">hours</option>
-    <option value="days">days</option>
-    <option value="weeks">weeks</option>
-    <option value="months">months</option>
-    <!-- Option years currently causes problems -- too large of date range -->
-    <!-- <option value="years">years</option> -->
-  </select>
+  <div style='text-align: center; display: block; margin-left: auto; margin-right: auto;'>
+    <select id='feed'>
+    </select>
+    <input id='duration' type='text' pattern='[0-9\.]*' class='number-input' style='height: 42px; padding-right: 10px;'>
+    <select id='units'>
+      <option value="seconds">seconds</option>
+      <option value="minutes">minutes</option>
+      <option value="hours">hours</option>
+      <option value="days">days</option>
+      <option value="weeks">weeks</option>
+      <option value="months">months</option>
+      <!-- Option years currently causes problems -- too large of date range -->
+      <!-- <option value="years">years</option> -->
+    </select>
+  </div>
   <div class='text-center'>
-    <img id='loading' class='centered' src="/img/load.gif">
+    <img id='loading' class='centered' src="/img/load.gif" style='width: 30px;'>
   </div>
 
   <div class='text-center'>
-    <img id='settings' href="#myModal" role='button' data-toggle='modal' class='centered' src='/img/settings.png'>
+    <img id='settings' href="#myModal" role='button' data-toggle='modal' class='centered' src='/img/settings.png' style='width: 30px;'>
   </div>
 
   <!-- Modal -->
@@ -52,7 +55,7 @@
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
       <h3 id="myModalLabel">Graph Settings</h3>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" style='height: 700px;'>
       <h4>Units of Measurement</h4>
       <select id='graph-units'>
         <option value='Watts'>Watts</option>
@@ -70,7 +73,5 @@
       <button class="btn btn-success unit-change">Save changes</button>
     </div>
   </div>
-
-</div>
 </div>
 

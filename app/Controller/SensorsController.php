@@ -40,7 +40,122 @@
 		public function electricity() {
 			//Potentially a case of mixing presentation and logic? 
 			$this->set('cssIncludes', array());
-			// $this->set('jsIncludes', array('http://cdnjs.cloudflare.com/ajax/libs/d3/2.10.0/d3.v2.min.js', 'nv.d3', 'electricity')); 
+			$this->set('jsIncludes', array('http://cdnjs.cloudflare.com/ajax/libs/d3/2.10.0/d3.v2.min.js', 'nv.d3', 'electricity')); 
+
+			$opts = array('conditions' => array('Sensor.type' => 'electricity'));
+			$sensors = $this->Sensor->find('all', $opts);
+
+			$js_sensors = Array();
+			foreach ($sensors as $sensor) {
+				array_push($js_sensors, $sensor['Sensor']['xively_id']);
+			}
+
+		    define('SECONDS_PER_DAY', 86400);
+
+		    // - 7200 is to account for 2 hour difference of time in Belgium to standard time
+		    // Should be made much more general
+
+		    // 1/4 of a day = 6 hours
+		    $past = date("Y-m-d\TH:i:sP", time() - .25 * SECONDS_PER_DAY - 7200);
+		    $now = date("Y-m-d\TH:i:sP", time());
+
+		    //grab streamIds from xively
+		    $url = 'http://api.xively.com/v2/feeds/120903.json?key=';
+		    $key = '-fU3XguRNz7lJxJ-sdR8KcvYqKuSAKxhc2YwREp6TjAzZz0g';
+		    $request = $url . $key;
+
+		    //default duration is currently 6 hours
+		    $duration = '6hours';
+
+		    $curl = curl_init();
+		    curl_setopt($curl, CURLOPT_URL, $request);
+		    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+		    $resp = curl_exec($curl);
+		    $obj_resp = json_decode($resp);
+		    curl_close($curl);
+
+		    //pass date of creation to client side code
+		    echo "<script> var created = " . json_encode($obj_resp->created) . "</script>";
+
+		    $datastreams = $obj_resp->datastreams;
+
+		    $data_ids = array();
+
+		    $streamId = 'PTOTAL';
+
+		    //compile datapoints and strip unnecessary properties
+		    //new code recently added to check for global permissions ($landloard)
+		    //and if permissions are not found, give access to only the room
+		    //associated with the current user and the total for the house.
+		    //support for 'public areas' still needs to be added
+
+		    //rooms should be pulled from user objects
+
+		    foreach ($datastreams as $data) {
+		        array_push($data_ids, $data->id);
+		        if ($data->id == $streamId) {
+		        	$plot_data = $data;
+		        }
+		    }
+		    //used to satisfy the quirks of Xively API -- number of seconds maps to interval between points
+		    
+		    $intervals = array(21600 => 0, 43200 => 30, 86400 => 60, 432000 => 300, 1209600 => 900,
+		                       2678400 => 1800, 7776000 => 10800, 15552000 => 21600, 31536000 => 43200);
+
+		    $data = $plot_data;
+		    //set by user -- defaults to 6 hours
+		    $duration = '6hours';
+
+		    //convert time from human readable format to seconds
+		    $seconds = strtotime($duration) - time();
+
+		    $delta = '';
+
+		    // calculate the ideal "resolution" (aka interval)
+		    foreach ($intervals as $time => $delta_time) {
+		      if ($seconds/100.0 <= $delta_time) {
+		        if ($seconds <= $time) {
+		          $delta = '&interval=' . $delta_time;
+		          break;
+		        }
+		      }
+		    }
+
+		    //not entirely functional -- will not always display the full timespan of data
+		    if ($seconds < 21600) {
+		      $delta = '&interval=0';
+		    }
+
+		    //send request to server
+		    $datapoints = array();
+		    $times = array();
+		    $raw_url = 'http://api.xively.com/v2/feeds/120903/datastreams/';
+		    $url =  $raw_url . $data->id . '.json?start=' . $past . '&duration=' . $seconds . 'seconds&key=';
+		    $key = '-fU3XguRNz7lJxJ-sdR8KcvYqKuSAKxhc2YwREp6TjAzZz0g';
+
+		    //combine strings and make request
+		    $request = $url . $key . $delta;
+		    $curl = curl_init();
+		    curl_setopt($curl, CURLOPT_URL, $request);
+		    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+		    $obj_resp = json_decode(curl_exec($curl));
+
+		    //push to arrays containing datapoints and time values
+		    foreach ($obj_resp->datapoints as $point) {
+		        array_push($datapoints, $point->value);
+		        $date = strtotime($point->at);
+		        array_push($times, $date*1000);
+		    }
+
+		    $data_length = count($datapoints);
+
+		    //save in json format for use client side
+		    echo '<script> window.data = {}; window.data["' . $data->id . '"] = ' . json_encode($datapoints) . '</script>';
+		    echo '<script> window.times = {}; window.times["' . $data->id . '"] = ' . json_encode($times) . '</script>';
+		    echo "<script> window.data_ids = " . json_encode($data_ids) . "</script>";
+		    echo "<script> window.data_length = " . json_encode($data_length) . "</script>";
+
 		}
 
 		public function index() {

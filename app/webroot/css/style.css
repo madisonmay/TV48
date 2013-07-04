@@ -224,6 +224,12 @@ input {
     background-image: url('../img/edit.png');
     background-position: 50% 50%;
     background-repeat: no-repeat; }
+
+.number-input {
+    width: 60px;
+    text-align: center;
+    padding-right: 10px;
+}
  
  
 .op25 {
