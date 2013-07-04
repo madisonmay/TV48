@@ -13,6 +13,22 @@
 
 		public function lighting() {
 
+			//compose js object
+			$lights = $this->Sensor->find('all', array("conditions" => array('Sensor.type' => 'lighting')));
+			$js_lights = array();
+			foreach ($lights as $light) {
+				$js_light = array(
+					'streamId' => $light['Sensor']['id'],
+					'pwm' => $light['Sensor']['value'],
+					'location' => $light['Sensor']['name'],
+					'request' => $light['Sensor']['request']);
+				array_push($js_lights, $js_light);
+			}
+
+			echo("<script> window.lights = " . json_encode($js_lights) . "</script>");
+
+			$this->set('cssIncludes', array());
+			$this->set('jsIncludes', array('lighting')); 
 		}
 
 		public function heating() {

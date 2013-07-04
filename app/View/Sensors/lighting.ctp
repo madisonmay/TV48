@@ -4,6 +4,14 @@
 	})
 </script>
 
+<style>
+    /*body initially hidden to prevent flickering*/
+    body {
+        display: none;
+    }
+
+</style>
+
 <div class='top_group'>
     <button class='btn all-off'>All Off</button>
     <button class='btn btn-success update'>Update</button>
