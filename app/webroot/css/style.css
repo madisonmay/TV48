@@ -77,6 +77,12 @@ body {
     z-index: 100; }
  
  
+.bottom_group {
+    margin-top: -20px;
+    text-align: center; 
+    margin-left: -45px;}
+ 
+ 
 .brightness {
     display: inline-block;
     font-size: 16px;
@@ -259,7 +265,6 @@ input {
     width: 202px;
     z-index: 2; }
  
- 
 #power {
     background-image: url('../img/electricity.png');
     background-position: 50% 50%;
@@ -379,10 +384,8 @@ textarea {
 }
 */
 .top_group {
-    margin-top: -20px;
     text-align: center; }
- 
- 
+
 .up {
     margin-bottom: -128px;
     margin-top: -128px;
