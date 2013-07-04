@@ -52,11 +52,11 @@
 
 		    define('SECONDS_PER_DAY', 86400);
 
-		    // - 7200 is to account for 2 hour difference of time in Belgium to standard time
+		    // - 7200 is to account for 6 hour difference of time in Belgium to standard time
 		    // Should be made much more general
 
 		    // 1/4 of a day = 6 hours
-		    $past = date("Y-m-d\TH:i:sP", time() - .25 * SECONDS_PER_DAY - 7200);
+		    $past = date("Y-m-d\TH:i:sP", time() - .25 * SECONDS_PER_DAY - 21600);
 		    $now = date("Y-m-d\TH:i:sP", time());
 
 		    //grab streamIds from xively
@@ -145,7 +145,7 @@
 		    foreach ($obj_resp->datapoints as $point) {
 		        array_push($datapoints, $point->value);
 		        $date = strtotime($point->at);
-		        array_push($times, $date*1000);
+		        array_push($times, $date*1000+21600*1000);
 		    }
 
 		    $data_length = count($datapoints);
@@ -164,9 +164,9 @@
 			$duration = $_POST['duration'];
 			$temp = strtotime($duration) - time();
 
-			//The 7200 is there to correct for the time zone -- needs to be updated
+			//The 21600 is there to correct for the time zone -- needs to be updated
 			//to be more general
-			$past = date("Y-m-d\TH:i:sP", time() - $temp - 7200);
+			$past = date("Y-m-d\TH:i:sP", time() - $temp - 21600);
 			$now = date("Y-m-d\TH:i:sP", time());
 
 			//grab streamIds from xively
@@ -248,7 +248,7 @@
 			foreach ($obj_resp->datapoints as $point) {
 			  array_push($datapoints, $point->value);
 			  $date = strtotime($point->at);
-			  array_push($times, $date*1000);
+			  array_push($times, $date*1000+21600*1000);
 			}
 
 			//useful client side

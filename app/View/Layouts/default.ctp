@@ -145,10 +145,10 @@
 	<?php echo $this->fetch('content'); ?>
 
 	<!-- SQL for debugging purposes -->
-	<div style='text-align: center; margin-top: 10px;'>
+<!-- 	<div style='text-align: center; margin-top: 10px;'>
 		<button class='btn' style='text-align: center; margin-bottom: 10px;'>
 			<?php echo $this->element('sql_dump'); ?>
 		</button>
-	</div>
+	</div> -->
 </body>
 </html>

@@ -1,6 +1,6 @@
 <script>
   $(document).ready(function() {
-    $("select").selectpicker();
+    // $("select").selectpicker();
 
     $('#duration').bind('keypress', function (event) {
         var regex = new RegExp("[0-9\.]+");

@@ -183,8 +183,12 @@ function prepare_data() {
 }
 
 //bind function handlers to events that should change the set of points plotted
+
 $('#feed').change(function() {
-  update_graph();
+  if (window.previous_value != $(this).val()) {
+    window.previous_value != $(this).val()
+    update_graph();
+  }
 });
 
 $('#duration').change(function() {
@@ -219,6 +223,8 @@ $(document).ready(function() {
   $('#units').val("hours");
   $('#duration').val("6");
   $('#feed').val('PTOTAL');
+  window.previous_value = 'PTOTAL';
+  $('select').selectpicker();
   prepare_data();
   render_page('PTOTAL');
 });
@@ -227,4 +233,8 @@ $(document).ready(function() {
 $(window).resize(function() {
   var svg_id = $('#feed').val().toString();
   render_page(svg_id);
+})
+
+$(window).ready(function(){
+  $('#feed').selectpicker('val', 'PTOTAL');
 })
