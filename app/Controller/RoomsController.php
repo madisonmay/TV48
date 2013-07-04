@@ -9,6 +9,18 @@
 			return false;
 		}
 
+		public function lighting() {
+
+		}
+
+		public function heating() {
+
+		}
+
+		public function electricity() {
+			
+		}
+
 		public function index() {
 			$opts = array('fields' => array('id', 'name'));
 			$this->set('rooms', $this->Room->find('list', $opts)); 

@@ -98,9 +98,9 @@
 		        </a>
 		        <ul class="nav">
 		            <li class="divider-vertical" style='margin-top: 18px;'></li>
-		            <li><a href='/light' style='color: #eeeeee'>Light</a></li>
-		            <li><a href='/heat' style='color: #eeeeee'>Heat</a></li>
-		            <li><a href='/power' style='color: #eeeeee'>Power</a></li>
+		            <li><a href='/sensors/lighting' style='color: #eeeeee'>Light</a></li>
+		            <li><a href='/sensors/heating' style='color: #eeeeee'>Heat</a></li>
+		            <li><a href='/sensors/electricity' style='color: #eeeeee'>Power</a></li>
                 	<?php 
                 		if ($this->Session->read('Auth.User')) {
 		                	if (in_array('landlord', $this->Session->read('User.roles'))) {

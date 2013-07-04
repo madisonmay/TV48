@@ -8,8 +8,10 @@
         }
 
         public function isAuthorized($user) {
+            //if the user does not have landlord privileges
             if (!in_array('landlord', $this->Session->read('User.roles'))) {
-                if (!in_array($this->action, array('login'))) {
+                //the only actions exposed should be login and logout
+                if (!in_array($this->action, array('login', 'logout'))) {
                     return false;
                 }
             }
