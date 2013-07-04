@@ -49,8 +49,7 @@
     </div>
 <?php endif; ?>
 
-<?php if ($this->Session->read('Auth.User') && !in_array('landlord', $this->Session->read('User.roles'))): ?>
-
+<?php if (!$this->Session->read('Auth.User') || !in_array('landlord', $this->Session->read('User.roles'))): ?>
     <div class="row-fluid">
         <div class="span4">
             <a href='light'><div class="border">

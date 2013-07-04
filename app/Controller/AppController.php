@@ -53,7 +53,7 @@ class AppController extends Controller {
 	}
 
 	public function permissions($user_id) {
-		//by default, all permissions are set to 0;
+		//by default, all permissions are set to 0
 		$permissions = array('view_public' => 0, 'modify_public' => 0, 'pay_public' => 0); 
 
 		//load models
