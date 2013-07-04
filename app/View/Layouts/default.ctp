@@ -44,7 +44,6 @@
 		echo $this->Html->script('jquery.min');
 		echo $this->Html->script('bootstrap.min');
 		echo $this->Html->script('bootstrap-select');
-		echo $this->Html->script('combobox');
 		echo $this->Html->script('global');
 		echo $this->Html->script("//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js");
 		echo $this->Html->css('bootstrap-combined.min.css');

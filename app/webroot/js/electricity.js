@@ -154,7 +154,7 @@ function update_graph() {
   var duration = $('#duration').val().toString() + $('#units').val().toString();
   console.log({'streamId': streamId, 'duration': duration});
   //send jquery post request
-  $.post('getPower.php', {'streamId': streamId, 'duration': duration}, function(data) {
+  $.post('/sensors/refresh', {'streamId': streamId, 'duration': duration}, function(data) {
     console.log(data);
     var data = JSON.parse(data);
     //data attached to window object to act as global vars
@@ -195,6 +195,7 @@ $('#units').change(function() {
   update_graph();
 });
 
+
 $('.unit-change').click(function() {
   var svg_id = $('#feed').val().toString();
   update_values(svg_id, 1.0/convert_cost[window.units]);
@@ -217,6 +218,7 @@ $(document).ready(function() {
 
   $('#units').val("hours");
   $('#duration').val("6");
+  $('#feed').val('PTOTAL');
   prepare_data();
   render_page('PTOTAL');
 });

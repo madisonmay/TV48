@@ -24,7 +24,7 @@
 <!-- eventually should also allow for datasets that do not contain the current value -->
 
 <div id="edit">
-  <div style='text-align: center; display: block; margin-left: auto; margin-right: auto;'>
+  <div style='text-align: center; display: block; margin-left: auto; margin-right: auto; margin-top: 20px;'>
     <select id='feed'>
     </select>
     <input id='duration' type='text' pattern='[0-9\.]*' class='number-input' style='height: 42px; padding-right: 10px;'>
@@ -40,7 +40,7 @@
     </select>
   </div>
   <div class='text-center'>
-    <img id='loading' class='centered' src="/img/load.gif" style='width: 30px;'>
+    <img id='loading' class='centered' src="/img/load.gif" style='width: 30px; display: none;'>
   </div>
 
   <div class='text-center'>
@@ -74,4 +74,6 @@
     </div>
   </div>
 </div>
+
+<script src='/js/electricity.js'></script>
 
