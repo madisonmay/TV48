@@ -11,6 +11,18 @@
 			return false;
 		}
 
+		public function lighting() {
+
+		}
+
+		public function heating() {
+
+		}
+
+		public function electricity() {
+			
+		}
+		
 		public function index() {
 			$this->set('cssIncludes', array());
 			$this->set('jsIncludes', array());
