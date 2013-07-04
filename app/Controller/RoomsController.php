@@ -1,6 +1,14 @@
 <?
 	class RoomsController extends AppController {
 
+		public function isAuthorized($user) {
+			if (in_array('landlord', $this->Session->read('User.roles'))) {
+				return true;
+			}
+
+			return false;
+		}
+
 		public function index() {
 			$opts = array('fields' => array('id', 'name'));
 			$this->set('rooms', $this->Room->find('list', $opts)); 

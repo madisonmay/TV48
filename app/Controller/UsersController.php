@@ -7,6 +7,17 @@
             $this->Auth->allow('add', 'login');
         }
 
+        public function isAuthorized($user) {
+            if (!in_array('landlord', $this->Session->read('User.roles'))) {
+                if (!in_array($this->action, array('login'))) {
+                    return false;
+                }
+            }
+            
+
+            return true;
+        }
+
         public function index() {
             $this->set('users', $this->findByRole('tenant')); 
         }

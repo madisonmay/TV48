@@ -49,8 +49,7 @@ class AppController extends Controller {
 	function beforeFilter() {
 	    parent::__construct();
 	    // Your app-wide beforeFilter code, if any
-	    $this->Auth->allow(array('controller' => 'users', 'action' => 'login'), 
-	    	array('controller' => 'users', 'action' => 'login'));
+	    $this->Auth->allow(array('controller' => 'users', 'action' => 'login'));
 	}
 
 	public function isAuthorized($user) {
