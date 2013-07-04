@@ -40,8 +40,7 @@
 	<!-- Should eventually be moved to local file -->
 	<link href='http://fonts.googleapis.com/css?family=Lato:300' rel='stylesheet' type='text/css'>
 	<?	
-		// //boilerplate includes
-		// echo $this->element('check'); 
+		// Some of these scripts should likewise be downloaded and integrated before release
 		echo $this->Html->script('jquery.min');
 		echo $this->Html->script('bootstrap.min');
 		echo $this->Html->script('bootstrap-select');
