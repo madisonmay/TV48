@@ -37,6 +37,7 @@ class AppController extends Controller {
 	public $components = array('Session', 'DebugKit.Toolbar', 'Auth' => array(
         'loginRedirect' => array('controller' => 'home', 'action' => 'index'),
         'logoutRedirect' => array('controller' => 'users', 'action' => 'login'),
+		'authorize' => array('Controller'),
         'authenticate' => array(
 	            'Form' => array(
 	                'fields' => array('username' => 'email')
@@ -50,6 +51,10 @@ class AppController extends Controller {
 	    // Your app-wide beforeFilter code, if any
 	    $this->Auth->allow(array('controller' => 'users', 'action' => 'login'), 
 	    	array('controller' => 'users', 'action' => 'login'));
+	}
+
+	public function isAuthorized($user) {
+	    return true;
 	}
 
 	public function permissions($user_id) {

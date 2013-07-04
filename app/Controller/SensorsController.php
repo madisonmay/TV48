@@ -1,6 +1,14 @@
 <?
 	class SensorsController extends AppController {
 
+		public function isAuthorized($user) {
+			if (in_array('admin', $this->Session->read('User.roles'))) {
+				return true;
+			}
+
+			return false;
+		}
+
 		public function index() {
 			$this->set('cssIncludes', array());
 			$this->set('jsIncludes', array());
