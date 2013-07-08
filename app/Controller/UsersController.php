@@ -4,14 +4,14 @@
 
         public function beforeFilter() {
             parent::beforeFilter();
-            $this->Auth->allow('add', 'login');
+            $this->Auth->allow('add', 'login', 'confirm');
         }
 
         public function isAuthorized($user) {
             //if the user does not have landlord privileges
             if (!in_array('landlord', $this->Session->read('User.roles'))) {
                 //the only actions exposed should be login and logout
-                if (!in_array($this->action, array('login', 'logout'))) {
+                if (!in_array($this->action, array('login', 'logout', 'confirm'))) {
                     return false;
                 }
             }
@@ -32,6 +32,23 @@
             $this->set('user', $this->User->read(null, $id));
         }
 
+        public function confirm() {
+            $code = $this->request->query['code'];
+            $email = $this->request->query['email'];
+            $user = $this->User->find('first', array('conditions' => array('email' => $email)));
+            $this->User->id = $user['User']['id'];
+            if ($code == $user['User']['confirmation_code']) {
+                $this->User->saveField('confirmed', 1);
+                $this->Session->write('flashWarning', 0);
+                $this->Session->setFlash(__('Account confirmed!'));
+                $this->redirect(array('controller' => 'home', 'action' => 'index'));
+            } else {
+                $this->Session->write('flashWarning', 1);
+                $this->Session->setFlash(__('Your confirmation code is not valid.  Please try again.'));
+                $this->redirect(array('controller' => 'home', 'action' => 'index'));
+            }
+        }
+
         public function add() {
             if ($this->request->is('post')) {
                 $this->User->create();
@@ -43,38 +60,25 @@
                     $this->addAllRooms($this->User->getInsertID());
                     // If flashWarning is set to 0, the btn-success class is added to the resultant message.
                     // Otherwise, the btn-danger class is added.
+
+                    $activate_url = "<a href=localhost/users/confirm?code=".$code."&email=".$this->request->data['User']['email'].">TV48 Confirmation</a>";
+                    $name = $this->request->data['User']['first_name'];
+                    $Email = new CakeEmail();
+                    $Email->config('default');
+                    $Email->from(array('core.tv48@gmail.com' => 'CORE TV48'));
+
+                    // Eventually the recipient should be the person signing up.
+                    // $Email->to($this->request->data['User']['email']);
+
+                    $Email->to('madison.may@students.olin.edu');
+                    $Email->template('confirm');
+                    $Email->emailFormat('html');
+                    $Email->subject('TV48 Email Confirmation');
+                    $Email->viewVars(array('activate_url' => $activate_url,'name' => $name));
+                    $Email->send();
+
                     $this->Session->write('flashWarning', 0);
-                    $this->Session->setFlash(__('Thanks for registering! Please check your inbox for a confirmation email.'));
-
-                    // //Email composition process -- will not work locally because of mail server configuration
-                    // $to=$this->request->data['User']['email'];
-
-                    // $subject = 'CORE registration';
-
-                    // $message = "
-                    //     <html>
-                    //         <head>
-                    //             <title>CORE Registration</title>
-                    //         </head>
-                    //         <body>
-                    //             <h1>Thanks for registering, ".$this->request->data['User']['first_name']."</h1>
-                    //             <p>Your information is as follows:</p>
-                    //             <p>Username: ".$this->request->data['User']['email']."</p>
-                    //             <br>
-                    //             <p>Click the link below to confirm your registration:</p>
-                    //             <a href=http://www.thinkcore.be/TV48/confirmation.php?code=".$code."&email=".$this->request->data['User']['first_name'].">";
-
-                    // // To send HTML mail, the Content-type header must be set
-                    // $headers  = 'MIME-Version: 1.0' . "\r\n";
-                    // $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-
-                    // // Additional headers
-                    // $headers .= 'From: CORE_cvba-so' . "\r\n";
-
-                    // // Mail it
-                    // mail($to, $subject, $message, $headers);
-
-                    // Redirect user to homepage
+                    $this->Session->setFlash(__('Registration successful!  Check your inbox for a confirmation email.'));
                     $this->redirect(array('controller' => 'home', 'action' => 'index'));
                 } else {
                     $this->Session->write('flashWarning', 1);
@@ -104,14 +108,20 @@
 
         public function login() {
             if ($this->request->is('post')) {
-                if ($this->Auth->login()) {
-                    $user_id = $this->Auth->user('id');
-                    $user = $this->User->findById($user_id);
-                    $this->Session->write('User.roles', json_decode($user['User']['roles']));
-                    $this->redirect($this->Auth->redirect());
+                if ($user['User']['confirmed']) {
+                    if ($this->Auth->login()) {
+                        $user_id = $this->Auth->user('id');
+                        $user = $this->User->findById($user_id);
+                        $this->Session->write('User.roles', json_decode($user['User']['roles']));
+                        $this->redirect($this->Auth->redirect());
+                    } else {
+                        $this->Session->write('flashWarning', 1);
+                        $this->Session->setFlash(__('Invalid email or password, try again'));
+                    }
                 } else {
                     $this->Session->write('flashWarning', 1);
-                    $this->Session->setFlash(__('Invalid email or password, try again'));
+                    $this->Session->setFlash(__('Please confirm your account.'));
+                    $this->redirect(array('controller' => 'users', 'action' => 'login'));
                 }
             }
         }
