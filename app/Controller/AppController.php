@@ -487,4 +487,13 @@ class AppController extends Controller {
 			}
 		}
 	}
+
+	public function contractExists($room_id, $user_id) {
+		$this->loadModel('Contract');
+		$opts = array('conditions' => array('user_id' => $user_id, 'room_id' => $room_id));
+		if ($this->Contract->find('first', $opts)) {
+			return true;
+		}
+		return false;
+	}
 }

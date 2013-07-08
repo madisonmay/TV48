@@ -6,6 +6,12 @@ var convert_cost = {'Euro cents per Hour': .0085, 'Euros per Month': 8765 / 1200
                     'Grams of CO2 per Hour': .76,  'Kg of CO2 per Day': .76*24/1000, 'Kg of CO2 per Month': .76*24*30/1000, 
                     'Kg of CO2 per Year': .76*24*365/1000, 'Watts': 1};
 
+Array.prototype.getKey = function() {
+  for (var prop in this)
+    if (this.propertyIsEnumerable(prop))
+      return prop;
+}
+
 function update_values(svg_id, ratio) {
   for (var i = 0; i < window.data[svg_id].length; i++) {
     window.data[svg_id][i]['y'] *= ratio; 
@@ -222,11 +228,11 @@ $(document).ready(function() {
 
   $('#units').val("hours");
   $('#duration').val("6");
-  $('#feed').val('PTOTAL');
-  window.previous_value = 'PTOTAL';
+  $('#feed').val(window.data.getKey());
+  window.previous_value = window.data.getKey();
   $('select').selectpicker();
   prepare_data();
-  render_page('PTOTAL');
+  render_page(window.data.getKey());
 });
 
 //dynamic plot resizing based on screen size
@@ -236,5 +242,5 @@ $(window).resize(function() {
 })
 
 $(window).ready(function(){
-  $('#feed').selectpicker('val', 'PTOTAL');
+  $('#feed').selectpicker('val', window.data.getKey());
 })

@@ -17,12 +17,14 @@
 			$lights = $this->Sensor->find('all', array("conditions" => array('Sensor.type' => 'lighting')));
 			$js_lights = array();
 			foreach ($lights as $light) {
-				$js_light = array(
-					'streamId' => $light['Sensor']['id'],
-					'pwm' => $light['Sensor']['value'],
-					'location' => $light['Sensor']['name'],
-					'request' => $light['Sensor']['request']);
-				array_push($js_lights, $js_light);
+				if ($this->contractExists($light['Sensor']['room_id'], $this->Auth->user('id'))) {
+					$js_light = array(
+						'streamId' => $light['Sensor']['id'],
+						'pwm' => $light['Sensor']['value'],
+						'location' => $light['Sensor']['name'],
+						'request' => $light['Sensor']['request']);
+					array_push($js_lights, $js_light);
+				}
 			}
 
 			echo("<script> window.lights = " . json_encode($js_lights) . "</script>");
@@ -64,9 +66,12 @@
 			//not currently used -- will eventually be integrated with permissions system
 			$opts = array('conditions' => array('Sensor.type' => 'electricity'));
 			$sensors = $this->Sensor->find('all', $opts);
-			$js_sensors = Array();
+			$sensor_ids = array();
 			foreach ($sensors as $sensor) {
-				array_push($js_sensors, $sensor['Sensor']['xively_id']);
+				$room_id = $sensor['Sensor']['room_id'];
+				if ($this->contractExists($room_id, $this->Auth->user('id'))) {
+					array_push($sensor_ids, $sensor['Sensor']['xively_id']);
+				}
 			}
 
 		    define('SECONDS_PER_DAY', 86400);
@@ -112,10 +117,12 @@
 		    //rooms should be pulled from user objects
 
 		    foreach ($datastreams as $data) {
-		        array_push($data_ids, $data->id);
-		        if ($data->id == $streamId) {
-		        	$plot_data = $data;
-		        }
+		    	if (in_array($data->id, $sensor_ids)) {
+			        array_push($data_ids, $data->id);
+			        if ($data->id == $streamId) {
+			        	$plot_data = $data;
+			        }
+		    	}
 		    }
 		    //used to satisfy the quirks of Xively API -- number of seconds maps to interval between points
 		    
