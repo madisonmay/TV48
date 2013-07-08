@@ -317,7 +317,7 @@ class AppController extends Controller {
 
 	    	$user_id = $contract['Contract']['user_id'];
 	    	$user = $this->findById($user_id);
-	    	if (!has_role('admin', $user) && !has_role('landlord', $user)) {
+	    	if (!$this->hasRole('admin', $user) && !$this->hasRole('landlord', $user)) {
 	    		//ensure landlords and admins do not have room access restricted
 
 		    	//deactivate old contracts
@@ -352,7 +352,7 @@ class AppController extends Controller {
 
 			//don't add a second entry for landlords or admins
 			//this has already been taken care of by addAdminsAndLandlords()
-			if (!$this->has_role('landlord', $user) && !$this->has_role('admin', $user)) {
+			if (!$this->hasRole('landlord', $user) && !$this->hasRole('admin', $user)) {
 				$fields['user_id'] = $user_id;
 				$fields['room_id'] = $room_id;
 				$datetime = date('F j, Y', time());

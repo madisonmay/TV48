@@ -31,19 +31,23 @@
 			$this->set('jsIncludes', array('lighting')); 
 		}
 
-		public function getLights() {
-			$lights = $this->Sensor->find('all', array("conditions" => array('Sensor.type' => 'lighting')));
-			$js_lights = array();
-			foreach ($lights as $light) {
-				$js_light = array(
-					'streamId' => $light['Sensor']['id'],
-					'pwm' => $light['Sensor']['value'],
-					'location' => $light['Sensor']['name'],
-					'request' => $light['Sensor']['request']);
-				array_push($js_lights, $js_light);
-			}
+		public function edit_lights() {
+			if ($this->request->is('post')) {
+				$js_lights = json_encode($this->request->data['values']);
+				$php_lights = json_decode($js_lights);
 
-			print_r(json_encode($js_lights));
+				foreach ($php_lights as $light) {
+					$brightness = 500*$light->pwm;
+
+					if ($brightness <= 50000) {
+						$this->Sensor->id = $light->streamId;
+						$this->Sensor->saveField('value', $brightness);
+						$this->Sensor->saveField('request', 1);
+					}
+				}
+				echo 1;
+			}
+			exit(0);
 		}
 
 		public function heating() {

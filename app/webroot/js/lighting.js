@@ -138,11 +138,9 @@ $(document).ready(function() {
           var value = slider.next('.labels').children(".amount").html();
           var streamId = slider.attr('streamId');
           if (slider.attr('modified') === '1') {
-            console.log(slider.attr('modified'));
             values.push({'streamId': streamId, 'pwm': value});
           }
       }
-      console.log(values);
       return values
   }
 
@@ -150,8 +148,7 @@ $(document).ready(function() {
       //only when update is clicked are the values sent to MySQL db
       var values = retrieve_all();
       reset_modified();
-      console.log("Values: ", values);
-      $.post('editLights.php', {'values': values}, function(data) {
+      $.post('/sensors/edit_lights', {'values': values}, function(data) {
           console.log(data);
       })
   })
