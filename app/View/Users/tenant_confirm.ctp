@@ -4,18 +4,11 @@
     <fieldset>
         <legend><?php echo ('Sign up for an account'); ?></legend>
         <?php 
-            $first_name = array('class' => 'span3', 'placeholder' => 'First name...', 'label' => '');
-            $last_name = array('class' => 'span3', 'placeholder' => 'Last name...', 'label' => '');
-            $email = array('class' => 'span3', 'placeholder' => 'Email...', 'label' => '', 'type' => 'email');
         	$password = array('class' => 'span3', 'placeholder' => 'Password...', 'label' => '');
             $confirm_password = array('class' => 'span3', 'type' => 'password', 'label' => '', 'placeholder' => 'Confirm password...', "oninput" => "checkPassword(this)");
-            $property_name = array('class' => 'span3', 'type' => 'text', 'label' => '', 'placeholder' => 'Property name...');
-            echo $this->Form->input('first_name', $first_name);
-            echo $this->Form->input('last_name', $last_name);
-            echo $this->Form->input('email', $email);
             echo $this->Form->input('password', $password);
             echo $this->Form->input('confirm_password', $confirm_password);
-            echo $this->Form->input('property_name', $property_name);
+            echo $this->Form->input('id');
 	        $end = array('label' => 'Register',
 							 'class' => 'btn btn-success');
     	?>

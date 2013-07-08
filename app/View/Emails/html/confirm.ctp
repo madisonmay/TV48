@@ -1,3 +1,9 @@
-Hey there <?php echo $name; ?>, we will have you up and running in no time, but first we just need you to confirm your user account by clicking the link below:
-
+Hey there <?php echo $name; ?>, 
+<br>
+Confirm your CORE account by clicking the link below:
+<br>
 <?php echo $activate_url; ?>
+
+Thanks for signing up,
+
+CORE

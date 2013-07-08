@@ -4,14 +4,14 @@
 
         public function beforeFilter() {
             parent::beforeFilter();
-            $this->Auth->allow('add', 'login', 'confirm');
+            $this->Auth->allow('add', 'login', 'confirm', 'tenant_confirm');
         }
 
         public function isAuthorized($user) {
             //if the user does not have landlord privileges
             if (!in_array('landlord', $this->Session->read('User.roles'))) {
                 //the only actions exposed should be login and logout
-                if (!in_array($this->action, array('login', 'logout', 'confirm'))) {
+                if (!in_array($this->action, array('login', 'logout', 'confirm', 'tenant_confirm'))) {
                     return false;
                 }
             }
@@ -30,23 +30,6 @@
                 throw new NotFoundException(__('Invalid user'));
             }
             $this->set('user', $this->User->read(null, $id));
-        }
-
-        public function confirm() {
-            $code = $this->request->query['code'];
-            $email = $this->request->query['email'];
-            $user = $this->User->find('first', array('conditions' => array('email' => $email)));
-            $this->User->id = $user['User']['id'];
-            if ($code == $user['User']['confirmation_code']) {
-                $this->User->saveField('confirmed', 1);
-                $this->Session->write('flashWarning', 0);
-                $this->Session->setFlash(__('Account confirmed!'));
-                $this->redirect(array('controller' => 'home', 'action' => 'index'));
-            } else {
-                $this->Session->write('flashWarning', 1);
-                $this->Session->setFlash(__('Your confirmation code is not valid.  Please try again.'));
-                $this->redirect(array('controller' => 'home', 'action' => 'index'));
-            }
         }
 
         public function add() {
@@ -108,21 +91,39 @@
 
         public function login() {
             if ($this->request->is('post')) {
-                if ($user['User']['confirmed']) {
-                    if ($this->Auth->login()) {
-                        $user_id = $this->Auth->user('id');
-                        $user = $this->User->findById($user_id);
+                if ($this->Auth->login()) {
+                    $user_id = $this->Auth->user('id');
+                    $user = $this->User->findById($user_id);
+                    if ($user['User']['confirmed']) {
                         $this->Session->write('User.roles', json_decode($user['User']['roles']));
                         $this->redirect($this->Auth->redirect());
                     } else {
+                        $this->Session->destroy();
                         $this->Session->write('flashWarning', 1);
-                        $this->Session->setFlash(__('Invalid email or password, try again'));
+                        $this->Session->setFlash(__('Please confirm your account.'));
                     }
                 } else {
                     $this->Session->write('flashWarning', 1);
-                    $this->Session->setFlash(__('Please confirm your account.'));
-                    $this->redirect(array('controller' => 'users', 'action' => 'login'));
+                    $this->Session->setFlash(__('Invalid email or password, try again'));
                 }
+            }
+        }
+
+
+        public function confirm() {
+            $code = $this->request->query['code'];
+            $email = $this->request->query['email'];
+            $user = $this->User->find('first', array('conditions' => array('email' => $email)));
+            $this->User->id = $user['User']['id'];
+            if ($code == $user['User']['confirmation_code']) {
+                $this->User->saveField('confirmed', 1);
+                $this->Session->write('flashWarning', 0);
+                $this->Session->setFlash(__('Account confirmed!'));
+                $this->redirect(array('controller' => 'home', 'action' => 'index'));
+            } else {
+                $this->Session->write('flashWarning', 1);
+                $this->Session->setFlash(__('Your confirmation code is not valid.  Please try again.'));
+                $this->redirect(array('controller' => 'home', 'action' => 'index'));
             }
         }
 
@@ -134,11 +135,6 @@
         public function tenant() {
             if ($this->request->is('post')) {
                 $code = rand();
-
-                // ******************* IMPORTANT ************************
-                // Will eventually need to send out an email to the tenant
-                // containing a link for the tenant to complete their registration
-                // and choose a password
 
                 $user = $this->Session->read("Auth.User");
                 $this->request->data['User']['property_name'] = $user['property_name'];
@@ -176,6 +172,23 @@
 
                 $this->User->create();
                 if ($this->User->save($this->request->data)) {
+
+
+                    $activate_url = "<a href=localhost/users/tenant_confirm?code=".$code."&email=".$this->request->data['User']['email'].">TV48 Confirmation</a>";
+                    $name = $this->request->data['User']['first_name'];
+                    $Email = new CakeEmail();
+                    $Email->config('default');
+                    $Email->from(array('core.tv48@gmail.com' => 'CORE TV48'));
+
+                    // Eventually the recipient should be the person signing up.
+                    // $Email->to($this->request->data['User']['email']);
+
+                    $Email->to('madison.may@students.olin.edu');
+                    $Email->template('confirm');
+                    $Email->emailFormat('html');
+                    $Email->subject('TV48 Email Confirmation');
+                    $Email->viewVars(array('activate_url' => $activate_url,'name' => $name));
+                    $Email->send();
 
                     //similar to SQL's lastInsertID();
                     $user_id = $this->User->getInsertID();
@@ -222,6 +235,30 @@
             }
 
             $this->set('rooms', $this->findAvailableRooms());
+        }
+
+        public function tenant_confirm() {
+            if ($this->request->is('get')) {
+                $email = $this->request->query['email'];
+                $code = $this->request->query['code'];
+                $user = $this->User->find('first', array('conditions' => array('email' => $email)));
+                if ($code == $user['User']['confirmation_code']) {
+                    $this->data = $user;
+                } else {
+                    $this->Session->write('flashWarning', 1);
+                    $this->Session->setFlash(__('Incorrect confirmation code.  Please try again.'));
+                    $this->redirect(array('controller' => 'users', 'action' => 'login')); 
+                }
+            } else {
+                // Post request
+                $this->User->id = $this->request->data['User']['id'];
+                $this->User->saveField('confirmed', 1);
+                $this->User->saveField('password', $this->request->data['User']['password']);
+                $this->Session->write('flashWarning', 0);
+                $this->Session->setFlash(__('Registration successful!'));
+                $this->redirect(array('controller' => 'home', 'action' => 'index'));
+            }
+
         }
 
         public function edit() {
