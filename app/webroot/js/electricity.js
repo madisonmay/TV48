@@ -181,6 +181,7 @@ function update_graph() {
 
 //format conversion -- perhaps could be done server side
 function prepare_data() {
+  //this is the format that nv.d3 accepts
   for(var stream in window.data) {
     for (var i = 0; i < 100; i++) {
         window.data[stream][i] = {x: window.times[stream][i], y: parseInt(window.data[stream][i], 10)};
@@ -207,6 +208,7 @@ $('#units').change(function() {
 
 
 $('.unit-change').click(function() {
+  //simple change in graph scale
   var svg_id = $('#feed').val().toString();
   update_values(svg_id, 1.0/convert_cost[window.units]);
   window.units = $('#graph-units').val();
