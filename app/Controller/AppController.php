@@ -314,9 +314,8 @@ class AppController extends Controller {
 		//eventually users home timezone should be selected
 	    date_default_timezone_set('Europe/Brussels');
 	    foreach ($contracts as $contract) {
-
 	    	$user_id = $contract['Contract']['user_id'];
-	    	$user = $this->findById($user_id);
+	    	$user = $this->User->findById($user_id);
 	    	if (!$this->hasRole('admin', $user) && !$this->hasRole('landlord', $user)) {
 	    		//ensure landlords and admins do not have room access restricted
 
@@ -329,7 +328,7 @@ class AppController extends Controller {
 		        	echo $this->getLastQuery();
 		        }	
 	    	}
-	    }        
+	    }     
 
 	    if ($room_type === 'public')  {
 	    	$this->addSecondaryContracts($room_id);

@@ -154,7 +154,7 @@ body {
  
  
 #heat {
-    background-image: url('../img/heat-small.png');
+    background-image: url('/img/heat-small.png');
     background-position: 50% 50%;
     background-repeat: no-repeat; }
  

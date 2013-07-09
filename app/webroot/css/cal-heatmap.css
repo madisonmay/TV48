@@ -1,0 +1,101 @@
+/* Cal-HeatMap CSS */
+
+.graph-browse-previous, .graph-browse-next
+{
+	padding: 5px;
+	background-image: linear-gradient(to bottom, rgb(255, 255, 255), rgb(230, 230, 230));
+	border: 1px solid #999;
+	border-radius: 3px;
+	line-height: 12px;
+	font-size: 12px;
+	font-family: "Lucida Grande", Lucida, Verdana, sans-serif;
+	text-decoration: none;
+}
+
+.graph-browse-previous:hover, .graph-browse-next:hover {
+	text-decoration: none;
+	
+}
+
+.graph-browse-previous
+{
+	margin-right: 5px;
+}
+
+.graph
+{
+	clear: both;
+	display: block;
+	margin-top: 10px;
+	font-family: "Lucida Grande", Lucida, Verdana, sans-serif;
+}
+
+.graph-label
+{
+	fill: #999;
+	font-size: 25px
+}
+
+.graph-rect
+{
+	fill: #ededed;
+	shape-rendering: crispedges
+}
+
+.graph-rect:hover
+{
+	stroke: #000;
+	stroke-width: 1px
+}
+
+.hover_cursor:hover {
+	cursor: pointer;
+}
+
+.qi {
+	background-color: #999;
+	fill: #999;
+}
+
+.q0
+{
+	background-color: #fff;
+	fill: #fff;
+	stroke: #ededed
+}
+
+.q1
+{
+	background-color: #067D06;
+	fill: #067D06
+}
+
+.q2
+{
+	background-color: #5EC45E;
+	fill: #5EC45E
+}
+
+.q3
+{
+	background-color: #E0E065;
+	fill: #E0E065
+}
+
+.q4
+{
+	background-color: #E89638;
+	fill: #E89638
+}
+
+.q5
+{
+	background-color: #AD1403;
+	fill: #AD1403
+}
+
+.today
+{
+	stroke:black;
+	stroke-width:1;
+}

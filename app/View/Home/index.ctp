@@ -2,7 +2,7 @@
 
     <div class="row-fluid">
         <div class="span3">
-            <a href='light'><div class="border">
+            <a href='/sensors/lighting'><div class="border">
                 <div id="light" class="circle">
                     <div class="opaque">
                         <div class="label-text">Light</div>
@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="span3">
-            <a href='heat'><div class="border">
+            <a href='/sensors/heating'><div class="border">
                 <div id="heat" class="circle">
                     <div class="opaque">
                         <div class="label-text">Heat</div>
@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="span3">
-            <a href='power'><div class="border">
+            <a href='/sensors/electricity'><div class="border">
                 <div id="power" class="circle">
                     <div class="opaque">
                         <div class="label-text">Power</div>
