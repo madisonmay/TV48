@@ -39,6 +39,7 @@
 
 	<!-- Should eventually be moved to local file -->
 	<link href='http://fonts.googleapis.com/css?family=Lato:300' rel='stylesheet' type='text/css'>
+	<script type='text/javascript' src='https://cdn.firebase.com/v0/firebase.js'></script>
 	<?	
 		// Some of these scripts should likewise be downloaded and integrated before release
 		echo $this->Html->script('jquery.min');
@@ -75,12 +76,58 @@
 		}
 
 		$(document).ready(function() {
+
+			//will eventually need to expand to other firebase accounts
+			window.dataRef = new Firebase('https://tv48.firebaseio.com/');
+			window.timer_id = 0;
+			window.notepad_open = false;
+
+			window.dataRef.on('value', function(snapshot) {
+				$('#footer').html(snapshot.val());
+			});
+
 			$('a').mouseover(function() {
 			  $(this).css("color", "#46a546");
 			});
 
 			$('a').mouseout(function() {
 			  $(this).css("color", "#eeeeee");
+			});
+
+			$('#footer-tab').click(function() {
+			  if (window.notepad_open) {
+			    $(this).animate({'bottom': '-=520'}, 1000);
+			    $('#footer').animate({'bottom': '-=520'}, 1000);
+			    window.notepad_open = false;
+			    window.dataRef.set($('#footer').html());
+			  } else {
+			    $(this).animate({'bottom': '+=520'}, 1000);
+			    $('#footer').animate({'bottom': '+=520'}, 1000);
+			    window.notepad_open = true;
+			  }
+			});
+
+			$('#footer').blur(function() {
+			  if (window.notepad_open) {
+			    $('#footer-tab').animate({'bottom': '-=520'}, 1000);
+			    $('#footer').animate({'bottom': '-=520'}, 1000);
+			    window.notepad_open = false;
+			  }
+
+			  clearInterval(window.timer_id);
+
+			  //update after three seconds of not typing
+			  window.dataRef.set($('#footer').html());
+			});
+
+			$('#footer').keydown(function() {
+			  clearInterval(window.timer_id);
+
+			  //update after three seconds of not typing
+			  //will run into trouble with simultaneous edits
+			  window.timer_id = setTimeout(function() {
+			  	window.dataRef.set($('#footer').html());
+			  }, 1500);
 			});
 		})
 
@@ -150,5 +197,14 @@
 			<?php echo $this->element('sql_dump'); ?>
 		</button>
 	</div> -->
+
+	<?php if ($this->Session->read('Auth.User')): ?>
+	    <div id='footer-tab'>
+	    notepad
+	    </div>
+	    <div id="footer" contenteditable> 
+	        <?php echo $notepad_content; ?>
+	    </div>
+	<?php endif; ?>
 </body>
 </html>

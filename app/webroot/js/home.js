@@ -1,7 +1,4 @@
 $(document).ready(function() {
-  window.timer_id = 0;
-  window.reload_timer_id = 0;
-  window.notepad_open = false;
   nv.dev = false;
   var average = [36, 35, 34, 21, 28, 28, 6, 9, 15, 31, 35, 24];
   var actual = [40, 36, 45];
@@ -146,46 +143,5 @@ $(document).ready(function() {
     $(this).children('.circle').children('.opaque').stop(true)
       .animate({'opacity': '0', '-moz-opacity': '0', 'filter': 'Alpha(Opacity=0)',
                '-ms-filter': '"progid:DXImageTransform.Microsoft.Alpha(Opacity=0}"'}, 500);
-  });
-
-  $('#footer-tab').click(function() {
-    if (window.notepad_open) {
-      $(this).animate({'bottom': '-=520'}, 1000);
-      $('#footer').animate({'bottom': '-=520'}, 1000);
-      window.notepad_open = false;
-    } else {
-      $(this).animate({'bottom': '+=520'}, 1000);
-      $('#footer').animate({'bottom': '+=520'}, 1000);
-      window.notepad_open = true;
-    }
-  });
-
-  $('#footer').blur(function() {
-    if (window.notepad_open) {
-      $('#footer-tab').animate({'bottom': '-=520'}, 1000);
-      $('#footer').animate({'bottom': '-=520'}, 1000);
-      window.notepad_open = false;
-    }
-
-    clearInterval(window.timer_id);
-
-    //update after three seconds of not typing
-    window.timer_id = setTimeout(function() {
-      $.post('/home/notepad', {'content': $('#footer').html()}, function(response) {
-        console.log(response);
-      });
-    }, 1500);
-  });
-
-  $('#footer').keydown(function() {
-    clearInterval(window.timer_id);
-
-    //update after three seconds of not typing
-    //will run into trouble with simultaneous edits
-    window.timer_id = setTimeout(function() {
-      $.post('/home/notepad', {'content': $('#footer').html()}, function(response) {
-        console.log(response);
-      });
-    }, 1500);
   });
 });

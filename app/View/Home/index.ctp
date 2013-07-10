@@ -90,11 +90,3 @@
 <div id='chart' style='height: 350px; width: 85%; display: block; margin-right: auto; margin-left: auto; display: block; float: none;'>
     <svg></svg>
 </div>
-<?php if ($this->Session->read('Auth.User')): ?>
-    <div id='footer-tab'>
-    notepad
-    </div>
-    <div id="footer" contenteditable> 
-        <?php echo $notepad_content; ?>
-    </div>
-<?php endif; ?>
