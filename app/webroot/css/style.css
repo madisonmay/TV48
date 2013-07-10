@@ -145,6 +145,41 @@ body {
     height: 2px;
     margin-left: 5%;
     margin-right: 5%; }
+
+
+#footer {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    margin-left: -250px;
+    width: 500px; 
+    height: 500px;
+    margin-bottom: -522px;
+    overflow: auto; 
+    background-color: #eee;
+    padding: 10px;
+    font-size: 25px; 
+    z-index: 10000;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border: 2px solid #333; }
+
+#footer-tab {
+    width: 100px; 
+    height: 18px; 
+    position: fixed; 
+    left: 50%; 
+    margin-left: -50px; 
+    bottom: 0; 
+    border: 2px solid #333; 
+    border-top-right-radius: 10px; 
+    border-top-left-radius: 10px; 
+    background-color: white; text-align: center; 
+    color: #eee; 
+    background-color: #333; 
+    cursor: pointer; 
+    border: 1px #eee solid;
+    z-index: 10000 };
  
  
 .full-height { height: 100%; }
@@ -391,6 +426,20 @@ textarea {
 */
 .top_group {
     text-align: center; }
+
+.unselectable {
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+
+    /*
+      Introduced in IE 10.
+      See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+    */
+    -ms-user-select: none;
+    user-select: none;
+}
+
 
 .up {
     margin-bottom: -128px;
