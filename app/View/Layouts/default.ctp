@@ -110,19 +110,6 @@
 			  }
 			});
 
-			$('#footer').blur(function() {
-			  if (window.notepad_open) {
-			    $('#footer-tab').animate({'bottom': '-=520'}, 1000);
-			    $('#footer').animate({'bottom': '-=520'}, 1000);
-			    window.notepad_open = false;
-			  }
-
-			  clearInterval(window.timer_id);
-
-			  //update after three seconds of not typing
-			  window.dataRef.set($('#footer').html());
-			});
-
 			$('#footer').keydown(function() {
 			  clearInterval(window.timer_id);
 
