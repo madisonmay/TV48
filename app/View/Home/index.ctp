@@ -88,9 +88,7 @@
 <?php endif; ?>
 <!-- <img src='images/left.png' style='width: 5%; float: left;'></img> -->
 <div id='chart' style='height: 350px; width: 85%; display: block; margin-right: auto; margin-left: auto; display: block; float: none;'>
-    </div>
-        <svg></svg>
-    </div>
+    <svg></svg>
 </div>
 <?php if ($this->Session->read('Auth.User')): ?>
     <div id='footer-tab'>

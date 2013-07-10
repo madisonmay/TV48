@@ -160,11 +160,28 @@ $(document).ready(function() {
     }
   });
 
-  $('#footer').keydown(function() {
+  $('#footer').blur(function() {
+    if (window.notepad_open) {
+      $('#footer-tab').animate({'bottom': '-=520'}, 1000);
+      $('#footer').animate({'bottom': '-=520'}, 1000);
+      window.notepad_open = false;
+    }
+
     clearInterval(window.timer_id);
-    clearInterval(window.reload_timer_id);
 
     //update after three seconds of not typing
+    window.timer_id = setTimeout(function() {
+      $.post('/home/notepad', {'content': $('#footer').html()}, function(response) {
+        console.log(response);
+      });
+    }, 1500);
+  });
+
+  $('#footer').keydown(function() {
+    clearInterval(window.timer_id);
+
+    //update after three seconds of not typing
+    //will run into trouble with simultaneous edits
     window.timer_id = setTimeout(function() {
       $.post('/home/notepad', {'content': $('#footer').html()}, function(response) {
         console.log(response);
