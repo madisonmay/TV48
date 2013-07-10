@@ -82,6 +82,9 @@
 			window.timer_id = 0;
 			window.notepad_open = false;
 
+			//turn off spell check
+			$('#footer').attr('spellcheck', false);
+
 			window.dataRef.on('value', function(snapshot) {
 				$('#footer').html(snapshot.val());
 			});
