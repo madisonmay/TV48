@@ -86,7 +86,9 @@
 			$('#footer').attr('spellcheck', false);
 
 			window.dataRef.on('value', function(snapshot) {
-				$('#footer').html(snapshot.val());
+				if (snapshot.val() != $('#footer').text()) {
+					$('#footer').html(snapshot.val());
+				}
 			});
 
 			$('a').mouseover(function() {
@@ -102,7 +104,6 @@
 			    $(this).animate({'bottom': '-=520'}, 1000);
 			    $('#footer').animate({'bottom': '-=520'}, 1000);
 			    window.notepad_open = false;
-			    window.dataRef.set($('#footer').html());
 			  } else {
 			    $(this).animate({'bottom': '+=520'}, 1000);
 			    $('#footer').animate({'bottom': '+=520'}, 1000);
@@ -110,14 +111,11 @@
 			  }
 			});
 
-			$('#footer').keydown(function() {
-			  clearInterval(window.timer_id);
+			$('#footer').keyup(function() {
 
 			  //update after three seconds of not typing
 			  //will run into trouble with simultaneous edits
-			  window.timer_id = setTimeout(function() {
-			  	window.dataRef.set($('#footer').html());
-			  }, 1500);
+			  window.dataRef.set($('#footer').text());
 			});
 		})
 
