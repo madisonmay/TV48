@@ -85,6 +85,30 @@
 			}
 		}
 
+		public function piechart() {
+			$this->set('cssIncludes', array());
+			$this->set('jsIncludes', array('http://cdnjs.cloudflare.com/ajax/libs/d3/2.10.0/d3.v2.min.js', 'nv.d3'));
+
+			$this->loadModel('Data');
+			$opts = array('conditions' => array('Sensor.type' => 'electricity'));
+			$sensors = $this->Sensor->find('all', $opts);
+			$sensors_values = array();
+			$count = 0;
+
+			//should create php object and then push all at once
+			echo '<script> window.feeds = [];</script>';
+			foreach ($sensors as $sensor) {
+				$count++;
+				$sensor_values = array();
+				$data = $sensor['Data'];
+				foreach ($data as $datum) {
+					array_push($sensor_values, $datum['value']);
+				}
+				$final = array('name' => $sensor['Sensor']['name'], 'values' => $sensor_values);
+				echo '<script> window.feeds.push(' . json_encode($final) . ');</script>';
+			}
+		}
+
 		public function electricity() {
 			//Potentially a case of mixing presentation and logic? 
 			$this->set('cssIncludes', array());
