@@ -364,7 +364,10 @@ for (var i=0; i<window.feeds.length; i++) {
     values = values.slice(values.length-7, values.length);
   }
   console.log(window.feeds[i]['name']);
-  window.data.push({value: sum(values), label: window.feeds[i]['name']});
+  //prevent extraneous labels
+  if (sum(values) > 0) {
+    window.data.push({value: sum(values), label: window.feeds[i]['name']});
+  }
 }
 
 function getData() {
