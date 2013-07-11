@@ -1,6 +1,34 @@
 $(document).ready(function() {
   nv.dev = false;
 
+  function GetDates(startDate, daysToAdd) {
+      var days = [];
+
+      for (var i = 0; i <= daysToAdd; i++) {
+          var currentDate = new Date();
+          currentDate.setDate(startDate.getDate() + i);
+          days.push(DayAsString(currentDate.getDay()));
+      }
+
+      return days;
+  }
+
+  function DayAsString(dayIndex) {
+      var weekdays = new Array(7);
+      weekdays[0] = "Sunday";
+      weekdays[1] = "Monday";
+      weekdays[2] = "Tuesday";
+      weekdays[3] = "Wednesday";
+      weekdays[4] = "Thursday";
+      weekdays[5] = "Friday";
+      weekdays[6] = "Saturday";
+
+      return weekdays[dayIndex];
+  }
+
+  var startDate = new Date();
+  var days = GetDates(startDate, 7);
+
   function sum(array) {
       var sum = 0;
       for (var i=0; i<array.length; i++) {
@@ -12,7 +40,8 @@ $(document).ready(function() {
   function paired(array) {
       var result = [];
       for (var i = 0; i < array.length; i++) {
-          result.push({x: i + 1, y: array[i]});
+        offset = array.length - 8; 
+        result.push({x: days[i-offset], y: array[i]});
       }
       return result;
   }
@@ -21,12 +50,7 @@ $(document).ready(function() {
     return '#'+Math.floor(Math.random()*16777215).toString(16);
   }
 
-  function sortfunction(a, b){
-    return (a[0] - b[0]) //causes an array to be sorted numerically and ascending
-  }
-
   function difference(arr) {
-    console.log(arr);
     var result = [];
 
     //temporary check to weed out streams that are not cumulative
@@ -38,31 +62,36 @@ $(document).ready(function() {
     }
   }
 
+  //more code to deal with non-cumulative streams
   var data = [];
-  window.feeds.sort(function(a, b) {
-    return a[0] - b[0];
+  window.new_feeds = [];
+  for (var i=0; i<window.feeds.length; i++) {
+    window.feeds[i]['values'] = difference(window.feeds[i]['values']);
+    if (window.feeds[i]['values']) {
+      window.new_feeds.push(window.feeds[i]);
+    }
+  }
+  window.feeds = window.new_feeds;
+
+  window.feeds.sort(function(a,b) {
+    //should be simplified
+    var last = a['values'].length - 1;
+    return a['values'][last] > b['values'][last];
   })
 
-  //next values need to be converted from cumulative to a daily consumption
   for (var i=0; i<window.feeds.length; i++) {
-    var deltas = difference(window.feeds[i]['values']);
-
-    //temporary check to weed out streams that are not cumulative
-    if (deltas) {
-      var values = paired(deltas);
-      if (values.length > 7) {
-        values = values.slice(values.length-7, values.length);
-      }
-      data.push({values: values, key: window.feeds[i]['name'], color: random_hex()})
+    var values = paired(window.feeds[i]['values']);
+    if (values.length > 7) {
+      values = values.slice(values.length-7, values.length);
     }
+    data.push({values: values, key: window.feeds[i]['name'], color: random_hex()})
   }
 
   nv.addGraph(function() {
     var chart = nv.models.multiBarChart();
 
     chart.xAxis
-        .axisLabel('Day')
-        .tickFormat(d3.format(',r'));
+        .axisLabel('Day of the week');
 
     chart.yAxis
         .axisLabel('Energy Expenditure (KWh)')

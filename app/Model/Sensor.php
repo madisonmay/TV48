@@ -4,7 +4,9 @@
     class Sensor extends AppModel {
 
         public $belongsTo = array('Room');
-        public $hasMany = array('Data');
+        public $hasMany = array('Data' => array(
+            'order' => 'Data.created ASC'
+        ));
 
         public $validate = array(
             'name' => array(
