@@ -47,7 +47,13 @@ $(document).ready(function() {
   }
 
   function random_hex() {
-    return '#'+Math.floor(Math.random()*16777215).toString(16);
+    var result = '#'+Math.floor(Math.random()*16777215).toString(16);
+    return result;
+  }
+
+  var getColorAtScalar = function (n, maxLength) {
+       var n = n * 240 / (maxLength);
+       return 'hsl(' + n + ',100%,50%)';
   }
 
   function difference(arr) {
@@ -84,7 +90,7 @@ $(document).ready(function() {
     if (values.length > 7) {
       values = values.slice(values.length-7, values.length);
     }
-    data.push({values: values, key: window.feeds[i]['name'], color: random_hex()})
+    data.push({values: values, key: window.feeds[i]['name'], color: getColorAtScalar(i, window.feeds.length)})
   }
 
   nv.addGraph(function() {
