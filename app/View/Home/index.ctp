@@ -1,3 +1,9 @@
+<style>
+    svg {
+        margin-left: -18px;
+    }
+</style>
+
 <?php if ($this->Session->read('Auth.User') && in_array('landlord', $this->Session->read('User.roles'))): ?>
 
     <div class="row-fluid">
