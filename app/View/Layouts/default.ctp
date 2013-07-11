@@ -42,6 +42,7 @@
 	<script type='text/javascript' src='https://cdn.firebase.com/v0/firebase.js'></script>
 	<?	
 		// Some of these scripts should likewise be downloaded and integrated before release
+
 		echo $this->Html->script('jquery.min');
 		echo $this->Html->script('bootstrap.min');
 		echo $this->Html->script('bootstrap-select');
@@ -82,13 +83,17 @@
 			window.timer_id = 0;
 			window.notepad_open = false;
 
-			//turn off spell check
-			$('#footer').attr('spellcheck', false);
+			// window.dataRef.on('value', function(snapshot) {
+			// 	if (snapshot.val() != $('#footer').html()) {
+			// 		$('#footer').html(snapshot.val());
+			// 	}
+			// });
 
-			window.dataRef.on('value', function(snapshot) {
-				if (snapshot.val() != $('#footer').html()) {
-					$('#footer').html(snapshot.val());
-				}
+			window.dataRef.limit(10).on('child_added', function (snapshot) {
+			  var message = snapshot.val();
+			  $('<div/>').text(message.text).prepend($('<b/>')
+			    .text(message.name+': ')).appendTo($('#footer'));
+			  $('#footer')[0].scrollTop = $('#footer')[0].scrollHeight;
 			});
 
 			$('a').mouseover(function() {
@@ -101,29 +106,28 @@
 
 			$('#footer-tab').click(function() {
 			  if (window.notepad_open) {
-			    $(this).animate({'bottom': '-=520'}, 1000);
-			    $('#footer').animate({'bottom': '-=520'}, 1000);
+			    $(this).animate({'bottom': '-=510'}, 1000);
+			    $('#footer').animate({'bottom': '-=510'}, 1000);
+			    $('#input').animate({'bottom': '-=510'}, 1000);
 			    window.notepad_open = false;
 			  } else {
-			    $(this).animate({'bottom': '+=520'}, 1000);
-			    $('#footer').animate({'bottom': '+=520'}, 1000);
+			    $(this).animate({'bottom': '+=510'}, 1000);
+			    $('#footer').animate({'bottom': '+=510'}, 1000);
+			    $('#input').animate({'bottom': '+=510'}, 1000);
 			    window.notepad_open = true;
 			  }
 			});
 
-			$('#footer').keyup(function() {
-
-			  //update after three seconds of not typing
-			  //will run into trouble with simultaneous edits
-			  window.dataRef.set($('#footer').html());
+			$('#input').keypress(function (e) {
+			  if (e.keyCode == 13) {
+			    var name = '<?php echo $this->Session->read("Auth.User.full_name"); ?>';
+			    var text = $('#input').val();
+			    window.dataRef.push({name:name, text:text});
+			    $('#input').val('');
+			  }
 			});
 
-			$('#footer').keydown(function() {
-
-			  //update after three seconds of not typing
-			  //will run into trouble with simultaneous edits
-			  window.dataRef.set($('#footer').html());
-			});
+			scrollTo(($(document).width() - $(window).width()) / 2, 0);
 		})
 
 	</script>
@@ -197,9 +201,9 @@
 	    <div id='footer-tab'>
 	    notepad
 	    </div>
-	    <pre id="footer" contenteditable>
-	        	<?php echo $notepad_content; ?>
-	    </pre>
+	    <div id="footer">
+	    </div>
+	    <input id='input' placeholder='Type message and press enter to send.'>
 	<?php endif; ?>
 </body>
 </html>

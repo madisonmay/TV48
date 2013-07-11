@@ -315,7 +315,7 @@ nv.addGraph(function() {
       .donut(true);
 
     d3.select("#chart svg")
-        .datum(exampleData())
+        .datum(getData())
       	.transition().duration(1200)
         .call(chart);
 
@@ -367,7 +367,7 @@ for (var i=0; i<window.feeds.length; i++) {
   window.data.push({value: sum(values), label: window.feeds[i]['name']});
 }
 
-function exampleData() {
+function getData() {
   return [
   {
     key: "Total Weekly Energy Usage",

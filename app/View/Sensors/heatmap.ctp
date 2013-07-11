@@ -19,7 +19,7 @@ $(document).ready(function() {
 	}).done(function (data) {
 	    ///////////////////////////////////////////////////
 	    // Edit from here    
-
+	    console.log(data);
 		var calendar = new CalHeatMap();
 		calendar.init({
 			data: data,
