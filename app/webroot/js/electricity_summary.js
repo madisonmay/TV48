@@ -29,8 +29,14 @@ $(document).ready(function() {
   window.feeds.sort(function(a, b) {
     return a[0] - b[0];
   })
+
+  //next values need to be converted from cumulative to a daily consumption
   for (var i=0; i<window.feeds.length; i++) {
-    data.push({values: paired(window.feeds[i]), key: i.toString(), color: random_hex()})
+    var values = paired(window.feeds[i]);
+    if (values.length > 7) {
+      values = values.slice(values.length-7, values.length);
+    }
+    data.push({values: values, key: i.toString(), color: random_hex()})
   }
 
   nv.addGraph(function() {
