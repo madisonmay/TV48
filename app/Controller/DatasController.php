@@ -12,7 +12,7 @@
 
 		public function logger() {
 			$midnight = strtotime('today midnight');
-			if (time() - $midnight < 600) {
+			// if (time() - $midnight < 600) {
 				$this->loadModel('Sensor');
 				$sensors = $this->Sensor->find('all', array('conditions' => array('Sensor.type' => 'electricity')));
 				foreach ($sensors as $sensor) {
@@ -40,7 +40,7 @@
 						echo "1";
 					}
 				}
-			}
+			// }
 			exit(0);
 		}
 	}
