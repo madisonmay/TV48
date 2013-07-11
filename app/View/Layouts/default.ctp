@@ -86,7 +86,7 @@
 			$('#footer').attr('spellcheck', false);
 
 			window.dataRef.on('value', function(snapshot) {
-				if (snapshot.val() != $('#footer').text()) {
+				if (snapshot.val() != $('#footer').html()) {
 					$('#footer').html(snapshot.val());
 				}
 			});
@@ -115,7 +115,14 @@
 
 			  //update after three seconds of not typing
 			  //will run into trouble with simultaneous edits
-			  window.dataRef.set($('#footer').text());
+			  window.dataRef.set($('#footer').html());
+			});
+
+			$('#footer').keydown(function() {
+
+			  //update after three seconds of not typing
+			  //will run into trouble with simultaneous edits
+			  window.dataRef.set($('#footer').html());
 			});
 		})
 
@@ -190,9 +197,9 @@
 	    <div id='footer-tab'>
 	    notepad
 	    </div>
-	    <div id="footer" contenteditable> 
-	        <?php echo $notepad_content; ?>
-	    </div>
+	    <pre id="footer" contenteditable>
+	        	<?php echo $notepad_content; ?>
+	    </pre>
 	<?php endif; ?>
 </body>
 </html>
