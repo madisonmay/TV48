@@ -155,8 +155,8 @@ body {
     bottom: 0;
     margin-left: -250px;
     width: 500px; 
-    height: 420px;
-    margin-bottom: -442px;
+    height: 440px;
+    margin-bottom: -464px;
     overflow: auto; 
     background-color: #f8f8f8;
     padding: 10px;
@@ -172,7 +172,7 @@ body {
     left: 50%;
     bottom: 0;
     margin-left: -250px;
-    width: 500px; 
+    width: 524px; 
     height: 50px;
     margin-bottom: -512px;
     border-radius: 0px;
