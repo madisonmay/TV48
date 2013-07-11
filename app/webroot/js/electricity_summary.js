@@ -25,6 +25,19 @@ $(document).ready(function() {
     return (a[0] - b[0]) //causes an array to be sorted numerically and ascending
   }
 
+  function difference(arr) {
+    console.log(arr);
+    var result = [];
+
+    //temporary check to weed out streams that are not cumulative
+    if (parseFloat(arr[arr.length-1]) > 1000) {
+      for (var i=1; i<arr.length; i++) {
+        result.push(arr[i] - arr[i-1]);
+      }
+      return result;
+    }
+  }
+
   var data = [];
   window.feeds.sort(function(a, b) {
     return a[0] - b[0];
@@ -32,18 +45,23 @@ $(document).ready(function() {
 
   //next values need to be converted from cumulative to a daily consumption
   for (var i=0; i<window.feeds.length; i++) {
-    var values = paired(window.feeds[i]);
-    if (values.length > 7) {
-      values = values.slice(values.length-7, values.length);
+    var deltas = difference(window.feeds[i]['values']);
+
+    //temporary check to weed out streams that are not cumulative
+    if (deltas) {
+      var values = paired(deltas);
+      if (values.length > 7) {
+        values = values.slice(values.length-7, values.length);
+      }
+      data.push({values: values, key: window.feeds[i]['name'], color: random_hex()})
     }
-    data.push({values: values, key: i.toString(), color: random_hex()})
   }
 
   nv.addGraph(function() {
     var chart = nv.models.multiBarChart();
 
     chart.xAxis
-        .axisLabel('Month')
+        .axisLabel('Day')
         .tickFormat(d3.format(',r'));
 
     chart.yAxis

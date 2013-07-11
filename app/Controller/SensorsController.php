@@ -80,7 +80,8 @@
 				foreach ($data as $datum) {
 					array_push($sensor_values, $datum['value']);
 				}
-				echo '<script> window.feeds.push(' . json_encode($sensor_values) . ');</script>';
+				$final = array('name' => $sensor['Sensor']['name'], 'values' => $sensor_values);
+				echo '<script> window.feeds.push(' . json_encode($final) . ');</script>';
 			}
 		}
 
