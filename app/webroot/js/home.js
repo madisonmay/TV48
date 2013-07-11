@@ -83,6 +83,8 @@ $(document).ready(function() {
                '-ms-filter': '"progid:DXImageTransform.Microsoft.Alpha(Opacity=0}"'}, 500);
   });
 
+
+  // Begin the actual work of creating the graph
   console.log("Actual: ", actual);
   console.log("Average: ", average);
   var absolute = expected_absolute(actual, average);
