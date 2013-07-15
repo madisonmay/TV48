@@ -134,12 +134,12 @@
 	<script>
 		function IE() {
 			if (Function('/*@cc_on return document.documentMode===10@*/')()){
-				if ($(window).innerWidth() < 1000) {
+				if ($(window).innerWidth() < 1200) {
 					$('#footer-tab').animate({'bottom': '+=15'}, 100);
 					$('#footer').animate({'bottom': '+=15'}, 100);
-					$('#input').animate({'bottom': '+=15'}, 100);
-					$('#input').animate({'width': '-=24'}, 100);
 				}
+
+				$('#input').animate({'bottom': '+=15', 'width': '-=24'}, 100);
 			}
 		}
 
