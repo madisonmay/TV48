@@ -111,6 +111,7 @@
 
 		public function electricity() {
 			//Potentially a case of mixing presentation and logic? 
+			
 			$this->set('cssIncludes', array());
 			$this->set('jsIncludes', array('http://cdnjs.cloudflare.com/ajax/libs/d3/2.10.0/d3.v2.min.js', 'nv.d3')); 
 
@@ -125,11 +126,15 @@
 				}
 			}
 
+			// need better default behavior
+			if (count($sensor_ids) < 1) {
+				array_push($sensor_ids, 'PTOTAL');
+			}
+
 		    define('SECONDS_PER_DAY', 86400);
 
-		    // - 7200 is to account for 6 hour difference of time in Belgium to standard time
-		    // Should be made much more general
-
+		    // offset of 21600 to account for time zone -- there has to be a more elegant way of doing this.
+		    // xively requires some special formatting, handled in the format string below
 		    // 1/4 of a day = 6 hours
 		    $past = date("Y-m-d\TH:i:sP", time() - .25 * SECONDS_PER_DAY - 21600);
 		    $now = date("Y-m-d\TH:i:sP", time());
@@ -159,13 +164,7 @@
 
 		    $streamId = 'PTOTAL';
 
-		    //compile datapoints and strip unnecessary properties
-		    //new code recently added to check for global permissions ($landloard)
-		    //and if permissions are not found, give access to only the room
-		    //associated with the current user and the total for the house.
-		    //support for 'public areas' still needs to be added
-
-		    //rooms should be pulled from user objects
+		    $plot_data = '';
 
 		    foreach ($datastreams as $data) {
 		    	if (in_array($data->id, $sensor_ids)) {
@@ -180,7 +179,6 @@
 		    $intervals = array(21600 => 0, 43200 => 30, 86400 => 60, 432000 => 300, 1209600 => 900,
 		                       2678400 => 1800, 7776000 => 10800, 15552000 => 21600, 31536000 => 43200);
 
-		    $data = $plot_data;
 		    //set by user -- defaults to 6 hours
 		    $duration = '6hours';
 
@@ -229,8 +227,9 @@
 
 		    //save in json format for use client side
 		    //not a huge fan of using the window object, but for right now it should be fine
-		    echo '<script> window.data = {}; window.data["' . $data->id . '"] = ' . json_encode($datapoints) . '</script>';
-		    echo '<script> window.times = {}; window.times["' . $data->id . '"] = ' . json_encode($times) . '</script>';
+		    $id = $plot_data->id;
+		    echo '<script> window.data = {}; window.data["' . $id . '"] = ' . json_encode($datapoints) . '</script>';
+		    echo '<script> window.times = {}; window.times["' . $id . '"] = ' . json_encode($times) . '</script>';
 		    echo "<script> window.data_ids = " . json_encode($data_ids) . "</script>";
 		    echo "<script> window.data_length = " . json_encode($data_length) . "</script>";
 
