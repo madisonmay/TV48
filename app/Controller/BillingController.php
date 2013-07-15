@@ -1,5 +1,5 @@
 <?
-	class HomeController extends AppController {
+	class BillingController extends AppController {
 
 		function beforeFilter() {
 			parent::beforeFilter();
@@ -7,13 +7,17 @@
 		}
 
 		public function isAuthorized($user) {
-			if (in_array('landlord', $this->Session->read('User.roles')) {
+			if (in_array('landlord', $this->Session->read('User.roles'))) {
 				return true;
 			} 
-			if (in_array('admin', $this->Session->read('User.roles')) {
+			if (in_array('admin', $this->Session->read('User.roles'))) {
 				return true;
 			} 
 			return false;
+		}
+
+		public function index() {
+			
 		}
 	}
 ?>
