@@ -84,7 +84,6 @@ body {
     text-align: center; 
     margin-left: -45px;}
  
- 
 .brightness {
     display: inline-block;
     font-size: 16px;
@@ -233,7 +232,7 @@ html {
     margin: 0;
     padding: 0;
     background-color: #eeeeee; 
-    min-width: 1000px;   }
+    min-width: 700px;   }
  
  
 input {
@@ -286,7 +285,7 @@ input {
     width: 175px; }
  
  
-.maintain-size { min-width: 1300px; }
+.maintain-size { min-width: 700px; }
  
  
 #management {
@@ -295,7 +294,7 @@ input {
     background-repeat: no-repeat; }
 
 .navbar, .navbar-inner, .container {
-    min-width: 940px;
+    min-width: 700px;
 }
 
 @media (max-width:979px) {
@@ -469,12 +468,14 @@ textarea {
 
 
 #title {
-    position: absolute; 
+    position: relative; 
     top:135px; 
     left: 50%; 
     width: 300px; 
     margin-left: -150px; 
     text-align: center; 
+    margin-top: -100px;
+    margin-bottom: 70px;
     font-size: 25px;
 }
  
