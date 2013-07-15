@@ -71,52 +71,72 @@ $(document).ready(function() {
   var App = {
     data: [],
     new_feeds: [],
-    feeds: window.feeds
+    numDays: 7,
+    feeds: JSON.parse(JSON.stringify(window.feeds))
   };
 
-  //more code to deal with non-cumulative streams
-  for (var i=0; i<App.feeds.length; i++) {
-    App.feeds[i]['values'] = difference(App.feeds[i]['values']);
-    if (App.feeds[i]['values']) {
-      App.new_feeds.push(App.feeds[i]);
+
+  function renderChart() {
+    //more code to deal with non-cumulative streams
+    App.data = [];
+    App.new_feeds = [];
+    App.feeds = JSON.parse(JSON.stringify(window.feeds));
+    for (var i=0; i<App.feeds.length; i++) {
+      App.feeds[i]['values'] = difference(App.feeds[i]['values']);
+      if (App.feeds[i]['values']) {
+        App.new_feeds.push(App.feeds[i]);
+      }
     }
-  }
-  App.feeds = App.new_feeds;
+    App.feeds = App.new_feeds;
 
-  App.feeds.sort(function(a,b) {
-    //should be simplified
-    var last = a['values'].length - 1;
-    return a['values'][last] > b['values'][last];
-  })
+    App.feeds.sort(function(a,b) {
+      //should be simplified
+      var last = a['values'].length - 1;
+      return a['values'][last] > b['values'][last];
+    })
 
-  for (var i=0; i<App.feeds.length; i++) {
-    var values = paired(App.feeds[i]['values']);
-    if (values.length > 7) {
-      values = values.slice(values.length-7, values.length);
+    for (var i=0; i<App.feeds.length; i++) {
+      var values = paired(App.feeds[i]['values']);
+      if (values.length > App.numDays) {
+        values = values.slice(values.length-App.numDays, values.length);
+      }
+      App.data.push({values: values, key: App.feeds[i]['name'], color: getColorAtScalar(i, App.feeds.length)})
     }
-    App.data.push({values: values, key: App.feeds[i]['name'], color: getColorAtScalar(i, App.feeds.length)})
+
+
+    $('svg').html('');
+    nv.addGraph(function() {
+      var chart = nv.models.multiBarChart();
+
+      chart.xAxis
+          // .axisLabel('Day of the week');
+          .axisLabel('');
+
+      chart.yAxis
+          .axisLabel('Energy Expenditure (KWh)')
+          .tickFormat(d3.format('.02f'));
+
+      chart.showControls(false).stacked(false);
+
+      d3.select('#chart svg')
+          .datum(App.data)
+          .transition().duration(500)
+          .call(chart);
+
+
+      nv.utils.windowResize(chart.update);
+
+      return chart;
+    });  
   }
 
-  nv.addGraph(function() {
-    var chart = nv.models.multiBarChart();
+  renderChart();
 
-    chart.xAxis
-        .axisLabel('Day of the week');
-
-    chart.yAxis
-        .axisLabel('Energy Expenditure (KWh)')
-        .tickFormat(d3.format('.02f'));
-
-    chart.showControls(false).stacked(false);
-
-    d3.select('#chart svg')
-        .datum(App.data)
-        .transition().duration(500)
-        .call(chart);
-
-
-    nv.utils.windowResize(chart.update);
-
-    return chart;
+  $('.numDays').change(function() {
+    console.log($(this).val());
+    App.numDays = parseInt($(this).val());
+    renderChart();
+    //send request to server
   });
+
 });

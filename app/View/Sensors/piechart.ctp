@@ -9,7 +9,7 @@ text {
 <div id='title'>
 	Weekly energy usage
 </div>
-<div id='chart'>
+<div id='chart' class='piechart'>
     <svg></svg>
 </div>
 <div style='display:block; margin-right: auto; margin-left: auto; text-align: center; border: 2px black auto; width: 100%; font-size: 20px;'>

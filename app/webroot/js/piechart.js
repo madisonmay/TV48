@@ -310,7 +310,7 @@ nv.dev = false;
 var App = (function() {
     var exports = {};
     exports.numDays = 7;
-    exports.feeds = window.feeds;
+    exports.feeds = JSON.parse(JSON.stringify(window.feeds));
     return exports; 
 })();
 
@@ -337,10 +337,10 @@ function sum(array) {
 
 function renderChart() {
   //more code to deal with non-cumulative streams
+  console.log('-----------------------------------------------')
   App.data = [];
-  App.old_feeds = JSON.parse(JSON.stringify(App.feeds));
+  App.feeds = JSON.parse(JSON.stringify(window.feeds));
   App.new_feeds = [];
-  console.log('App: ', App)
   for (var i=0; i<App.feeds.length; i++) {
     App.feeds[i]['values'] = difference(App.feeds[i]['values']);
     if (App.feeds[i]['values']) {
@@ -348,24 +348,25 @@ function renderChart() {
     }
   }
 
-  App.feeds = App.new_feeds;
-  App.feeds.sort(function(a,b) {
+  App.new_feeds.sort(function(a,b) {
     var last = a['values'].length - 1;
     return a['values'][last] > b['values'][last];
   })
 
-  for (var i=0; i<App.feeds.length; i++) {
-    var values = App.feeds[i]['values'];
+  for (var i=0; i<App.new_feeds.length; i++) {
+    var values = App.new_feeds[i]['values'];
     if (values.length > App.numDays) {
       values = values.slice(values.length - App.numDays, values.length);
+      console.log("Values: ", values);
     }
     // console.log(App.feeds[i]['name']);
     //prevent extraneous labels
     if (sum(values) > 0) {
-      App.data.push({value: sum(values), label: App.feeds[i]['name']});
+      App.data.push({value: sum(values), label: App.new_feeds[i]['name']});
     }
   }
 
+  console.log('App: ', App)
   $('svg').html('');
   nv.addGraph(function() {
     var chart = nv.models.pieChart()
@@ -382,8 +383,6 @@ function renderChart() {
 
     return chart;
   });
-
-  App.feeds = App.old_feeds;
 }
 
 
@@ -399,7 +398,6 @@ function getData() {
 renderChart();
 
 $('.numDays').change(function() {
-  console.log($(this).val());
   App.numDays = parseInt($(this).val());
   renderChart();
   //send request to server
