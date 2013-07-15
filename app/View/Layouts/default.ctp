@@ -144,11 +144,12 @@
 		}
 
 		$(document).ready(function() {
+			$('.brand').css('margin-left', '15px');
 			IE();
 		})
 
 		$(window).resize(function() {
-			$('.brand').css('margin-left', '10px');
+			$('.brand').css('margin-left', '15px');
 		})
 	</script>
 
