@@ -228,6 +228,7 @@
 		    $data_length = count($datapoints);
 
 		    //save in json format for use client side
+		    //not a huge fan of using the window object, but for right now it should be fine
 		    echo '<script> window.data = {}; window.data["' . $data->id . '"] = ' . json_encode($datapoints) . '</script>';
 		    echo '<script> window.times = {}; window.times["' . $data->id . '"] = ' . json_encode($times) . '</script>';
 		    echo "<script> window.data_ids = " . json_encode($data_ids) . "</script>";
