@@ -306,21 +306,13 @@ nv.models.pieChart = function() {
 }
 
 nv.dev = false;
-nv.addGraph(function() {
-  var chart = nv.models.pieChart()
-      .x(function(d) { return d.label })
-      .y(function(d) { return d.value })
-      .showLabels(true)
-      .labelThreshold(.05)
-      .donut(true);
 
-    d3.select("#chart svg")
-        .datum(getData())
-      	.transition().duration(1200)
-        .call(chart);
-
-  return chart;
-});
+var App = (function() {
+    var exports = {};
+    exports.numDays = 7;
+    exports.feeds = window.feeds;
+    return exports; 
+})();
 
 function difference(arr) {
   var result = [];
@@ -342,42 +334,76 @@ function sum(array) {
     return sum;
 }
 
-//more code to deal with non-cumulative streams
-window.data = [];
-window.new_feeds = [];
-for (var i=0; i<window.feeds.length; i++) {
-  window.feeds[i]['values'] = difference(window.feeds[i]['values']);
-  if (window.feeds[i]['values']) {
-    window.new_feeds.push(window.feeds[i]);
-  }
-}
-window.feeds = window.new_feeds;
 
-window.feeds.sort(function(a,b) {
-  var last = a['values'].length - 1;
-  return a['values'][last] > b['values'][last];
-})
+function renderChart() {
+  //more code to deal with non-cumulative streams
+  App.data = [];
+  App.old_feeds = JSON.parse(JSON.stringify(App.feeds));
+  App.new_feeds = [];
+  console.log('App: ', App)
+  for (var i=0; i<App.feeds.length; i++) {
+    App.feeds[i]['values'] = difference(App.feeds[i]['values']);
+    if (App.feeds[i]['values']) {
+      App.new_feeds.push(App.feeds[i]);
+    }
+  }
 
-for (var i=0; i<window.feeds.length; i++) {
-  var values = window.feeds[i]['values'];
-  if (values.length > 7) {
-    values = values.slice(values.length-7, values.length);
+  App.feeds = App.new_feeds;
+  App.feeds.sort(function(a,b) {
+    var last = a['values'].length - 1;
+    return a['values'][last] > b['values'][last];
+  })
+
+  for (var i=0; i<App.feeds.length; i++) {
+    var values = App.feeds[i]['values'];
+    if (values.length > App.numDays) {
+      values = values.slice(values.length - App.numDays, values.length);
+    }
+    // console.log(App.feeds[i]['name']);
+    //prevent extraneous labels
+    if (sum(values) > 0) {
+      App.data.push({value: sum(values), label: App.feeds[i]['name']});
+    }
   }
-  console.log(window.feeds[i]['name']);
-  //prevent extraneous labels
-  if (sum(values) > 0) {
-    window.data.push({value: sum(values), label: window.feeds[i]['name']});
-  }
+
+  $('svg').html('');
+  nv.addGraph(function() {
+    var chart = nv.models.pieChart()
+        .x(function(d) { return d.label })
+        .y(function(d) { return d.value })
+        .showLabels(true)
+        .labelThreshold(.05)
+        .donut(true);
+
+      d3.select("#chart svg")
+          .datum(getData())
+          .transition().duration(1200)
+          .call(chart);
+
+    return chart;
+  });
+
+  App.feeds = App.old_feeds;
 }
+
 
 function getData() {
   return [
   {
     key: "Total Weekly Energy Usage",
-    values: window.data
+    values: App.data
   }
   ];
 }
+
+renderChart();
+
+$('.numDays').change(function() {
+  console.log($(this).val());
+  App.numDays = parseInt($(this).val());
+  renderChart();
+  //send request to server
+})
 
 
 

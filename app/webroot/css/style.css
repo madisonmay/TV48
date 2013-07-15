@@ -119,6 +119,17 @@ body {
     margin-right: auto; }
  
  
+ #chart {
+    height: 500px; 
+    width: 500px; 
+    display: block; 
+    margin-right: auto; 
+    margin-left: auto; 
+    display: block; 
+    float: none;
+ }
+
+
 .circle {
     background-color: #eeeeee;
     border-radius: 200px;
@@ -455,6 +466,17 @@ textarea {
     margin-right: 5%;
     margin-top: 10px;
     width: 80%; }
+
+
+#title {
+    position: absolute; 
+    top:135px; 
+    left: 50%; 
+    width: 300px; 
+    margin-left: -150px; 
+    text-align: center; 
+    font-size: 25px;
+}
  
  
 .toggle-sort { margin-top: 20px; }
