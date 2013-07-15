@@ -314,6 +314,8 @@ var App = (function() {
     return exports; 
 })();
 
+var color = d3.scale.category20b();
+
 function difference(arr) {
   var result = [];
 
@@ -379,6 +381,7 @@ function renderChart() {
       d3.select("#chart svg")
           .datum(getData())
           .transition().duration(1200)
+          .attr("fill", function(d, i) { return color(i); })
           .call(chart);
 
     return chart;

@@ -147,6 +147,9 @@
 			IE();
 		})
 
+		$(window).resize(function() {
+			$('.brand').css('margin-left', '10px');
+		})
 	</script>
 
 	<!--[if lte IE 9]>

@@ -87,6 +87,7 @@ $(document).ready(function() {
         App.new_feeds.push(App.feeds[i]);
       }
     }
+    var color = d3.scale.category20b();
     App.feeds = App.new_feeds;
 
     App.feeds.sort(function(a,b) {
@@ -100,7 +101,7 @@ $(document).ready(function() {
       if (values.length > App.numDays) {
         values = values.slice(values.length-App.numDays, values.length);
       }
-      App.data.push({values: values, key: App.feeds[i]['name'], color: getColorAtScalar(i, App.feeds.length)})
+      App.data.push({values: values, key: App.feeds[i]['name'], color: color(i)})
     }
 
 
