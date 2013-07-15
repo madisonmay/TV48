@@ -208,6 +208,12 @@ $('#units').change(function() {
   update_graph();
 });
 
+$('#duration').keypress(function(e) {
+  if(e.keyCode == 13) {
+    $('#duration').trigger('change');
+  }
+})
+
 
 $('.unit-change').click(function() {
   //simple change in graph scale
