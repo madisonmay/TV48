@@ -25,8 +25,8 @@ function next_chart(svg_id) {
 
   //nvd3 magic -- see nvd3 docs for details
   svg_id = svg_id.toString();
-  $('#inner_chart').html('');
-  $('#inner_chart').append('<svg id="id'+svg_id+'"></svg>');
+  $('#chart').html('');
+  $('#chart').append('<svg id="id'+svg_id+'"></svg>');
   nv.addGraph(function() {
     var chart = nv.models.lineWithFocusChart().margin({left: 80, bottom: 50})
                   .tooltipContent(function(key, y, e, graph) { return '<h3>' + e + ' ' + window.units + '</h3>' })
@@ -108,9 +108,9 @@ function render_page(svg_id) {
   var width = $(window).width();
 
   //avoid flickering by changing properties and then making chart visible
-  $('#inner_chart').css('height', height*.6);
-  $('#inner_chart').css('width', width - 65);
-  $('#inner_chart').css('display', 'block');
+  $('#chart').css('height', height*.6);
+  $('#chart').css('width', width - 65);
+  $('#chart').css('display', 'block');
 
   //remove feed html to prepare for addition of new feed value
   $('#feed').html('');

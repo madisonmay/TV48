@@ -128,6 +128,13 @@ body {
     float: none;
  }
 
+#chart {
+ display: block; 
+ margin-right: auto; 
+ margin-left: auto; 
+ float: none;
+}
+
 
 .circle {
     background-color: #eeeeee;
@@ -147,6 +154,10 @@ body {
     font-size: 20px;
     text-align: center; }
  
+#duration {
+    max-width: 50px;
+    margin-top: 0px;
+}
  
 .fade_line {
     background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 1000, from(#333), to(#fff));
@@ -319,6 +330,11 @@ input {
     padding-right: 10px;
 }
  
+
+.numDays {
+    max-width: 50px;
+    margin-top: 0px;
+}
  
 .op25 {
     -moz-opacity: .25;

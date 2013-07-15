@@ -14,9 +14,7 @@
 
 </script>
 
-<div id='chart'>
-    <div id="inner_chart", style="text-align: center">
-    </div>
+<div id="chart">
 </div>
 
 
