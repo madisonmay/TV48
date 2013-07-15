@@ -127,6 +127,7 @@
 			  }
 			});
 
+			//focus on the center -- kind of a hack, and should be changed
 			scrollTo(($(document).width() - $(window).width()) / 2, 0);
 		})
 
@@ -144,13 +145,17 @@
 		}
 
 		$(document).ready(function() {
-			$('.brand').css('margin-left', '15px');
+			if ($(window).innerWidth() < 800) {
+				$('.brand').css('margin-left', '15px');
+			}
 			IE();
-		})
+		});
 
 		$(window).resize(function() {
-			$('.brand').css('margin-left', '15px');
-		})
+			if ($(window).innerWidth() < 800) {
+				$('.brand').css('margin-left', '15px');
+			}
+		});
 	</script>
 
 	<!--[if lte IE 9]>

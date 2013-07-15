@@ -21,6 +21,7 @@
         }
 
         public function index() {
+            $this->set('title_for_layout', 'Tenants');
             $this->set('users', $this->findByRole('tenant')); 
         }
 
@@ -33,6 +34,7 @@
         }
 
         public function add() {
+            $this->set('title_for_layout', 'Register');
             if ($this->request->is('post')) {
                 $this->User->create();
                 $code = rand();
@@ -90,6 +92,7 @@
         }
 
         public function login() {
+            $this->set('title_for_layout', 'Login');
             if ($this->request->is('post')) {
                 if ($this->Auth->login()) {
                     $user_id = $this->Auth->user('id');
@@ -111,6 +114,7 @@
 
 
         public function confirm() {
+            $this->set('title_for_layout', 'Registration Confirmation');
             $code = $this->request->query['code'];
             $email = $this->request->query['email'];
             $user = $this->User->find('first', array('conditions' => array('email' => $email)));
@@ -133,6 +137,7 @@
         }
 
         public function tenant() {
+            $this->set('title_for_layout', 'Add a Tenant');
             if ($this->request->is('post')) {
                 $code = rand();
 
@@ -238,6 +243,7 @@
         }
 
         public function tenant_confirm() {
+            $this->set('title_for_layout', 'Registration Confirmation');
             if ($this->request->is('get')) {
                 $email = $this->request->query['email'];
                 $code = $this->request->query['code'];
@@ -262,6 +268,7 @@
         }
 
         public function edit() {
+            $this->set('title_for_layout', 'Edit Tenant');
             if ($this->request->is('get')) {
                 //get request
 

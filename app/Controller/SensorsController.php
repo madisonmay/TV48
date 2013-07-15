@@ -29,6 +29,7 @@
 
 			echo("<script> window.lights = " . json_encode($js_lights) . "</script>");
 
+			$this->set('title_for_layout', 'Lighting');
 			$this->set('cssIncludes', array());
 			$this->set('jsIncludes', array('lighting')); 
 		}
@@ -54,17 +55,20 @@
 
 		public function heating() {
 			//Potentially a case of mixing presentation and logic? 
+			$this->set('title_for_layout', 'Heating');
 			$this->set('cssIncludes', array('plot'));
 			$this->set('jsIncludes', array('http://cdnjs.cloudflare.com/ajax/libs/d3/2.10.0/d3.v2.min.js', 'nv.d3')); 
 		}
 
 		public function heatmap() {
+			$this->set('title_for_layout', 'Energy Use Heatmap');
 			$this->set('cssIncludes', array());
 			$this->set('jsIncludes', array('http://cdnjs.cloudflare.com/ajax/libs/d3/2.10.0/d3.v2.min.js')); 
 		}
 
 		public function electricity_summary() {
-			//Potentially a case of mixing presentation and logic? 
+			//Potentially a case of mixing presentation and logic?
+			$this->set('title_for_layout', 'Electricity Use');
 			$this->set('cssIncludes', array());
 			$this->set('jsIncludes', array('http://cdnjs.cloudflare.com/ajax/libs/d3/2.10.0/d3.v2.min.js', 'nv.d3'));
 			$this->loadModel('Data');
@@ -86,6 +90,7 @@
 		}
 
 		public function piechart() {
+			$this->set('title_for_layout', 'Energy Use Piechart');
 			$this->set('cssIncludes', array());
 			$this->set('jsIncludes', array('http://cdnjs.cloudflare.com/ajax/libs/d3/2.10.0/d3.v2.min.js', 'nv.d3'));
 
@@ -111,7 +116,7 @@
 
 		public function electricity() {
 			//Potentially a case of mixing presentation and logic? 
-			
+			$this->set('title_for_layout', 'Electricity');
 			$this->set('cssIncludes', array());
 			$this->set('jsIncludes', array('http://cdnjs.cloudflare.com/ajax/libs/d3/2.10.0/d3.v2.min.js', 'nv.d3')); 
 
@@ -340,6 +345,7 @@
 		}
 
 		public function index() {
+			$this->set('title_for_layout', 'Sensors');
 			$this->set('cssIncludes', array());
 			$this->set('jsIncludes', array());
 			$lighting = array("conditions" => array("Sensor.type" => "lighting"));
@@ -351,6 +357,7 @@
 		}
 
 		public function add() {
+			$this->set('title_for_layout', 'Add a Sensor');
 			if ($this->request->is('get')) {
 				$rooms = $this->Sensor->Room->find('list');
 				$this->set('rooms', $rooms);
@@ -371,6 +378,7 @@
 		}
 
 		public function edit() {
+			$this->set('title_for_layout', 'Edit a Sensor');
 			if ($this->request->is('get')) {
 				$rooms = $this->Sensor->Room->find('list');
 				$this->set('rooms', $rooms);

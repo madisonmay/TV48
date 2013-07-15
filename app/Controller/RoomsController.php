@@ -10,15 +10,13 @@
 		}
 
 		public function index() {
+			$this->set('title_for_layout', 'Rooms');
 			$opts = array('fields' => array('id', 'name'));
 			$this->set('rooms', $this->Room->find('list', $opts)); 
 		}
 
 		public function add() {
-			// ***********************************************************************
-			// Make sure that admins and landlords are always given access 
-			// Write a method that creates a contract between new room and those roles
-			// ***********************************************************************
+			$this->set('title_for_layout', 'Add a Room');
 		    if ($this->request->is('post')) {
 		        if ($this->request->data['Room']['Users']) {
 
@@ -117,6 +115,7 @@
 		}
 
 		public function edit() {
+			$this->set('title_for_layout', 'Edit a Room');
 			if ($this->request->is('get')) {
 				//get request
 				$this->set('users', $this->findByRole('tenant')); 

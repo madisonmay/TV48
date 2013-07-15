@@ -11,6 +11,7 @@
 		}
 
 		public function logger() {
+			$this->set('title_for_layout', 'Data Logger');
 			$midnight = strtotime('today midnight');
 			// if (time() - $midnight < 600) {
 				$this->loadModel('Sensor');
