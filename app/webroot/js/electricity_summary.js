@@ -68,29 +68,33 @@ $(document).ready(function() {
     }
   }
 
+  var App = {
+    data: [],
+    new_feeds: [],
+    feeds: window.feeds
+  };
+
   //more code to deal with non-cumulative streams
-  var data = [];
-  window.new_feeds = [];
-  for (var i=0; i<window.feeds.length; i++) {
-    window.feeds[i]['values'] = difference(window.feeds[i]['values']);
-    if (window.feeds[i]['values']) {
-      window.new_feeds.push(window.feeds[i]);
+  for (var i=0; i<App.feeds.length; i++) {
+    App.feeds[i]['values'] = difference(App.feeds[i]['values']);
+    if (App.feeds[i]['values']) {
+      App.new_feeds.push(App.feeds[i]);
     }
   }
-  window.feeds = window.new_feeds;
+  App.feeds = App.new_feeds;
 
-  window.feeds.sort(function(a,b) {
+  App.feeds.sort(function(a,b) {
     //should be simplified
     var last = a['values'].length - 1;
     return a['values'][last] > b['values'][last];
   })
 
-  for (var i=0; i<window.feeds.length; i++) {
-    var values = paired(window.feeds[i]['values']);
+  for (var i=0; i<App.feeds.length; i++) {
+    var values = paired(App.feeds[i]['values']);
     if (values.length > 7) {
       values = values.slice(values.length-7, values.length);
     }
-    data.push({values: values, key: window.feeds[i]['name'], color: getColorAtScalar(i, window.feeds.length)})
+    App.data.push({values: values, key: App.feeds[i]['name'], color: getColorAtScalar(i, App.feeds.length)})
   }
 
   nv.addGraph(function() {
@@ -106,7 +110,7 @@ $(document).ready(function() {
     chart.showControls(false).stacked(false);
 
     d3.select('#chart svg')
-        .datum(data)
+        .datum(App.data)
         .transition().duration(500)
         .call(chart);
 
