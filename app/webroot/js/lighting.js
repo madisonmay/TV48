@@ -1,4 +1,9 @@
 
+//namespace to avoid polluting global namespace
+var App = {
+  lights: window.lights
+};
+
 Array.prototype.sortByProp = function(p){
     return this.sort(function(a,b){
         return (a[p] > b[p]) ? 1 : (a[p] < b[p]) ? -1 : 0;
@@ -21,16 +26,16 @@ function render_page() {
     }
 
     //initialize all icons and sliders
-    for (var i = 0; i < window.lights.length; i++) {
+    for (var i = 0; i < App.lights.length; i++) {
 
         if ((i%(num_cols)) == 0) {
             $('body').append('<div class="row-fluid"></div>');
         }
 
         //get the essentials from the global window object
-        var brightness = window.lights[i]['pwm']/500.0;
-        var room_name = window.lights[i]['location'];
-        var streamId = window.lights[i]['streamId'];
+        var brightness = App.lights[i]['pwm']/500.0;
+        var room_name = App.lights[i]['location'];
+        var streamId = App.lights[i]['streamId'];
 
         //string for templating purposes
         var room = '<div class="span' + 12/num_cols + '">' +
@@ -74,8 +79,8 @@ function render_page() {
 
 $(document).ready(function() {
 
-  window.lights.sortByProp('pwm');
-  window.lights.reverse();
+  App.lights.sortByProp('pwm');
+  App.lights.reverse();
 
   render_page();
   reset_modified();
@@ -85,7 +90,7 @@ $(document).ready(function() {
 
   function update_all(value) {
     //set all sliders to the same value
-    for (var i = 0; i < window.lights.length; i++) {
+    for (var i = 0; i < App.lights.length; i++) {
         var slider = $('#slider' + i.toString());
         slider.slider("value", value);
         slider.attr('modified', 1);
@@ -97,7 +102,7 @@ $(document).ready(function() {
 
   function reset_modified() {
     //make sure none of the lights are registered as modified
-    for (var i = 0; i < window.lights.length; i++) {
+    for (var i = 0; i < App.lights.length; i++) {
         var slider = $('#slider' + i.toString());
         slider.attr('modified', 0);
     }
@@ -116,24 +121,24 @@ $(document).ready(function() {
   $('.sort-by').change(function() {
       //make sorting through entries a little easier on the user
       if ($(this).val() === 'pwm') {
-          window.lights.sortByProp('pwm');
-          window.lights.reverse();
+          App.lights.sortByProp('pwm');
+          App.lights.reverse();
       } else if ($(this).val() === 'location') {
-          window.lights.sortByProp('location');
+          App.lights.sortByProp('location');
       }
       render_page();
   })
 
   $('.toggle-sort').click(function() {
       //reverse list
-      window.lights.reverse();
+      App.lights.reverse();
       render_page();
   })
 
   function retrieve_all() {
       //retrieve all pwm values for pushing to database as string
       var values = [];
-      for (var i = 0; i <= window.lights.length; i++) {
+      for (var i = 0; i <= App.lights.length; i++) {
           var slider = $('#slider' + i.toString());
           var value = slider.next('.labels').children(".amount").html();
           var streamId = slider.attr('streamId');
