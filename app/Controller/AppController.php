@@ -84,10 +84,12 @@ class AppController extends Controller {
 	}
 
 	public function hasRole($role, $user) {
+		//check whether a user object has a particular role
 		return in_array($role, json_decode($user['User']['roles']));
 	}
 
 	public function filterByRole($users, $role) {
+		//filters list of user by role
 		$result = array();
 		foreach ($users as $user) {
 			if ($this->hasRole($role, $user)) {
@@ -98,6 +100,8 @@ class AppController extends Controller {
 	}
 
 	public function findByRole($role) {
+		//returns an array of the form user_id => full_name,
+		//of all users with role 'role'.
 		$this->loadModel('User');
 
 		$users = $this->User->find('all');
@@ -113,6 +117,7 @@ class AppController extends Controller {
 	}
 
 	public function removeByRole($users, $role) {
+		//removes all users from a list of users who have a given role
 		$result = array();
 		foreach ($users as $user) {
 			if (!$this->hasRole($role, $user)) {
@@ -153,6 +158,7 @@ class AppController extends Controller {
 	}
 
 	public function findAvailableRooms() {
+		//returns a list of unoccupied, non public rooms
 		$this->loadModel('Room');
 		$rooms = $this->Room->find('all');
 
@@ -488,6 +494,8 @@ class AppController extends Controller {
 	}
 
 	public function contractExists($room_id, $user_id) {
+		//what is sounds like -- searches for a contract between room and user 
+		//given a room_id and user_id
 		$this->loadModel('Contract');
 		$opts = array('conditions' => array('user_id' => $user_id, 'room_id' => $room_id));
 		if ($this->Contract->find('first', $opts)) {

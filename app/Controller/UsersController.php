@@ -11,13 +11,28 @@
             //if the user does not have landlord privileges
             if (!in_array('landlord', $this->Session->read('User.roles'))) {
                 //the only actions exposed should be login and logout
-                if (!in_array($this->action, array('login', 'logout', 'confirm', 'tenant_confirm'))) {
+                if (!in_array($this->action, array('login', 'logout', 'confirm', 'tenant_confirm', 'billing'))) {
                     return false;
                 }
             }
             
 
             return true;
+        }
+
+        public function billing() {
+            $users = $this->User->find('all');
+            $users = $this->filterByRole($users, 'tenant');
+            $max_letter_count = 0;
+            foreach ($users as $user) {
+                $letter_count = strlen((string) number_format($user['User']['balance'], 2));
+                if ($letter_count > $max_letter_count) {
+                    $max_letter_count = $letter_count;
+                }
+            }
+            $this->set('max_letter_count', $max_letter_count);
+            $this->set('users', $users);
+            $this->set('title_for_layout', 'Tenant Balances');
         }
 
         public function index() {

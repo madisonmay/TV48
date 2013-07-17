@@ -1,6 +1,8 @@
 <?
 	class BillsController extends AppController {
 
+		//currently deprecated in favor of prepaid style billing
+
 		function beforeFilter() {
 			parent::beforeFilter();
 			$this->Auth->allow('index');
