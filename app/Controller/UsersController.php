@@ -23,14 +23,6 @@
         public function billing() {
             $users = $this->User->find('all');
             $users = $this->filterByRole($users, 'tenant');
-            $max_letter_count = 0;
-            foreach ($users as $user) {
-                $letter_count = strlen((string) number_format($user['User']['balance'], 2));
-                if ($letter_count > $max_letter_count) {
-                    $max_letter_count = $letter_count;
-                }
-            }
-            $this->set('max_letter_count', $max_letter_count);
             $this->set('users', $users);
             $this->set('title_for_layout', 'Tenant Balances');
         }
