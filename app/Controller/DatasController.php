@@ -22,9 +22,12 @@
 				//deactivate the necessary contracts that have expired
 				$contracts = $this->Contract->find('all', array('conditions' => array('deactivated' => 0)));
 				foreach ($contracts as $contract) {
+
+					//if the contract has expired
 					if (strtotime($contract['Contract']['end_date']) < time()) {
 						$this->Contract->id = $contract['Contract']['id'];
 						$datetime = date('F j, Y', time());
+						//set the deactivated field to the current datetime
 						$this->Contract->saveField('deactivated', $datetime);
 					}
 				}
@@ -32,6 +35,8 @@
 				//the real business
 				$sensors = $this->Sensor->find('all', array('conditions' => array('Sensor.type' => 'electricity')));
 				foreach ($sensors as $sensor) {
+
+					//url components
 					$xively_id = $sensor['Sensor']['xively_id'];
 					$raw_url = 'http://api.xively.com/v2/feeds/120903/datastreams/';
 					$url =  $raw_url . $xively_id . '.json?key=';
@@ -44,22 +49,32 @@
 					curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 					$obj_resp = json_decode(curl_exec($curl));
 					$current_value = $obj_resp->current_value;
+
+					//compose new data object and save to the db
 					$data = array();
 					$data['Data']['sensor_id'] = $sensor['Sensor']['id'];
 					$data['Data']['value'] = $current_value;
 					$this->Data->create();
+
 					if ($this->Data->save($data)) {
-						//success - update user balance
+						//successful save - update user balance
 						$room = $this->Sensor->findById($sensor['Sensor']['id']);
 						$room_id = $room['Room']['id'];
 
+						//find all valid contracts that concern that sensor
 						$contract_opts = array('conditions' => array(
 							'Contract.deactivated' => 0,
 							'Contract.pay' => 1,
 							'Contract.room_id' => $room_id));
 						$contracts = $this->Contract->find('all', $contract_opts);
+
+						//count them to divide the balance evenly
 						$numUsers = count($contracts);
+
+						//assuming this value is greater than 0 (needs to be checked to prevent divide by 0)
 						if ($numUsers) {
+
+							//find the change in the cumulative energy consumption
 							$data_opts = array('conditions' => array(
 								'Data.sensor_id' => $sensor['Sensor']['id']),
 								'order' => array('Data.created'));
@@ -68,34 +83,27 @@
 								//at least two data points exist now
 								$previous_value = $previous_values[count($previous_values) - 2]['Data']['value'];
 								$delta = $current_value - $previous_value;
-								echo "Current value: ";
-								pr($current_value);
-								echo "Previous value: ";
-								pr($previous_value);
-								echo "Delta: ";
-								pr($delta);
+
+								//divide by the number of users to evenly distribute cost
 								$watts_per_person = $delta/$numUsers;
 
+								//convert kwh to a monetary value
 								//.2 (the cost per kwh) should eventually be a value tied to the landlord (dynamic)
 								$cost_per_person = ($watts_per_person/1000)*.2;
+
+								//if this value is nonzero
 								if ($cost_per_person) {
+
+									//update the balanace for each user
 									foreach ($contracts as $contract) {
-										echo 'User id: ';
 										$user = $this->User->findById($contract['User']['id']);
-										pr($user['User']['id']);
-										echo 'Room id: ';
-										pr($contract['Room']['id']);
-										echo 'User balance: ';
-										pr($user['User']['balance']);
-										echo 'minus';
-										pr($cost_per_person);
-										echo '<br>------------------------<br>';
 										$this->User->id = $user['User']['id'];
 										$this->User->saveField('balance', $user['User']['balance'] - $cost_per_person);
 									}
 								}
 							}
 						}
+						echo "0";
 					} else {
 						//failure
 						echo "1";
