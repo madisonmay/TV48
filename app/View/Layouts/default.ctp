@@ -139,8 +139,6 @@
 					$('#footer-tab').animate({'bottom': '+=15'}, 100);
 					$('#footer').animate({'bottom': '+=15'}, 100);
 				}
-
-				$('#input').animate({'bottom': '+=15', 'width': '-=24'}, 100);
 			}
 		}
 
