@@ -27,6 +27,19 @@
             $this->set('title_for_layout', 'Tenant Balances');
         }
 
+        public function update_balance() {
+            if ($this->request->is('post')) {
+                $user_id = (int) $this->request->data['id'];
+                $delta = (float) $this->request->data['delta'];
+                $user = $this->User->findById($user_id);
+                $this->User->id = $user_id;
+                if ($this->User->saveField('balance', $user['User']['balance'] + $delta)) {
+                    echo $user['User']['balance'] + $delta;
+                }
+            }
+            exit(0);
+        }
+
         public function index() {
             $this->set('title_for_layout', 'Tenants');
             $this->set('users', $this->findByRole('tenant')); 
