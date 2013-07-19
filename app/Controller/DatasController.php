@@ -33,7 +33,7 @@
 				}
 
 				//the real business
-				$sensors = $this->Sensor->find('all', array('conditions' => array('Sensor.type' => 'electricity', 'Sensor.delta' => 0)));
+				$sensors = $this->Sensor->find('all', array('conditions' => array('Sensor.type' => 'electricity')));
 				foreach ($sensors as $sensor) {
 
 					//url components
@@ -59,63 +59,68 @@
 					if ($this->Data->save($data)) {
 						$this->loadModel('BalanceUpdate');
 						//successful save - update user balance
-						$room = $this->Sensor->findById($sensor['Sensor']['id']);
-						$room_id = $room['Room']['id'];
+						$room_id = $sensor['Room']['id'];
 
-						//find all valid contracts that concern that sensor
-						$contract_opts = array('conditions' => array(
-							'Contract.deactivated' => 0,
-							'Contract.pay' => 1,
-							'Contract.room_id' => $room_id));
-						$contracts = $this->Contract->find('all', $contract_opts);
+						if (!$sensor['Sensor']['delta']) {
+							//find all valid contracts that concern that sensor
+							//also make sure sensor is cumulative ^^
+							$contract_opts = array('conditions' => array(
+								'Contract.deactivated' => 0,
+								'Contract.pay' => 1,
+								'Contract.room_id' => $room_id));
+							$contracts = $this->Contract->find('all', $contract_opts);
 
-						//count them to divide the balance evenly
-						$numUsers = count($contracts);
+							//count them to divide the balance evenly
+							$numUsers = count($contracts);
 
-						//assuming this value is greater than 0 (needs to be checked to prevent divide by 0)
-						if ($numUsers) {
+							//assuming this value is greater than 0 (needs to be checked to prevent divide by 0)
+							if ($numUsers) {
 
-							//find the change in the cumulative energy consumption
-							$data_opts = array('conditions' => array(
-								'Data.sensor_id' => $sensor['Sensor']['id']),
-								'order' => array('Data.created'));
-							$previous_values = $this->Data->find('all', $data_opts);
-							if (count($previous_values) > 1) {
-								//at least two data points exist now
-								$previous_value = $previous_values[count($previous_values) - 2]['Data']['value'];
-								$delta = $current_value - $previous_value;
+								//find the change in the cumulative energy consumption
+								$data_opts = array('conditions' => array(
+									'Data.sensor_id' => $sensor['Sensor']['id']),
+									'order' => array('Data.created'));
+								$previous_values = $this->Data->find('all', $data_opts);
+								if (count($previous_values) > 1) {
+									//at least two data points exist now
+									$previous_value = $previous_values[count($previous_values) - 2]['Data']['value'];
+									$delta = $current_value - $previous_value;
 
-								//divide by the number of users to evenly distribute cost
-								$watts_per_person = $delta/$numUsers;
+									//divide by the number of users to evenly distribute cost
+									$watts_per_person = $delta/$numUsers;
 
-								//convert kwh to a monetary value
-								//.2 (the cost per kwh) should eventually be a value tied to the landlord (dynamic)
-								$cost_per_person = ($watts_per_person/1000)*.2;
+									//convert kwh to a monetary value
+									//.2 (the cost per kwh) should eventually be a value tied to the landlord (dynamic)
+									$cost_per_person = ($watts_per_person/1000)*.2;
 
-								//if this value is nonzero
-								if ($cost_per_person) {
+									//if this value is nonzero
+									if ($cost_per_person) {
 
-									//update the balance for each user
-									foreach ($contracts as $contract) {
-										$user = $this->User->findById($contract['User']['id']);
+										//update the balance for each user
+										foreach ($contracts as $contract) {
+											$user = $this->User->findById($contract['User']['id']);
 
-										//make BalanceUpdate object
-										$data = array();
-										$data['BalanceUpdate']['delta'] = $cost_per_person;
-										$data['BalanceUpdate']['balance'] = $user['User']['balance'] - $cost_per_person;
-										$data['BalanceUpdate']['user_id'] = $user['User']['id'];
-										$data['BalanceUpdate']['wh_delta'] = $watts_per_person;
-										$data['BalanceUpdate']['wh'] = $watts_per_person + $user['User']['wh'];
+											//make BalanceUpdate object
+											$data = array();
+											$data['BalanceUpdate']['delta'] = $cost_per_person;
+											$data['BalanceUpdate']['balance'] = $user['User']['balance'] - $cost_per_person;
+											$data['BalanceUpdate']['user_id'] = $user['User']['id'];
+											$data['BalanceUpdate']['wh_delta'] = $watts_per_person;
+											$data['BalanceUpdate']['wh'] = $watts_per_person + $user['User']['wh'];
+											$data['BalanceUpdate']['room_id'] = $contract['Room']['id'];
+											$data['BalanceUpdate']['sensor_id'] = $sensor['Sensor']['id'];
 
-										$this->User->id = $user['User']['id'];
-										$this->User->saveField('balance', $data['BalanceUpdate']['balance']);
-										$this->User->saveField('wh', $data['BalanceUpdate']['wh']);
-										$this->BalanceUpdate->create();
-										$this->BalanceUpdate->save($data);
+											$this->User->id = $user['User']['id'];
+											$this->User->saveField('balance', $data['BalanceUpdate']['balance']);
+											$this->User->saveField('wh', $data['BalanceUpdate']['wh']);
+											$this->BalanceUpdate->create();
+											$this->BalanceUpdate->save($data);
+										}
 									}
 								}
-							}
+							}	
 						}
+						
 						echo "0";
 					} else {
 						//failure

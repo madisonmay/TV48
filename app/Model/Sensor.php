@@ -6,7 +6,7 @@
         public $belongsTo = array('Room');
         public $hasMany = array('Data' => array(
             'order' => 'Data.created ASC'
-        ));
+        ), 'BalanceUpdate');
 
         public $validate = array(
             'name' => array(

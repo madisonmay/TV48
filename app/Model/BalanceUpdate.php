@@ -3,7 +3,7 @@
     App::uses('AuthComponent', 'Controller/Component');
     class BalanceUpdate extends AppModel {
 
-        public $belongsTo = array('User');
+        public $belongsTo = array('User', 'Room', 'Sensor');
         
         public $validate = array(
             'user_id' => array(
