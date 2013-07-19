@@ -174,12 +174,14 @@
 
 		    foreach ($datastreams as $data) {
 		    	if (in_array($data->id, $sensor_ids)) {
-			        array_push($data_ids, $data->id);
-			        $sensor = $this->Sensor->find('first', array('conditions' => array('Sensor.xively_id' => $data->id)));
-			        $name = $sensor['Sensor']['name'];
-			        $data_names[$data->id] = $name;
-			        if ($data->id == $streamId) {
-			        	$plot_data = $data;
+			        $sensor = $this->Sensor->find('first', array('conditions' => array('Sensor.xively_id' => $data->id, 'Sensor.delta' => 1)));
+			        if ($sensor) {
+			        	array_push($data_ids, $data->id);
+				        $name = $sensor['Sensor']['name'];
+				        $data_names[$data->id] = $name;
+				        if ($data->id == $streamId) {
+				        	$plot_data = $data;
+				        }
 			        }
 		    	}
 		    }
