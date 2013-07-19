@@ -72,6 +72,5 @@
 <div id="chart">
 </div>
 
-
 <script src='/js/electricity.js'></script>
 

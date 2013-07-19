@@ -4,7 +4,7 @@
 		public function isAuthorized($user) {
 			if (in_array('admin', $this->Session->read('User.roles'))) {
 				return true;
-			} elseif (in_array($this->action, array('lighting', 'heating', 'electricity', 'refresh'))) {
+			} elseif (in_array($this->action, array('lighting', 'heating', 'electricity', 'refresh', 'piechart', 'electricity_summary'))) {
 				return true;
 			}
 
@@ -78,14 +78,16 @@
 			$count = 0;
 			echo '<script> window.feeds = [];</script>';
 			foreach ($sensors as $sensor) {
-				$count++;
-				$sensor_values = array();
-				$data = $sensor['Data'];
-				foreach ($data as $datum) {
-					array_push($sensor_values, $datum['value']);
+				if ($this->contractExists($sensor['Sensor']['room_id'], $this->Auth->user('id'))) {
+					$count++;
+					$sensor_values = array();
+					$data = $sensor['Data'];
+					foreach ($data as $datum) {
+						array_push($sensor_values, $datum['value']);
+					}
+					$final = array('name' => $sensor['Sensor']['name'], 'values' => $sensor_values);
+					echo '<script> window.feeds.push(' . json_encode($final) . ');</script>';
 				}
-				$final = array('name' => $sensor['Sensor']['name'], 'values' => $sensor_values);
-				echo '<script> window.feeds.push(' . json_encode($final) . ');</script>';
 			}
 		}
 
@@ -103,14 +105,16 @@
 			//should create php object and then push all at once
 			echo '<script> window.feeds = [];</script>';
 			foreach ($sensors as $sensor) {
-				$count++;
-				$sensor_values = array();
-				$data = $sensor['Data'];
-				foreach ($data as $datum) {
-					array_push($sensor_values, $datum['value']);
+				if ($this->contractExists($sensor['Sensor']['room_id'], $this->Auth->user('id'))) {
+					$count++;
+					$sensor_values = array();
+					$data = $sensor['Data'];
+					foreach ($data as $datum) {
+						array_push($sensor_values, $datum['value']);
+					}
+					$final = array('name' => $sensor['Sensor']['name'], 'values' => $sensor_values);
+					echo '<script> window.feeds.push(' . json_encode($final) . ');</script>';
 				}
-				$final = array('name' => $sensor['Sensor']['name'], 'values' => $sensor_values);
-				echo '<script> window.feeds.push(' . json_encode($final) . ');</script>';
 			}
 		}
 

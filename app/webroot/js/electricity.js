@@ -105,11 +105,11 @@ function render_page(svg_id) {
 
   //called on page load -- sets params based on clients computer
   //and calls helper functions to render data
-  var height = $(window).height();
+  var height = $(window).innerHeight() - 150;
   var width = $(window).width();
 
   //avoid flickering by changing properties and then making chart visible
-  $('#chart').css('height', height*.6);
+  $('#chart').css('height', height*.9);
   $('#chart').css('width', width - 65);
   $('#chart').css('display', 'block');
 
