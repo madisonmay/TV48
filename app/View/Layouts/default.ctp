@@ -78,24 +78,6 @@
 
 		$(document).ready(function() {
 
-			//will eventually need to expand to other firebase accounts
-			window.dataRef = new Firebase('https://tv48.firebaseio.com/');
-			window.timer_id = 0;
-			window.notepad_open = false;
-
-			// window.dataRef.on('value', function(snapshot) {
-			// 	if (snapshot.val() != $('#footer').html()) {
-			// 		$('#footer').html(snapshot.val());
-			// 	}
-			// });
-
-			window.dataRef.limit(15).on('child_added', function (snapshot) {
-			  var message = snapshot.val();
-			  $('<div/>').text(message.text).prepend($('<b/>')
-			    .text(message.name+': ')).appendTo($('#footer'));
-			  $('#footer')[0].scrollTop = $('#footer')[0].scrollHeight;
-			});
-
 			$('a').mouseover(function() {
 			  $(this).css("color", "#46a546");
 			});
@@ -104,51 +86,17 @@
 			  $(this).css("color", "#eeeeee");
 			});
 
-			$('#footer-tab').click(function() {
-			  //open up chat window
-			  if (window.notepad_open) {
-			    $(this).animate({'bottom': '-=510'}, 1000);
-			    $('#footer').animate({'bottom': '-=510'}, 1000);
-			    $('#input').animate({'bottom': '-=510'}, 1000);
-			    window.notepad_open = false;
-			  } else {
-			    $(this).animate({'bottom': '+=510'}, 1000);
-			    $('#footer').animate({'bottom': '+=510'}, 1000);
-			    $('#input').animate({'bottom': '+=510'}, 1000);
-			    window.notepad_open = true;
-			  }
-			});
-
-			$('#input').keypress(function (e) {
-			  //bind enter key to submit message
-			  if (e.keyCode == 13) {
-			    var name = '<?php echo $this->Session->read("Auth.User.full_name"); ?>';
-			    var text = $('#input').val();
-			    window.dataRef.push({name:name, text:text});
-			    $('#input').val('');
-			  }
-			});
-
 			//focus on the center -- kind of a hack, and should be changed
 			scrollTo(($(document).width() - $(window).width()) / 2, 0);
 		})
 
 	</script>
 	<script>
-		function IE() {
-			if (Function('/*@cc_on return document.documentMode===10@*/')()){
-				if ($(window).innerWidth() < 1200) {
-					$('#footer-tab').animate({'bottom': '+=15'}, 100);
-					$('#footer').animate({'bottom': '+=15'}, 100);
-				}
-			}
-		}
 
 		$(document).ready(function() {
 			if ($(window).innerWidth() < 800) {
 				$('.brand').css('margin-left', '15px');
 			}
-			IE();
 		});
 
 		$(window).resize(function() {
@@ -251,14 +199,5 @@
 			<?php echo $this->element('sql_dump'); ?>
 		</button>
 	</div> -->
-
-	<?php if ($this->Session->read('Auth.User')): ?>
-	    <div id='footer-tab'>
-	    notepad
-	    </div>
-	    <div id="footer">
-	    </div>
-	    <input id='input' placeholder='Type message and press enter to send.'>
-	<?php endif; ?>
 </body>
 </html>
