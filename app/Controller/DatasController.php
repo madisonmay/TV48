@@ -57,6 +57,7 @@
 					$this->Data->create();
 
 					if ($this->Data->save($data)) {
+						$this->loadModel('BalanceUpdate');
 						//successful save - update user balance
 						$room = $this->Sensor->findById($sensor['Sensor']['id']);
 						$room_id = $room['Room']['id'];
@@ -94,11 +95,23 @@
 								//if this value is nonzero
 								if ($cost_per_person) {
 
-									//update the balanace for each user
+									//update the balance for each user
 									foreach ($contracts as $contract) {
 										$user = $this->User->findById($contract['User']['id']);
+
+										//make BalanceUpdate object
+										$data = array();
+										$data['BalanceUpdate']['delta'] = $cost_per_person;
+										$data['BalanceUpdate']['balance'] = $user['User']['balance'] - $cost_per_person;
+										$data['BalanceUpdate']['user_id'] = $user['User']['id'];
+										$data['BalanceUpdate']['wh_delta'] = $watts_per_person;
+										$data['BalanceUpdate']['wh'] = $watts_per_person + $user['User']['wh'];
+
 										$this->User->id = $user['User']['id'];
-										$this->User->saveField('balance', $user['User']['balance'] - $cost_per_person);
+										$this->User->saveField('balance', $data['BalanceUpdate']['balance']);
+										$this->User->saveField('wh', $data['BalanceUpdate']['wh']);
+										$this->BalanceUpdate->create();
+										$this->BalanceUpdate->save($data);
 									}
 								}
 							}

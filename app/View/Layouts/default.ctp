@@ -105,6 +105,7 @@
 			});
 
 			$('#footer-tab').click(function() {
+			  //open up chat window
 			  if (window.notepad_open) {
 			    $(this).animate({'bottom': '-=510'}, 1000);
 			    $('#footer').animate({'bottom': '-=510'}, 1000);
@@ -119,6 +120,7 @@
 			});
 
 			$('#input').keypress(function (e) {
+			  //bind enter key to submit message
 			  if (e.keyCode == 13) {
 			    var name = '<?php echo $this->Session->read("Auth.User.full_name"); ?>';
 			    var text = $('#input').val();

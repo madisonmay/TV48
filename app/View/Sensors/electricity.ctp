@@ -14,10 +14,6 @@
 
 </script>
 
-<div id="chart">
-</div>
-
-
 <!-- simple gui for user interaction -- change time plotted or dataset -->
 <!-- eventually should also allow for datasets that do not contain the current value -->
 
@@ -37,18 +33,18 @@
       <!-- <option value="years">years</option> -->
     </select>
   </div>
-  <div class='text-center'>
+<!--   <div class='text-center'>
     <img id='loading' class='centered' src="/img/load.gif" style='width: 30px; display: none;'>
   </div>
 
   <div class='text-center'>
     <img id='settings' href="#myModal" role='button' data-toggle='modal' class='centered' src='/img/settings.png' style='width: 30px;'>
-  </div>
+  </div> -->
 
   <!-- Modal -->
 
   <!-- Switch around this interface - all that is needed is a mapping betweeen users and rooms, and a way to assign rooms to be public -->
-  <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!--   <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
       <h3 id="myModalLabel">Graph Settings</h3>
@@ -70,8 +66,12 @@
       <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
       <button class="btn btn-success unit-change">Save changes</button>
     </div>
-  </div>
+  </div> -->
 </div>
+
+<div id="chart">
+</div>
+
 
 <script src='/js/electricity.js'></script>
 

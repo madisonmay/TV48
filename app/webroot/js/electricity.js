@@ -28,7 +28,7 @@ function next_chart(svg_id) {
   $('#chart').html('');
   $('#chart').append('<svg id="id'+svg_id+'"></svg>');
   nv.addGraph(function() {
-    var chart = nv.models.lineWithFocusChart().margin({left: 80, bottom: 50})
+    var chart = nv.models.lineChart().margin({left: 80, bottom: 50})
                   .tooltipContent(function(key, y, e, graph) { return '<h3>' + e + ' ' + window.units + '</h3>' })
 
     //chart formatting
@@ -38,23 +38,23 @@ function next_chart(svg_id) {
           return d3.time.format("%H:%M")(new Date(d));
          });
 
-    chart.x2Axis
-        .axisLabel('')
-        .tickFormat(function(d) {
-          return d3.time.format("%b %d")(new Date(d));
-         });
+    // chart.x2Axis
+    //     .axisLabel('')
+    //     .tickFormat(function(d) {
+    //       return d3.time.format("%b %d")(new Date(d));
+    //      });
 
     chart.yAxis
         .axisLabel(window.units)
         .tickFormat(d3.format('.00f'));
 
-    chart.y2Axis
-        .tickFormat(d3.format('.00f'));
+    // chart.y2Axis
+    //     .tickFormat(d3.format('.00f'));
 
     //pass data to chart, specify transition length, initialize chart
     var chart_id = '#chart svg#' + 'id' + svg_id;
     d3.select(chart_id)
-        .datum([{key: svg_id, values: window.data[svg_id].slice(0, window.data_length-1)}])
+        .datum([{key: window.data_names[svg_id], values: window.data[svg_id].slice(0, window.data_length-1)}])
       .transition().duration(500)
         .call(chart);
 
@@ -119,7 +119,7 @@ function render_page(svg_id) {
   //speed up the process a bit.
   for (var i = 0; i < data_ids.length; i++) {
     if (!$('option[value=' + window.data_ids[i] + ']').length) {
-      $('#feed').append('<option value="' + window.data_ids[i] + '">' + window.data_ids[i] + '</option>');
+      $('#feed').append('<option value="' + window.data_ids[i] + '">' + window.data_names[window.data_ids[i]] + '</option>');
     }
   }
 
@@ -195,7 +195,7 @@ function prepare_data() {
 
 $('#feed').change(function() {
   if (window.previous_value != $(this).val()) {
-    window.previous_value != $(this).val()
+    window.previous_value = $(this).val()
     update_graph();
   }
 });

@@ -7,7 +7,7 @@ text {
 
 
 <div id='title'>
-	Weekly energy usage
+	Recent energy usage
 </div>
 <div id='chart' class='piechart'>
     <svg></svg>

@@ -4,7 +4,7 @@
     class User extends AppModel {
 
         public $hasAndBelongsToMany = array('Room');
-        public $hasMany = array('Contract');
+        public $hasMany = array('Contract', 'BalanceUpdate');
 
         public $virtualFields = array(    
             'full_name' => 'CONCAT(User.first_name, " ", User.last_name)'

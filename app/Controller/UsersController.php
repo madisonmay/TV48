@@ -35,6 +35,18 @@
                 $this->User->id = $user_id;
                 if ($this->User->saveField('balance', $user['User']['balance'] + $delta)) {
                     echo $user['User']['balance'] + $delta;
+
+                    //make BalanceUpdate object
+                    $data = array();
+                    $data['BalanceUpdate']['delta'] = $delta;
+                    $data['BalanceUpdate']['balance'] = $user['User']['balance'] + $delta;
+                    $data['BalanceUpdate']['user_id'] = $user_id;
+                    $data['BalanceUpdate']['wh_delta'] = 0;
+                    $data['BalanceUpdate']['wh'] = $user['User']['wh'];
+
+                    $this->loadModel('BalanceUpdate');
+                    $this->BalanceUpdate->create();
+                    $this->BalanceUpdate->save($data);
                 }
             }
             exit(0);

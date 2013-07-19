@@ -166,6 +166,7 @@
 		    $datastreams = $obj_resp->datastreams;
 
 		    $data_ids = array();
+		    $data_names = array();
 
 		    $streamId = 'PTOTAL';
 
@@ -174,6 +175,9 @@
 		    foreach ($datastreams as $data) {
 		    	if (in_array($data->id, $sensor_ids)) {
 			        array_push($data_ids, $data->id);
+			        $sensor = $this->Sensor->find('first', array('conditions' => array('Sensor.xively_id' => $data->id)));
+			        $name = $sensor['Sensor']['name'];
+			        $data_names[$data->id] = $name;
 			        if ($data->id == $streamId) {
 			        	$plot_data = $data;
 			        }
@@ -211,7 +215,7 @@
 		    $datapoints = array();
 		    $times = array();
 		    $raw_url = 'http://api.xively.com/v2/feeds/120903/datastreams/';
-		    $url =  $raw_url . $data->id . '.json?start=' . $past . '&duration=' . $seconds . 'seconds&key=';
+		    $url =  $raw_url . $plot_data->id . '.json?start=' . $past . '&duration=' . $seconds . 'seconds&key=';
 		    $key = '-fU3XguRNz7lJxJ-sdR8KcvYqKuSAKxhc2YwREp6TjAzZz0g';
 
 		    //combine strings and make request
@@ -237,6 +241,7 @@
 		    echo '<script> window.times = {}; window.times["' . $id . '"] = ' . json_encode($times) . '</script>';
 		    echo "<script> window.data_ids = " . json_encode($data_ids) . "</script>";
 		    echo "<script> window.data_length = " . json_encode($data_length) . "</script>";
+		    echo "<script> window.data_names = " . json_encode($data_names) . "</script>";
 
 		}
 
@@ -299,12 +304,12 @@
 
 			//calculate ideal resolution value
 			foreach ($intervals as $time => $delta_time) {
-			if ($seconds/100.0 <= $delta_time) {
-			  if ($seconds <= $time) {
-			    $delta = '&interval=' . $delta_time;
-			    break;
-			  }
-			}
+				if ($seconds/100.0 <= $delta_time) {
+				    if ($seconds <= $time) {
+				      $delta = '&interval=' . $delta_time;
+				      break;
+				    }
+				}
 			}
 
 			//edge case -- still needs some work to make sure the entire interval is displayed
