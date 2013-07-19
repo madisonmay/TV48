@@ -98,6 +98,7 @@ function populate_graph(svg_id) {
 function render_page(svg_id) {
 
   //check DOM elements for relevant values
+  var feed_val = $('#feed').val();
   var units = $('#units').val();
   var duration = $('#duration').val();
   var seconds = convert_time[units] * duration;
@@ -124,7 +125,7 @@ function render_page(svg_id) {
   }
 
   //update feed value and populate graph with the appropriate information
-  $('#feed').val(svg_id);
+  $('#feed').val(feed_val);
   populate_graph(svg_id);
 
   //When the feed, duration, or units change, update the graph
@@ -148,7 +149,6 @@ function update_graph() {
   if (duration_in_seconds > timeDiff) {
     var delta = Math.ceil(window.timeDiff / convert_time[units]);
     $('#duration').val(delta);
-    console.log("Only " + duration + " units of data are available.")
   }
 
   //Live mode -- updates every 5 seconds and refreshes the graph
@@ -160,13 +160,10 @@ function update_graph() {
   //more variables are grabbed from DOM elements
   var streamId = $('#feed').val().toString();
   var duration = $('#duration').val().toString() + $('#units').val().toString();
-  console.log({'streamId': streamId, 'duration': duration});
   //send jquery post request
   $.post('/sensors/refresh', {'streamId': streamId, 'duration': duration}, function(data) {
-    console.log(data);
     var data = JSON.parse(data);
     //data attached to window object to act as global vars
-    window.data_ids = data.data_ids;
     window.times = data.times;
     window.data = data.data;
     window.data_length = data.data_length;
@@ -220,9 +217,7 @@ $('.unit-change').click(function() {
   var svg_id = $('#feed').val().toString();
   update_values(svg_id, 1.0/convert_cost[window.units]);
   window.units = $('#graph-units').val();
-  console.log($('#graph-units').val());
-  var feed = $('#feed').val().toString();
-  render_page(feed);
+  render_page(svg_id);
   $('#myModal').modal('hide');
 });
 
@@ -236,7 +231,6 @@ $(document).ready(function() {
   window.units = 'Watts';
   window.timeDiff = (current_date.getTime() - date_created.getTime())/1000;
 
-  console.log(window.data);
   $('#units').val("hours");
   $('#duration').val("6");
   $('#feed').val(keys(window.data)[0]);
@@ -253,5 +247,9 @@ $(window).resize(function() {
 })
 
 $(window).ready(function(){
+  $('#feed').selectpicker('val', keys(window.data)[0]);
+})
+
+$(window).resize(function() {
   $('#feed').selectpicker('val', keys(window.data)[0]);
 })

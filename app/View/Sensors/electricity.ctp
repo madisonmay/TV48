@@ -74,5 +74,4 @@
 
 
 <script src='/js/electricity.js'></script>
-<script src='/js/plot_formatting.js'></script>
 

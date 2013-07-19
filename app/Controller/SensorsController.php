@@ -174,13 +174,14 @@
 
 		    foreach ($datastreams as $data) {
 		    	if (in_array($data->id, $sensor_ids)) {
-			        $sensor = $this->Sensor->find('first', array('conditions' => array('Sensor.xively_id' => $data->id, 'Sensor.delta' => 1)));
+			        $sensor = $this->Sensor->find('first', array('conditions' => array('Sensor.xively_id' => $data->id, 'delta' => 1)));
 			        if ($sensor) {
 			        	array_push($data_ids, $data->id);
 				        $name = $sensor['Sensor']['name'];
 				        $data_names[$data->id] = $name;
 				        if ($data->id == $streamId) {
 				        	$plot_data = $data;
+				        	break;
 				        }
 			        }
 		    	}
@@ -274,16 +275,12 @@
 			//Extract the relevant information
 			$datastreams = $obj_resp->datastreams;
 
-			$data_ids = array();
-
 			//Requested stream
 			$streamId = $_POST['streamId'];
 
 			//Select data that corresponds with the given streamId
 			foreach ($datastreams as $data) {
-				array_push($data_ids, $data->id);
 				if ($data->id == $streamId) {
-
 				  //matching datastream found
 				  $plot_data = $data;
 				  break;
@@ -346,7 +343,7 @@
 			//construct PHP object, encode as JSON, and send to client
 			$_data = array($data->id => $datapoints);
 			$_times = array($data->id => $times);
-			$reply = json_encode(array("data" => $_data, "times" => $_times, "data_ids" => $data_ids, "data_length" => $data_length));
+			$reply = json_encode(array("data" => $_data, "times" => $_times, "data_length" => $data_length));
 			echo $reply;
 			exit(0);
 		}
