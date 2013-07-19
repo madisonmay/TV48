@@ -68,7 +68,6 @@ body {
     padding: 0;
     background-color: #eeeeee;
     font-family: 'Lato', sans-serif;
-    min-width: 1100px;
     padding: 25px; }
  
  
@@ -257,8 +256,7 @@ body {
 html { 
     margin: 0;
     padding: 0;
-    background-color: #eeeeee; 
-    min-width: 700px;   }
+    background-color: #eeeeee; }
  
  
 input {
@@ -310,18 +308,10 @@ input {
     margin-right: auto;
     width: 175px; }
  
- 
-.maintain-size { min-width: 700px; }
- 
- 
 #management {
     background-image: url('../img/edit.png');
     background-position: 50% 50%;
     background-repeat: no-repeat; }
-
-.navbar, .navbar-inner, .container {
-    min-width: 700px;
-}
 
 @media (max-width:979px) {
     li a {

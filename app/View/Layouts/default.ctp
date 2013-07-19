@@ -181,49 +181,66 @@
 
 </head>
 <body>
-	<!-- Site navigation -->
+
 	<div class="navbar navbar-fixed-top">
+	  <div class="navbar-inner" style='background-color: #333333; color: #eeeeee;'>
+	    <div class="container">
+	      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <a class="brand" href="/" style='color: #eeeeee'>
+	        TV48
+	      </a>
+	      <div class="nav-collapse collapse">
+	      	<ul class="nav">
+	            <li class="divider-vertical" style='margin-top: 18px;'></li>
+	            <li><a href='/sensors/lighting' style='color: #eeeeee; text-align: center;'>Light</a></li>
+	            <li><a href='/sensors/heating' style='color: #eeeeee; text-align: center;'>Heat</a></li>
+	            <li><a href='/sensors/electricity' style='color: #eeeeee; text-align: center;'>Power</a></li>
+            	<?php 
+            		if ($this->Session->read('Auth.User')) {
+	                	if (in_array('landlord', $this->Session->read('User.roles'))) {
+	                		echo "<li><a href='/home/manage' style='color: #eeeeee; text-align: center;'>Manage</a></li>";
+	                	}
+	                	if (in_array('admin', $this->Session->read('User.roles'))) {
+	                		echo "<li><a href='/sensors' style='color: #eeeeee; text-align: center;'>Admin</a></li>";
+	                	}                	
+            		}
+                ?>
+	        </ul>
+	        <ul class="nav pull-right">
+        	  <?php if (!$this->Session->read('Auth.User')): ?>
+	          	<li>
+	              <a href="/users/add" style='color: #eeeeee; text-align: center;'>Register</a>
+	        	</li>
+        	  <?php endif; ?>
+        	  <?php if (!$this->Session->read('Auth.User')): ?>
+	        	<li>
+	              <a href="/users/login" style='color: #eeeeee; text-align: center;'>Login</a>
+	        	</li>
+        	  <?php endif; ?>
+        	  <?php if ($this->Session->read('Auth.User')): ?>
+	        	<li>
+	        	  <a href="/users/logout" style='color: #eeeeee; text-align: center;'>Logout</a>
+	        	</li>
+        	  <?php endif; ?>
+            </ul>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<!-- Site navigation -->
+<!-- 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner" style='background-color: #333333; color: #eeeeee;'>
 		    <div class="container"> 
 		    	<a class="brand" href="/" style='color: #eeeeee'>
 		            TV48
 		        </a>
-		        <ul class="nav">
-		            <li class="divider-vertical" style='margin-top: 18px;'></li>
-		            <li><a href='/sensors/lighting' style='color: #eeeeee'>Light</a></li>
-		            <li><a href='/sensors/heating' style='color: #eeeeee'>Heat</a></li>
-		            <li><a href='/sensors/electricity' style='color: #eeeeee'>Power</a></li>
-                	<?php 
-                		if ($this->Session->read('Auth.User')) {
-		                	if (in_array('landlord', $this->Session->read('User.roles'))) {
-		                		echo "<li><a href='/home/manage' style='color: #eeeeee'>Manage</a></li>";
-		                	}
-		                	if (in_array('admin', $this->Session->read('User.roles'))) {
-		                		echo "<li><a href='/sensors' style='color: #eeeeee'>Admin</a></li>";
-		                	}                	
-                		}
-	                ?>
-		        </ul>
-		        <ul class="nav pull-right">
-		        	<?php if (!$this->Session->read('Auth.User')): ?>
-			        	<li>
-			        		<a href="/users/add" style='color: #eeeeee'>Register</a>
-			        	</li>
-		        	<?php endif; ?>
-    	        	<?php if (!$this->Session->read('Auth.User')): ?>
-    		        	<li>
-    		        		<a href="/users/login" style='color: #eeeeee'>Login</a>
-    		        	</li>
-    	        	<?php endif; ?>
-    	        	<?php if ($this->Session->read('Auth.User')): ?>
-    		        	<li>
-    		        		<a href="/users/logout" style='color: #eeeeee'>Logout</a>
-    		        	</li>
-    	        	<?php endif; ?>
-		        </ul>
 		    </div>
 		</div>
-	</div>
+	</div> -->
 
 	<!-- Container for flash messages -->
 	<div style='margin-bottom: 75px;'></div>
