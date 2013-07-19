@@ -231,16 +231,6 @@
 	    </div>
 	  </div>
 	</div>
-	<!-- Site navigation -->
-<!-- 	<div class="navbar navbar-fixed-top">
-		<div class="navbar-inner" style='background-color: #333333; color: #eeeeee;'>
-		    <div class="container"> 
-		    	<a class="brand" href="/" style='color: #eeeeee'>
-		            TV48
-		        </a>
-		    </div>
-		</div>
-	</div> -->
 
 	<!-- Container for flash messages -->
 	<div style='margin-bottom: 75px;'></div>

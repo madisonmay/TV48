@@ -315,12 +315,21 @@ input {
 
 @media (max-width:979px) {
     li a {
-        margin-top: 22px;
+        font-size: 25px !important;
+        margin-top: 5px !important;
+        margin-bottom: 5px !important;
+        padding: 5px !important;
+    }
+
+    .pull-right li {
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
 
     body {
         margin: 0;
         padding: 0;
+        overflow-x: hidden;
     }
 
     html {
