@@ -57,6 +57,9 @@
             $this->set('users', $this->findByRole('tenant')); 
         }
 
+        public function profiles() {
+        }
+
         public function view($id = null) {
             $this->User->id = $id;
             if (!$this->User->exists()) {

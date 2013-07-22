@@ -246,6 +246,11 @@ body {
     background-image: url('/img/heat-small.png');
     background-position: 50% 50%;
     background-repeat: no-repeat; }
+
+
+.hidden {
+    display: none;
+}
  
  
 .home-button {
@@ -336,6 +341,10 @@ input {
         margin: 0;
         padding: 0;
     }
+
+    #logout {
+        border-top: 1px white dotted;
+    }
 }
 
 .number-input {
@@ -348,6 +357,19 @@ input {
 .numDays {
     max-width: 50px;
     margin-top: 0px;
+}
+
+.nvd3 g .nv-axislabel {
+    font-size: 20px !important;
+}
+
+.nv-x .nvd3 g .nv-axislabel {
+    font-size: 20px !important;
+}
+
+.nv-y .nvd3 g .nv-axislabel {
+    font-size: 20px !important;
+    margin-right: 0px;
 }
 
 .op25 {

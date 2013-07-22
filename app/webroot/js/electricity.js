@@ -33,11 +33,11 @@ function next_chart(svg_id) {
 
     //chart formatting
     chart.xAxis
-        .axisLabel('Time')
         .tickFormat(function(d) {
           return d3.time.format("%H:%M")(new Date(d));
-         });
+         })
 
+    // // Add in this code if you want to switch to a format with zoom.
     // chart.x2Axis
     //     .axisLabel('')
     //     .tickFormat(function(d) {
@@ -45,9 +45,9 @@ function next_chart(svg_id) {
     //      });
 
     chart.yAxis
-        .axisLabel(window.units)
         .tickFormat(d3.format('.00f'));
 
+    // // Add in this code if you want to switch to a format with zoom.
     // chart.y2Axis
     //     .tickFormat(d3.format('.00f'));
 
@@ -57,6 +57,35 @@ function next_chart(svg_id) {
         .datum([{key: window.data_names[svg_id], values: window.data[svg_id].slice(0, window.data_length-1)}])
       .transition().duration(500)
         .call(chart);
+
+    var w = parseFloat(d3.select(chart_id).style("width"));
+    var h = parseFloat(d3.select(chart_id).style("height"));
+    console.log(w, h);
+
+    d3.select(chart_id)
+      .append("text")
+        .attr("x", w/2)
+        .attr("y", 18)
+        .attr("style", "font-size: 25px !important")
+        .style("text-anchor", "middle")
+        .text("Power Consumption");
+
+    d3.select(chart_id)
+      .append("text")
+        .attr("x", w/2)
+        .attr("y", h-5)
+        .attr("style", "font-size: 20px !important")
+        .style("text-anchor", "middle")
+        .text("Time");
+
+    d3.select(chart_id)
+      .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 40)
+        .attr("x", 0 - (h/2))
+        .attr("style", "font-size: 20px !important")
+        .style("text-anchor", "middle")
+        .text("Watts");
 
    //update chart on window resize
     nv.utils.windowResize(chart.update);
