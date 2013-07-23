@@ -10,9 +10,15 @@
         public function isAuthorized($user) {
             //if the user does not have landlord privileges
             if (!in_array('landlord', $this->Session->read('User.roles'))) {
-                //the only actions exposed should be login and logout
-                if (!in_array($this->action, array('login', 'logout', 'confirm', 'tenant_confirm', 'billing'))) {
+                //the only actions exposed should be login and logout + confirmation pages, and own profile
+                if (!in_array($this->action, array('login', 'logout', 'confirm', 'tenant_confirm', 'profile'))) {
                     return false;
+                }
+
+                if (in_array($this->action, array('profile'))) {
+                    if ($this->request->query['id'] != $this->Auth->user('id')) {
+                        return false;
+                    }
                 }
             }
             
@@ -62,14 +68,14 @@
         }
 
         public function profiles() {
-            //a summery of all tenants current standings
+            //a summary of all tenants current standings
             $this->loadModel('Room');
             //filter the list of all users to get a list of all tenants
             $users = $this->User->find('all');
             $users = $this->filterByRole($users, 'tenant');
             //for each user
-            for ($i = 0; $i < count($users); $i++) {s
-                //for each contract that user is part of 
+            for ($i = 0; $i < count($users); $i++) {
+                //for each contract that the user (tenant) is part of 
                 for ($j = 0; $j < count($users[$i]['Contract']); $j++) {
                     $contract = $users[$i]['Contract'][$j];
                     //if the contract is a primary contract
