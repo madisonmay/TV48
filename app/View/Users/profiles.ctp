@@ -31,7 +31,7 @@
     });
 
     //
-    $('.sortBy').click(function() {
+    $('body').on('click', '.sortBy', function() {
       if (window.lastClicked != $(this).attr('id')) {
         window.lastClicked = $(this).attr('id');
         $(this).click();
@@ -39,6 +39,10 @@
       var first_page = $($('#table_paginate').children(".round")[0]);
       setTimeout(function() {first_page.click();}, 10);
     })
+
+    $('body').on('click', 'name', function() {
+      console.long($(this).attr('id'));
+    });
   })
 </script>
 
@@ -55,6 +59,17 @@
   .name {
     color: #46a564;
     cursor: pointer;
+    -webkit-user-select: none;  
+    -moz-user-select: none;    
+    -ms-user-select: none;      
+    user-select: none;
+  }
+
+  .no-select {
+    -webkit-user-select: none;  
+    -moz-user-select: none;    
+    -ms-user-select: none;      
+    user-select: none;
   }
 
   .deactivated .name{
@@ -83,16 +98,16 @@
 
 <div class='table-container'>
   <div id='invisible-wrapper'>
-    <table class="table table-hover sortable" style='margin-top: 15px;'>
+    <table class="table table-hover sortable" style='margin-top: 15px; table-layout: fixed;'>
       <thead>
         <tr>
-          <th id='name_header' class='sortBy'>Name</th>
-          <th class='sortBy' id='room'>Room</th>
-          <th class='sortBy' id='contract_start'>Contract start</th>
-          <th class='sortBy' id='contract_end'>Contract end</th>
-          <th class='sortBy' id='energy_use'>Energy use</th>
-          <th class='sortBy' id='balance'>Balance</th>
-          <th class='sortBy' id='funds_added'>Funds Added</th>
+          <th id='name_header' class='sortBy no-select'>Name</th>
+          <th class='sortBy no-select' id='room'>Room</th>
+          <th class='sortBy no-select' id='contract_start'>Contract start</th>
+          <th class='sortBy no-select' id='contract_end'>Contract end</th>
+          <th class='sortBy no-select' id='energy_use'>Energy use</th>
+          <th class='sortBy no-select' id='balance'>Balance</th>
+          <th class='sortBy no-select' id='funds_added'>Funds Added</th>
         </tr>
       </thead>
       <tbody class='table-body'>
@@ -105,10 +120,18 @@
           }
 
           //begin adding tds
-          echo '<td class="name">' . $user['User']['full_name'] . '</td>';
+          echo '<td class="name" id="' . $user['User']['id'] . '">' . $user['User']['full_name'] . '</td>';
           echo '<td>' . $user['Room']['name'] . '</td>';
-          echo '<td>' . $user['primary_contract']['start_date'] . '</td>';
-          echo '<td>' . $user['primary_contract']['end_date'] . '</td>';
+          if ($user['primary_contract']['start_date'] != "None") {
+            echo '<td>' . date('d/m/Y', strtotime($user['primary_contract']['start_date'])) . '</td>';
+          } else {
+            echo '<td>None</td>';
+          }
+          if ($user['primary_contract']['end_date'] != "None") {
+            echo '<td>' . date('d/m/Y', strtotime($user['primary_contract']['end_date'])) . '</td>';
+          } else {
+            echo '<td>None</td>';
+          }
           echo '<td>' . number_format($user['User']['wh']/1000, 2) . ' kWh </td>';
           echo '<td>' . '€' . number_format($user['User']['balance'], 2) . '</td>';
            echo '<td>' . '€' . number_format($user['User']['funds_added'], 2) . '</td>';

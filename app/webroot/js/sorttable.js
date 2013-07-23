@@ -180,18 +180,9 @@ sorttable = {
         possdate = text.match(sorttable.DATE_RE)
         if (possdate) {
           // looks like a date
-          first = parseInt(possdate[1]);
-          second = parseInt(possdate[2]);
-          if (first > 12) {
-            // definitely dd/mm
-            return sorttable.sort_ddmm;
-          } else if (second > 12) {
-            return sorttable.sort_mmdd;
-          } else {
-            // looks like a date, but we can't tell which, so assume
-            // that it's dd/mm (English imperialism!) and keep looking
-            sortfn = sorttable.sort_ddmm;
-          }
+
+          //Modified to always use European format
+          return sorttable.sort_ddmm;
         }
       }
     }
@@ -291,6 +282,8 @@ sorttable = {
     var b1 = $(b[1]).hasClass("deactivated");
     if (a1 && !b1) return -1;
     if (!a1 && b1) return 1;
+    if (a[0] == 'None') { a[0] = '00/00/0000'; }
+    if (b[0] == 'None') { b[0] = '00/00/0000'; }
     mtch = a[0].match(sorttable.DATE_RE);
     y = mtch[3]; m = mtch[2]; d = mtch[1];
     if (m.length == 1) m = '0'+m;

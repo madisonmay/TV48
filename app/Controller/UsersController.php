@@ -399,7 +399,7 @@
                             // $this->updateSecondaryContracts($room_id, $room['Room']['type']);
 
                             $this->Session->write('flashWarning', 0);
-                            $this->Session->setFlash(__('Room saved!'));
+                            $this->Session->setFlash(__('Tenant saved!'));
                             $this->redirect('/home/manage');
                         } else {
                             // exit only during debugging test
@@ -410,7 +410,7 @@
                     }
 
                     $this->Session->write('flashWarning', 0);
-                    $this->Session->setFlash(__('Room saved!'));
+                    $this->Session->setFlash(__('Tenant saved!'));
                     $this->redirect('/home/manage');
                 } else {
                     // exit only during debugging test
