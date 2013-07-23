@@ -161,17 +161,17 @@
 	        <ul class="nav pull-right">
         	  <?php if (!$this->Session->read('Auth.User')): ?>
 	          	<li>
-	              <a id='register' href="/users/add" style='color: #eeeeee; text-align: center;'>Register</a>
+	              <a id='register' href="/users/add" style='color: #eeeeee; text-align: center; width: 60px;'>Register</a>
 	        	</li>
         	  <?php endif; ?>
         	  <?php if (!$this->Session->read('Auth.User')): ?>
 	        	<li>
-	              <a id='login' href="/users/login" style='color: #eeeeee; text-align: center;'>Login</a>
+	              <a id='login' href="/users/login" style='color: #eeeeee; text-align: center; width: 60px;'>Login</a>
 	        	</li>
         	  <?php endif; ?>
         	  <?php if ($this->Session->read('Auth.User')): ?>
 	        	<li>
-	        	  <a id='logout' href="/users/logout" style='color: #eeeeee; text-align: center;'>Logout</a>
+	        	  <a id='logout' href="/users/logout" style='color: #eeeeee; text-align: center; width: 60px;'>Logout</a>
 	        	</li>
         	  <?php endif; ?>
             </ul>

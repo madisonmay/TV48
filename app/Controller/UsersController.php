@@ -58,6 +58,34 @@
         }
 
         public function profiles() {
+            $this->loadModel('Room');
+            $users = $this->User->find('all');
+            $users = $this->filterByRole($users, 'tenant');
+            for ($i = 0; $i < count($users); $i++) {
+                for ($j = 0; $j < count($users[$i]['Contract']); $j++) {
+                    $contract = $users[$i]['Contract'][$j];
+                    if ($contract['primary']) {
+                        if (!$contract['deactivated']) {
+                            $users[$i]['primary_contract'] = $contract;
+                        }
+                    }
+                }
+                if (!array_key_exists('primary_contract', $users[$i])) {
+                    $users[$i]['primary_contract'] = array('start_date' => 'None', 'end_date' => 'None');
+                    $users[$i]['Room'] = array('name' => 'None');
+                } else {
+                    $room = $this->Room->findById($users[$i]['primary_contract']['room_id']);
+                    $users[$i]['Room'] = $room['Room'];
+                }
+                $users[$i]['User']['funds_added'] = 0;
+                foreach ($users[$i]['BalanceUpdate'] as $update) {
+                    if (!$update['sensor_id']) {
+                        $users[$i]['User']['funds_added'] += $update['delta'];
+                    }
+                }
+            }
+            $this->set('users', $users);
+            $this->set('title_for_layout', 'Tenants Overview');
         }
 
         public function view($id = null) {
@@ -213,6 +241,15 @@
                 $this->User->create();
                 if ($this->User->save($this->request->data)) {
 
+                    $user_id = $this->User->getInsertID();
+
+                    $this->loadModel('BalanceUpdate');
+                    $this->BalanceUpdate->create();
+                    $data = array('user_id' => $user_id, 
+                                  'delta' => $this->request->data['User']['balance'],
+                                  'balance' => $this->request->data['User']['balance']);
+                    $this->BalanceUpdate->save($data);
+
 
                     $activate_url = "<a href=localhost/users/tenant_confirm?code=".$code."&email=".$this->request->data['User']['email'].">TV48 Confirmation</a>";
                     $name = $this->request->data['User']['first_name'];
@@ -231,7 +268,6 @@
                     $Email->send();
 
                     //similar to SQL's lastInsertID();
-                    $user_id = $this->User->getInsertID();
 
                     if ($this->request->data['User']['Rooms']) {
 
