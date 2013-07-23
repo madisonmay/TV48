@@ -6,6 +6,7 @@
         });
 
         $("select").selectpicker();
+        $("select").selectpicker('val', '<?php echo $primary_contract["room_id"]; ?>')
     })
 </script>
 <? echo $this->Html->script('date'); ?>

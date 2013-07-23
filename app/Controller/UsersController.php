@@ -65,6 +65,35 @@
 
         public function profile() {
             //display a single users profile
+            $user = $this->User->findById($this->request->query('id'));
+            $this->set('user', $user);
+            $this->set('title_for_layout', $user['User']['full_name']);
+            // Could potentially be used for data vis.
+            // $room_kwh = array();
+            // foreach ($user['BalanceUpdate'] as $update) {
+            //     if ($update['room_id']) {
+            //         if (array_key_exists($update['room_id'], $room_kwh)) {
+            //             $room_kwh[$update['room_id']] += $update['wh_delta'];
+            //         } else {
+            //             $room_kwh[$update['room_id']] = $update['wh_delta'];
+            //         }
+            //     }
+            // }
+            // $this->set('room_kwh', $room_kwh);
+
+            $user_kwh = array();
+            foreach ($user['BalanceUpdate'] as $update) {
+                if ($update['room_id']) {
+                    $date = date('F j, Y', $update['created']);
+                    if (array_key_exists($date, $user_kwh)) {
+                        $user_kwh[$date] += $update['wh_delta'];
+                    } else {
+                        $user_kwh[$date] = $update['wh_delta'];
+                    }
+                }
+            }
+            $this->set('user_kwh', $user_kwh);
+
         }
 
         public function profiles() {
@@ -75,10 +104,14 @@
             $users = $this->filterByRole($users, 'tenant');
             //for each user
             for ($i = 0; $i < count($users); $i++) {
+                $users[$i]['active'] = false;
                 //for each contract that the user (tenant) is part of 
                 for ($j = 0; $j < count($users[$i]['Contract']); $j++) {
                     $contract = $users[$i]['Contract'][$j];
                     //if the contract is a primary contract
+                    if (!$contract['deactivated']) {
+                        $users[$i]['active'] = true;
+                    }
                     if ($contract['primary']) {
                         //and is currently in effect
                         if (!$contract['deactivated']) {
@@ -372,8 +405,11 @@
 
                 //retrieve user data
                 $user_id = $this->request->query['Users'];
-                $this->data = $this->User->findById($user_id);
-                
+                $user = $this->User->findById($user_id);
+                $this->set('user', $user);
+                $this->set('primary_contract', $this->primaryContract($user_id));
+                $this->data = $user;
+
             } else {
                 //post request
                 $user_id = $this->request->data['User']['id'];
@@ -386,7 +422,7 @@
 
                     if ($this->request->data['User']['Rooms']) {
 
-                        $room_id = $this->request->data['Room']['Users'];
+                        $room_id = $this->request->data['User']['Rooms'];
                         $room = $this->User->Room->findById($room_id);
 
                         //set contract variables to values stored in user object
@@ -412,6 +448,12 @@
 
                         $this->removeOldUserContract($user_id);
                         $this->updateUserSecondaryContracts($user_id);
+
+                        //this line must come after updateUserSecondaryContracts
+                        //however, I don't really know why.  Need to explore the issue further.
+                        if ($room['Room']['type'] != 'studio') {
+                            $this->addUserSecondaryContracts($user_id);
+                        }
 
                         $this->User->Contract->create();
                         if ($this->Room->Contract->save($this->request->data)) {

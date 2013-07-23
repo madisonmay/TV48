@@ -42,9 +42,6 @@
 		        		$this->addRole($user_id, 'dorm_owner');
 		        		$this->removeRole($user_id, 'studio_owner');
 		        	}
-
-		        	$this->updateUserSecondaryContracts($user_id);
-
 		        }
 
 		        $this->Room->create();
@@ -70,6 +67,8 @@
 		        		$this->Room->Contract->create();
 		        		if ($this->Room->Contract->save($this->request->data)) {
 	        				//if save successful, send positive response
+
+	        				$this->updateUserSecondaryContracts($user_id);
 
 		        			$this->Session->write('flashWarning', 0);
 		        			$this->Session->setFlash(__('Room added!'));
@@ -165,6 +164,11 @@
 
 		        		$this->updateUserSecondaryContracts($user_id);
 	        			$this->updateSecondaryContracts($room_id, $this->request->data['Room']['type']);
+
+
+	        			if ($this->request->data['Room']['type'] != 'studio') {
+	        				$this->addUserSecondaryContracts($user_id);
+	        			}
 
 		        		$this->Room->Contract->create();
 		        		if ($this->Room->Contract->save($this->request->data)) {

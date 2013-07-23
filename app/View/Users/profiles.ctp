@@ -113,7 +113,7 @@
       <tbody class='table-body'>
       <?php 
         foreach ($users as $user) {
-          if ($user['primary_contract']['start_date'] == 'None') {
+          if (!$user['active']) {
             echo '<tr class="deactivated">';
           } else {
             echo '<tr>';

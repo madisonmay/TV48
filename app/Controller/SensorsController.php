@@ -130,7 +130,7 @@
 			$sensor_ids = array();
 			foreach ($sensors as $sensor) {
 				$room_id = $sensor['Sensor']['room_id'];
-				if ($this->contractExists($room_id, $this->Auth->user('id'))) {
+				if ($room_id == 0 || $this->contractExists($room_id, $this->Auth->user('id'))) {
 					array_push($sensor_ids, $sensor['Sensor']['xively_id']);
 				}
 			}

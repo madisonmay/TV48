@@ -241,28 +241,45 @@ class AppController extends Controller {
 			//convention
 			$room_id = $room['Room']['id'];
 
-			$fields['user_id'] = $user_id;
-			$fields['room_id'] = $room_id;
-			$datetime = date('F j, Y', time());
-			$fields['start_date'] = $user['User']['start_date'];
-			$fields['end_date'] = $user['User']['end_date'];
-			
-			//generic approach
-			$permissions = $this->permissions($user_id);
-			$fields['view'] = $permissions['view_public'];
-			$fields['pay'] = $permissions['pay_public'];
-			$fields['modify'] = $permissions['modify_public'];
-			//deactivated and primary both default to zero
+			if (!$this->contractExists($room_id, $user_id)) {
+				$fields['user_id'] = $user_id;
+				$fields['room_id'] = $room_id;
+				$datetime = date('F j, Y', time());
+				$fields['start_date'] = $user['User']['start_date'];
+				$fields['end_date'] = $user['User']['end_date'];
+				
+				//generic approach
+				$permissions = $this->permissions($user_id);
+				$fields['view'] = $permissions['view_public'];
+				$fields['pay'] = $permissions['pay_public'];
+				$fields['modify'] = $permissions['modify_public'];
+				//deactivated and primary both default to zero
 
-			$this->Contract->create();
-			if ($this->Contract->save($fields)) {
-				//success
-			} else {
-				$this->Session->write('flashWarning', 1);
-				$this->Session->setFlash(__('An internal error occurred.  Please try again.')); 
+				$this->Contract->create();
+				if ($this->Contract->save($fields)) {
+					//success
+				} else {
+					$this->Session->write('flashWarning', 1);
+					$this->Session->setFlash(__('An internal error occurred.  Please try again.')); 
+				}
 			}
 		}
                     
+	}
+
+	public function primaryContract($user_id) {
+		$this->loadModel('Contract');
+		$this->loadModel('User');
+
+		$user = $this->User->findById($user_id);
+		foreach ($user['Contract'] as $contract) {
+			if ($contract['primary']) {
+				if (!$contract['deactivated']) {
+					return $contract;
+				}
+			}
+		}
+		return false;
 	}
 
 	public function updateUserSecondaryContracts($user_id) {
@@ -279,6 +296,7 @@ class AppController extends Controller {
 
 		//retrieve array of permissions
 		$permissions = $this->permissions($user_id);
+		$primary_contract = $this->primaryContract($user_id);
 
 	    date_default_timezone_set('Europe/Brussels');
 	    foreach ($contracts as $contract) {
@@ -291,7 +309,8 @@ class AppController extends Controller {
 	        //add new contracts -- this way it is simpler to keep track of payments
 	        $fields = $contract['Contract'];
 	        $fields['id'] = '';
-	        $fields['start_date'] = $datetime;
+	        $fields['start_date'] = $primary_contract['start_date'];
+	        $fields['end_date'] = $primary_contract['end_date'];
 	        $fields['view'] = $permissions['view_public'];
 	        $fields['pay'] = $permissions['pay_public'];
 	        $fields['modify'] = $permissions['modify_public'];
@@ -358,25 +377,27 @@ class AppController extends Controller {
 			//don't add a second entry for landlords or admins
 			//this has already been taken care of by addAdminsAndLandlords()
 			if (!$this->hasRole('landlord', $user) && !$this->hasRole('admin', $user)) {
-				$fields['user_id'] = $user_id;
-				$fields['room_id'] = $room_id;
-				$datetime = date('F j, Y', time());
-				$fields['start_date'] = $datetime;
-				$fields['end_date'] = $user['User']['end_date'];
-				
-				//generic approach
-				$permissions = $this->permissions($user_id);
-				$fields['view'] = $permissions['view_public'];
-				$fields['pay'] = $permissions['pay_public'];
-				$fields['modify'] = $permissions['modify_public'];
-				//deactivated and primary both default to zero
+				if (!$this->contractExists($room_id, $user_id)) {
+					$fields['user_id'] = $user_id;
+					$fields['room_id'] = $room_id;
+					$datetime = date('F j, Y', time());
+					$fields['start_date'] = $datetime;
+					$fields['end_date'] = $user['User']['end_date'];
+					
+					//generic approach
+					$permissions = $this->permissions($user_id);
+					$fields['view'] = $permissions['view_public'];
+					$fields['pay'] = $permissions['pay_public'];
+					$fields['modify'] = $permissions['modify_public'];
+					//deactivated and primary both default to zero
 
-				$this->Contract->create();
-				if($this->Contract->save($fields)) {
-					//success
-				} else {
-					echo $this->Contract->getLastQuery();
-					exit(0);
+					$this->Contract->create();
+					if($this->Contract->save($fields)) {
+						//success
+					} else {
+						echo $this->Contract->getLastQuery();
+						exit(0);
+					}
 				}
 			}
 			
@@ -442,6 +463,7 @@ class AppController extends Controller {
 			$fields['room_id'] = $room_id;
 			$datetime = date('F j, Y', time());
 			$fields['start_date'] = $datetime;
+			$fields['end_date'] = 'January 1, 2100';
 			
 			//generic approach
 			$permissions = $this->permissions($user_id);
