@@ -177,7 +177,16 @@ sorttable = {
         // check for a date: dd/mm/yyyy or dd/mm/yy
         // can have / or . or - as separator
         // can be mm/dd as well
-        possdate = text.match(sorttable.DATE_RE)
+        if (text == 'None') {
+          text = 'January 1, 1900';
+        }
+        possible_date = Date.parse(text); 
+        try {
+          possdate = possible_date.toString('dd/MM/yyyy');
+        } catch(e) {
+          return sortfn;
+        }
+        possdate = possdate.match(sorttable.DATE_RE)
         if (possdate) {
           // looks like a date
 
@@ -282,8 +291,16 @@ sorttable = {
     var b1 = $(b[1]).hasClass("deactivated");
     if (a1 && !b1) return -1;
     if (!a1 && b1) return 1;
-    if (a[0] == 'None') { a[0] = '00/00/0000'; }
-    if (b[0] == 'None') { b[0] = '00/00/0000'; }
+    if (a[0] == 'None') { a[0] = '01/01/1900'; } 
+    else {
+      console.log(a[0]);
+      a[0] = Date.parse(a[0]).toString('dd/MM/yyyy');
+    }
+    if (b[0] == 'None') { b[0] = '01/01/1900'; }
+    else {
+      console.log(b[0]);
+      b[0] = Date.parse(b[0]).toString('dd/MM/yyyy');
+    }
     mtch = a[0].match(sorttable.DATE_RE);
     y = mtch[3]; m = mtch[2]; d = mtch[1];
     if (m.length == 1) m = '0'+m;

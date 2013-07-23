@@ -1,3 +1,4 @@
+<script src='/js/date.js'></script>
 <script src='/js/sorttable.js'></script>
 
 <script>
@@ -40,8 +41,8 @@
       setTimeout(function() {first_page.click();}, 10);
     })
 
-    $('body').on('click', 'name', function() {
-      console.long($(this).attr('id'));
+    $('body').on('click', '.name', function() {
+      console.log($(this).attr('id'));
     });
   })
 </script>
@@ -101,13 +102,13 @@
     <table class="table table-hover sortable" style='margin-top: 15px; table-layout: fixed;'>
       <thead>
         <tr>
-          <th id='name_header' class='sortBy no-select'>Name</th>
-          <th class='sortBy no-select' id='room'>Room</th>
-          <th class='sortBy no-select' id='contract_start'>Contract start</th>
-          <th class='sortBy no-select' id='contract_end'>Contract end</th>
-          <th class='sortBy no-select' id='energy_use'>Energy use</th>
-          <th class='sortBy no-select' id='balance'>Balance</th>
-          <th class='sortBy no-select' id='funds_added'>Funds Added</th>
+          <th id='name_header' class='sortBy no-select sorttable_alpha'>Name</th>
+          <th class='sortBy no-select sorttable_alpha' id='room'>Room</th>
+          <th class='sortBy no-select sorttable_ddmm' id='contract_start'>Contract start</th>
+          <th class='sortBy no-select sorttable_ddmm' id='contract_end'>Contract end</th>
+          <th class='sortBy no-select sorttable_alpha' id='energy_use'>Energy use</th>
+          <th class='sortBy no-select sorttable_numeric' id='balance'>Balance</th>
+          <th class='sortBy no-select sorttable_numeric' id='funds_added'>Funds Added</th>
         </tr>
       </thead>
       <tbody class='table-body'>
@@ -123,12 +124,12 @@
           echo '<td class="name" id="' . $user['User']['id'] . '">' . $user['User']['full_name'] . '</td>';
           echo '<td>' . $user['Room']['name'] . '</td>';
           if ($user['primary_contract']['start_date'] != "None") {
-            echo '<td>' . date('d/m/Y', strtotime($user['primary_contract']['start_date'])) . '</td>';
+            echo '<td>' . $user['primary_contract']['start_date'] . '</td>';
           } else {
             echo '<td>None</td>';
           }
           if ($user['primary_contract']['end_date'] != "None") {
-            echo '<td>' . date('d/m/Y', strtotime($user['primary_contract']['end_date'])) . '</td>';
+            echo '<td>' . $user['primary_contract']['end_date'] . '</td>';
           } else {
             echo '<td>None</td>';
           }
