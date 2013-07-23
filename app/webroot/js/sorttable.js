@@ -150,7 +150,7 @@ sorttable = {
             row_array[row_array.length] = [sorttable.getInnerText(rows[j].cells[col]), rows[j]];
           }
           /* If you want a stable sort, uncomment the following line */
-          //sorttable.shaker_sort(row_array, this.sorttable_sortfunction);
+          sorttable.shaker_sort(row_array, this.sorttable_sortfunction);
           /* and comment out this one */
           row_array.sort(this.sorttable_sortfunction);
 
@@ -293,12 +293,10 @@ sorttable = {
     if (!a1 && b1) return 1;
     if (a[0] == 'None') { a[0] = '01/01/1900'; } 
     else {
-      console.log(a[0]);
       a[0] = Date.parse(a[0]).toString('dd/MM/yyyy');
     }
     if (b[0] == 'None') { b[0] = '01/01/1900'; }
     else {
-      console.log(b[0]);
       b[0] = Date.parse(b[0]).toString('dd/MM/yyyy');
     }
     mtch = a[0].match(sorttable.DATE_RE);

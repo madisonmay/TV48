@@ -57,26 +57,43 @@
             $this->set('users', $this->findByRole('tenant')); 
         }
 
+        public function profile() {
+            //display a single users profile
+        }
+
         public function profiles() {
+            //a summery of all tenants current standings
             $this->loadModel('Room');
+            //filter the list of all users to get a list of all tenants
             $users = $this->User->find('all');
             $users = $this->filterByRole($users, 'tenant');
-            for ($i = 0; $i < count($users); $i++) {
+            //for each user
+            for ($i = 0; $i < count($users); $i++) {s
+                //for each contract that user is part of 
                 for ($j = 0; $j < count($users[$i]['Contract']); $j++) {
                     $contract = $users[$i]['Contract'][$j];
+                    //if the contract is a primary contract
                     if ($contract['primary']) {
+                        //and is currently in effect
                         if (!$contract['deactivated']) {
+                            //set as primary contract for use in the view
                             $users[$i]['primary_contract'] = $contract;
                         }
                     }
                 }
+
+                //if the user is not currently assigned a room, fill an array with filler data
                 if (!array_key_exists('primary_contract', $users[$i])) {
                     $users[$i]['primary_contract'] = array('start_date' => 'None', 'end_date' => 'None');
                     $users[$i]['Room'] = array('name' => 'None');
                 } else {
+                    //otherwise, also connect the user to a room
                     $room = $this->Room->findById($users[$i]['primary_contract']['room_id']);
                     $users[$i]['Room'] = $room['Room'];
                 }
+
+                //count up the amount of funds that a user has added to their account
+                //we also need this for statistical/overview purposes
                 $users[$i]['User']['funds_added'] = 0;
                 foreach ($users[$i]['BalanceUpdate'] as $update) {
                     if (!$update['sensor_id']) {

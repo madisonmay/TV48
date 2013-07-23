@@ -24,7 +24,6 @@
       $('.round').removeClass('selected-page');
       $(this).addClass('selected-page');
       var n = $(this).index();
-      console.log(n);
       $('tbody').find('tr').css('display', 'none');
       $('tbody').find('tr').show();
       $('tbody').find('tr:lt(' + n*10 + ')').hide();
@@ -42,7 +41,7 @@
     })
 
     $('body').on('click', '.name', function() {
-      console.log($(this).attr('id'));
+      window.location = '/users/profile?id=' + $(this).attr('id');
     });
   })
 </script>
