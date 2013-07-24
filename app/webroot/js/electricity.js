@@ -138,7 +138,7 @@ function render_page(svg_id) {
   var width = $(window).width();
 
   //avoid flickering by changing properties and then making chart visible
-  $('#chart').css('height', height*.9);
+  $('#chart').css('height', height*.85);
   $('#chart').css('width', width - 65);
   $('#chart').css('display', 'block');
 
@@ -269,7 +269,7 @@ $(document).ready(function() {
   //hacky fix to resolve display issues with selectpicker
   $('.select').fadeTo(0, 0);
   setTimeout(function() {
-    $('.select').fadeTo(0, 1);}, 200);
+    $('.select').fadeTo(0, 1);}, 400);
 
   prepare_data();
   render_page(keys(window.data)[0]);

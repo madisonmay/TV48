@@ -39,6 +39,7 @@
       <!-- <option value="years">years</option> -->
     </select>
   </div>
+<!-- Because we are now using a vertically placed control panel, a modal doesn't make as much sense. -->
 <!--   <div class='text-center'>
     <img id='loading' class='centered' src="/img/load.gif" style='width: 30px; display: none;'>
   </div>
