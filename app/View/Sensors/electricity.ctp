@@ -14,6 +14,12 @@
 
 </script>
 
+<style>
+  select {
+    display: none;
+  }
+</style>
+
 <!-- simple gui for user interaction -- change time plotted or dataset -->
 <!-- eventually should also allow for datasets that do not contain the current value -->
 
