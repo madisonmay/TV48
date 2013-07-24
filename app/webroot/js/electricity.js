@@ -251,7 +251,7 @@ $('.unit-change').click(function() {
 });
 
 $(document).ready(function() {
-
+  // $('select').fadeTo(0, 0);
   //calculate difference between the time when the feed was created and the current time
   var date_created = new Date(created);
   var current_date = new Date();
@@ -265,6 +265,12 @@ $(document).ready(function() {
   $('#feed').val(keys(window.data)[0]);
   window.previous_value = keys(window.data)[0];
   $('select').selectpicker();
+
+  //hacky fix to resolve display issues with selectpicker
+  $('.select').fadeTo(0, 0);
+  setTimeout(function() {
+    $('.select').fadeTo(0, 1);}, 200);
+
   prepare_data();
   render_page(keys(window.data)[0]);
 });

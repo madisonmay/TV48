@@ -107,14 +107,14 @@ $(document).ready(function() {
 
     $('svg').html('');
     nv.addGraph(function() {
-      var chart = nv.models.multiBarChart();
+      var chart = nv.models.multiBarChart().margin({left: 80, bottom: 50});
 
       chart.xAxis
           // .axisLabel('Day of the week');
-          .axisLabel('');
+          .axisLabel('Day');
 
       chart.yAxis
-          .axisLabel('Energy Expenditure (KWh)')
+          .axisLabel('Energy Expenditure (Wh)')
           .tickFormat(d3.format('.02f'));
 
       chart.showControls(false).stacked(false);
@@ -127,6 +127,14 @@ $(document).ready(function() {
 
 
       nv.utils.windowResize(chart.update);
+
+      nv.utils.windowResize(function() {
+        var x_val = $('.nv-x .nvd3 g .nv-axislabel').attr('x'); 
+        $('.nv-x .nvd3 g .nv-axislabel').attr('x', x_val - 35);
+      })
+
+      var x_val = $('.nv-x .nvd3 g .nv-axislabel').attr('x'); 
+      $('.nv-x .nvd3 g .nv-axislabel').attr('x', x_val - 35);
 
       return chart;
     });  
