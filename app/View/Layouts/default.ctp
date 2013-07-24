@@ -154,7 +154,11 @@
 	                	}
 	                	if (in_array('admin', $this->Session->read('User.roles'))) {
 	                		echo "<li><a href='/sensors' style='color: #eeeeee; text-align: center;'>Admin</a></li>";
-	                	}                	
+	                	}  
+	                	if (in_array('tenant', $this->Session->read('User.roles'))) {
+	                		echo "<li><a href='/users/profile?id=" . $this->Session->read('Auth.User.id');
+	                		echo "' style='color: #eeeeee; text-align: center;'>Profile</a></li>";
+	                	}                   	
             		}
                 ?>
 	        </ul>
