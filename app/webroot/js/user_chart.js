@@ -31,7 +31,7 @@ $(document).ready(function() {
         })
 
     chart.yAxis
-        .axisLabel('Energy Expenditure (KWh)')
+        .axisLabel('Energy Expenditure (Wh)')
         .tickFormat(d3.format('.02f'));
 
     var chart_id = '#chart svg';

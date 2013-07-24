@@ -300,7 +300,27 @@ input {
  
  
 #light {
-    background-image: url('../img/small-light.png');
+    background-image: url('/img/small-light.png');
+    background-position: 50% 50%;
+    background-repeat: no-repeat; }
+
+.links {
+    text-align: center;
+}
+
+.img-link {
+    margin-left: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+#tenants {
+    background-image: url('/img/tenants.png');
+    background-position: 50% 50%;
+    background-repeat: no-repeat; }
+
+#rooms {
+    background-image: url('/img/rooms.png');
     background-position: 50% 50%;
     background-repeat: no-repeat; }
  
