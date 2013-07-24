@@ -119,6 +119,7 @@ $(document).ready(function() {
 
       chart.showControls(false).stacked(false);
 
+      console.log("App.data: ", App.data);
       d3.select('#chart svg')
           .datum(App.data)
           .transition().duration(500)

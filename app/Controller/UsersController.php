@@ -64,36 +64,56 @@
         }
 
         public function profile() {
+            $this->loadModel('Room');
             //display a single users profile
+            $this->set('cssIncludes', array());
+            $this->set('jsIncludes', array('http://cdnjs.cloudflare.com/ajax/libs/d3/2.10.0/d3.v2.min.js', 'nv.d3'));
             $user = $this->User->findById($this->request->query('id'));
             $this->set('user', $user);
             $this->set('title_for_layout', $user['User']['full_name']);
             // Could potentially be used for data vis.
-            // $room_kwh = array();
-            // foreach ($user['BalanceUpdate'] as $update) {
-            //     if ($update['room_id']) {
-            //         if (array_key_exists($update['room_id'], $room_kwh)) {
-            //             $room_kwh[$update['room_id']] += $update['wh_delta'];
-            //         } else {
-            //             $room_kwh[$update['room_id']] = $update['wh_delta'];
-            //         }
-            //     }
-            // }
-            // $this->set('room_kwh', $room_kwh);
-
-            $user_kwh = array();
+            $room_wh = array();
             foreach ($user['BalanceUpdate'] as $update) {
                 if ($update['room_id']) {
-                    $date = date('F j, Y', $update['created']);
-                    if (array_key_exists($date, $user_kwh)) {
-                        $user_kwh[$date] += $update['wh_delta'];
+                    $room = $this->Room->findById($update['room_id']);
+                    if (array_key_exists($room['Room']['name'], $room_wh)) {
+                        $room_wh[$room['Room']['name']] += $update['wh_delta'];
                     } else {
-                        $user_kwh[$date] = $update['wh_delta'];
+                        $room_wh[$room['Room']['name']] = $update['wh_delta'];
                     }
                 }
             }
-            $this->set('user_kwh', $user_kwh);
 
+            $day_wh = array(0, 0, 0, 0, 0, 0, 0);
+            $days = array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+            foreach ($user['BalanceUpdate'] as $update) {
+                if ($update['room_id']) {
+                    $date = date('l', $update['created']);
+                    $index = array_search($date, $days);
+                    $day_wh[$index] += $update['wh_delta'];
+                }
+            }
+
+            $user_wh = array();
+            $deposits = array();
+            foreach ($user['BalanceUpdate'] as $update) {
+                $date = date('F j, Y', $update['created']);
+                if ($update['room_id']) {
+                    
+                    if (array_key_exists($date, $user_wh)) {
+                        $user_wh[$date] += $update['wh_delta'];
+                    } else {
+                        $user_wh[$date] = $update['wh_delta'];
+                    }
+                } else {
+                    array_push($deposits, array($date => $update['delta']));
+                }
+            }
+            $this->set('deposits', $deposits);
+            $this->set('user_wh', $user_wh);
+            $this->set('room_wh', $room_wh);
+            $this->set('day_wh', $day_wh);
+            echo '<script> window.data = ' . json_encode($user_wh) . '</script>';
         }
 
         public function profiles() {
