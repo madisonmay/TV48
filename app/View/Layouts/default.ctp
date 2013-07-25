@@ -146,7 +146,7 @@
 	            <li class="divider-vertical" style='margin-top: 18px;'></li>
 	            <li><a href='/sensors/lighting' style='color: #eeeeee; text-align: center;'>Light</a></li>
 	            <li><a href='/sensors/heating' style='color: #eeeeee; text-align: center;'>Heat</a></li>
-	            <li><a href='/sensors/electricity' style='color: #eeeeee; text-align: center;'>Power</a></li>
+	            <li><a href='/sensors/electricity_select' style='color: #eeeeee; text-align: center;'>Power</a></li>
             	<?php 
             		if ($this->Session->read('Auth.User')) {
 	                	if (in_array('landlord', $this->Session->read('User.roles'))) {

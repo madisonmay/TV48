@@ -33,6 +33,10 @@
                 $opts = array('conditions' => array('email' => $email));
                 $user = $this->User->find('first', $opts);
                 if ($user) {
+                    $this->Session->write('flashWarning', 0);
+                    $this->Session->setFlash(__('Password reset email sent.  Check your inbox!'));
+                    $this->redirect(array('controller' => 'home', 'action' => 'index'), null, false);
+
                     $activate_url = "<a href=localhost/users/reset_page?code=".$user['User']['confirmation_code']."&email=".$email.">Password Reset</a>";
                     $name = $user['User']['first_name'];
                     $Email = new CakeEmail();
@@ -47,11 +51,7 @@
                     $Email->emailFormat('html');
                     $Email->subject('TV48 Password Reset');
                     $Email->viewVars(array('activate_url' => $activate_url,'name' => $name));
-                    $Email->send();
-
-                    $this->Session->write('flashWarning', 0);
-                    $this->Session->setFlash(__('Password reset email sent!'));
-                    $this->redirect(array('controller' => 'home', 'action' => 'index'));   
+                    $Email->send(); 
                 } else {
                     $this->Session->write('flashWarning', 1);
                     $this->Session->setFlash(__('No user matching that email address was found!'));
