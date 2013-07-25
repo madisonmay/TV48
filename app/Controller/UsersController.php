@@ -61,8 +61,13 @@
         }
 
         public function billing() {
+
+            function cmp($a, $b) {
+                return $a['User']['full_name'] > $b['User']['full_name'];
+            }
             $users = $this->User->find('all');
             $users = $this->filterByRole($users, 'tenant');
+            usort($users, 'cmp');
             $this->set('users', $users);
             $this->set('title_for_layout', 'Tenant Balances');
         }
