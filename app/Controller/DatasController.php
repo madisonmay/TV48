@@ -91,7 +91,7 @@
 
 									//convert kwh to a monetary value
 									//.2 (the cost per kwh) should eventually be a value tied to the landlord (dynamic)
-									$cost_per_person = ($watts_per_person/1000)*.2;
+									$kw_per_person = ($watts_per_person/1000);
 
 									//if this value is nonzero
 									if ($cost_per_person) {
@@ -103,7 +103,7 @@
 											//make BalanceUpdate object
 											$data = array();
 											$data['BalanceUpdate']['delta'] = $cost_per_person;
-											$data['BalanceUpdate']['balance'] = $user['User']['balance'] - $cost_per_person;
+											$data['BalanceUpdate']['balance'] = $user['User']['balance'] - $kw_per_person*$user['User']['price'];
 											$data['BalanceUpdate']['user_id'] = $user['User']['id'];
 											$data['BalanceUpdate']['wh_delta'] = $watts_per_person;
 											$data['BalanceUpdate']['wh'] = $watts_per_person + $user['User']['wh'];
