@@ -4,14 +4,14 @@
 
         public function beforeFilter() {
             parent::beforeFilter();
-            $this->Auth->allow('add', 'login', 'confirm', 'tenant_confirm');
+            $this->Auth->allow('add', 'login', 'confirm', 'tenant_confirm', 'password_reset');
         }
 
         public function isAuthorized($user) {
             //if the user does not have landlord privileges
             if (!in_array('landlord', $this->Session->read('User.roles'))) {
                 //the only actions exposed should be login and logout + confirmation pages, and own profile
-                if (!in_array($this->action, array('login', 'logout', 'confirm', 'tenant_confirm', 'profile'))) {
+                if (!in_array($this->action, array('login', 'logout', 'confirm', 'tenant_confirm', 'profile', 'password_reset'))) {
                     return false;
                 }
 
@@ -24,6 +24,39 @@
             
 
             return true;
+        }
+
+        public function password_reset() {
+            if ($this->request->is('post')) {
+                $email = $this->request->data['User']['username'];
+                $opts = array('conditions' => array('email' => $email));
+                $user = $this->User->find('first', $opts);
+                if ($user) {
+                    $activate_url = "<a href=localhost/users/tenant_confirm?code=".$user['User']['confirmation_code']."&email=".$email.">Password Reset</a>";
+                    $name = $user['User']['first_name'];
+                    $Email = new CakeEmail();
+                    $Email->config('default');
+                    $Email->from(array('core.tv48@gmail.com' => 'CORE TV48'));
+
+                    // Eventually the recipient should be the person signing up.
+                    // $Email->to($user['User']['email']);
+
+                    $Email->to('madison.may@students.olin.edu');
+                    $Email->template('reset');
+                    $Email->emailFormat('html');
+                    $Email->subject('TV48 Password Reset');
+                    $Email->viewVars(array('activate_url' => $activate_url,'name' => $name));
+                    $Email->send();
+
+                    $this->Session->write('flashWarning', 0);
+                    $this->Session->setFlash(__('Password reset email sent!'));
+                    $this->redirect(array('controller' => 'home', 'action' => 'index'));   
+                } else {
+                    $this->Session->write('flashWarning', 1);
+                    $this->Session->setFlash(__('No user matching that email address was found!'));
+                    $this->redirect(array('controller' => 'users', 'action' => 'password_reset'));   
+                }
+            }
         }
 
         public function billing() {
@@ -247,6 +280,7 @@
                 } else {
                     $this->Session->write('flashWarning', 1);
                     $this->Session->setFlash(__('Invalid email or password, try again'));
+                    $this->set('reset', true);
                 }
             }
         }

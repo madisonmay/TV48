@@ -30,7 +30,7 @@
             $start_date = array('class' => 'span3 date', 'placeholder' => 'Start date...', 'label' => '', 'type' => 'text', 'required' => true);
             $end_date = array('class' => 'span3 date', 'placeholder' => 'End date...', 'label' => '', 'type' => 'text', 'required' => true);
             $balance = array('class' => 'span3', 'placeholder' => 'Balance...', 'label' => '', 'type' => 'text');
-            $price = array('class' => 'span3 double', 'type' => 'text', 'label' => '', 
+            $price = array('class' => 'span3 double', 'type' => 'text', 'label' => '',
                            'placeholder' => 'Cost per kWh...', 'pattern' => '[0-9\.]+');
             echo $this->Form->input('first_name', $first_name);
             echo $this->Form->input('last_name', $last_name);

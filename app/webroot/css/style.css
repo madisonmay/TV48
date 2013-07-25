@@ -33,7 +33,19 @@ border:   2px black solid;
  
 a { text-decoration: none; }
  
- 
+
+.left-col {
+    float: left; 
+    text-align: right; 
+    width: 49%;
+}
+
+.right-col {
+    float: right; 
+    text-align: left; 
+    width: 49%;
+}
+
 .amount {
     border: 0;
     color: #46a564;
@@ -673,7 +685,9 @@ textarea {
     max-height: 45px;
     vertical-align: middle; }
  
- 
+.wrapper-plus {
+    margin-left: 0px;
+}
 /**  {
  
 border:  2px black solid;

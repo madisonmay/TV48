@@ -73,6 +73,7 @@
         	<a href='/users/tenant'><img class='img-link' src='/img/add-this.png' label-text='Add'></a>
         	<a href='/users'><img class='img-link' src='/img/edit-this.png' label-text='Edit'></a>
         	<a href='/users/profiles'><img class='img-link' src='/img/view-this.png' label-text='View'></a>
+            <a href='/users/billing'><img class='img-link' src='/img/bill-this.png' label-text='Deposit'></a>
         </div>
     </div>
     <div class="span6">
