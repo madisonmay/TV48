@@ -4,14 +4,15 @@
 
         public function beforeFilter() {
             parent::beforeFilter();
-            $this->Auth->allow('add', 'login', 'confirm', 'tenant_confirm', 'password_reset');
+            $this->Auth->allow('add', 'login', 'confirm', 'tenant_confirm', 'password_reset', 'reset_page');
         }
 
         public function isAuthorized($user) {
             //if the user does not have landlord privileges
             if (!in_array('landlord', $this->Session->read('User.roles'))) {
                 //the only actions exposed should be login and logout + confirmation pages, and own profile
-                if (!in_array($this->action, array('login', 'logout', 'confirm', 'tenant_confirm', 'profile', 'password_reset'))) {
+                if (!in_array($this->action, array('login', 'logout', 'confirm', 'tenant_confirm',
+                                                   'profile', 'password_reset', 'reset_page'))) {
                     return false;
                 }
 
@@ -32,7 +33,7 @@
                 $opts = array('conditions' => array('email' => $email));
                 $user = $this->User->find('first', $opts);
                 if ($user) {
-                    $activate_url = "<a href=localhost/users/tenant_confirm?code=".$user['User']['confirmation_code']."&email=".$email.">Password Reset</a>";
+                    $activate_url = "<a href=localhost/users/reset_page?code=".$user['User']['confirmation_code']."&email=".$email.">Password Reset</a>";
                     $name = $user['User']['first_name'];
                     $Email = new CakeEmail();
                     $Email->config('default');
@@ -421,6 +422,29 @@
             }
 
             $this->set('rooms', $this->findAvailableRooms());
+        }
+
+        public function reset_page() {
+            $this->set('title_for_layout', 'Password Reset');
+            if ($this->request->is('get')) {
+                $email = $this->request->query['email'];
+                $code = $this->request->query['code'];
+                $user = $this->User->find('first', array('conditions' => array('email' => $email)));
+                if ($code == $user['User']['confirmation_code']) {
+                    $this->data = $user;
+                } else {
+                    $this->Session->write('flashWarning', 1);
+                    $this->Session->setFlash(__('Incorrect confirmation code.  Please try again.'));
+                    $this->redirect(array('controller' => 'users', 'action' => 'login')); 
+                }
+            } else {
+                // Post request
+                $this->User->id = $this->request->data['User']['id'];
+                $this->User->saveField('password', $this->request->data['User']['password']);
+                $this->Session->write('flashWarning', 0);
+                $this->Session->setFlash(__('Password reset successful!  Please login...'));
+                $this->redirect(array('controller' => 'users', 'action' => 'login'));
+            }
         }
 
         public function tenant_confirm() {
