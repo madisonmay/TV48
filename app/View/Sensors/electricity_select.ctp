@@ -41,17 +41,6 @@
 
 <div class="row-fluid">
     <div class="span4">
-        <a href='/sensors/piechart'><div class="border">
-            <div id="piechart" class="circle circular-icon" style="background-image: url('/img/piechart.png')">
-                <div class="opaque">
-                    <div class="label-text" label-text='Piechart'>Piechart</div>
-                </div>
-            </div>
-        </div></a>
-        <div class="description">
-        </div>
-    </div>
-    <div class="span4">
         <a href='/sensors/electricity_summary'><div class="border">
             <div id="barchart" class="circle circular-icon" style="background-image: url('/img/barchart.png')">
                 <div class="opaque">
@@ -60,6 +49,19 @@
             </div>
         </div></a>
         <div class="description">
+            A day by day look at each room's electrical demand.
+        </div>
+    </div>
+    <div class="span4">
+        <a href='/sensors/piechart'><div class="border">
+            <div id="piechart" class="circle circular-icon" style="background-image: url('/img/piechart.png')">
+                <div class="opaque">
+                    <div class="label-text" label-text='Piechart'>Piechart</div>
+                </div>
+            </div>
+        </div></a>
+        <div class="description">
+            A breakdown by room of the house's energy consumption.
         </div>
     </div>
     <div class="span4">
@@ -71,6 +73,7 @@
             </div>
         </div></a>
         <div class="description">
+            A detailed view of the house's recent power draw.
         </div>
     </div>
 </div>
