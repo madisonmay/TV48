@@ -91,10 +91,10 @@
 
 									//convert kwh to a monetary value
 									//.2 (the cost per kwh) should eventually be a value tied to the landlord (dynamic)
-									$kw_per_person = ($watts_per_person/1000);
+									$kw_per_person = ($watts_per_person/1000.00);
 
 									//if this value is nonzero
-									if ($cost_per_person) {
+									if ($kw_per_person) {
 
 										//update the balance for each user
 										foreach ($contracts as $contract) {
@@ -102,26 +102,31 @@
 
 											//make BalanceUpdate object
 											$data = array();
-											$data['BalanceUpdate']['delta'] = $cost_per_person;
-											$data['BalanceUpdate']['balance'] = $user['User']['balance'] - $kw_per_person*$user['User']['price'];
-											$data['BalanceUpdate']['user_id'] = $user['User']['id'];
-											$data['BalanceUpdate']['wh_delta'] = $watts_per_person;
-											$data['BalanceUpdate']['wh'] = $watts_per_person + $user['User']['wh'];
-											$data['BalanceUpdate']['room_id'] = $contract['Room']['id'];
-											$data['BalanceUpdate']['sensor_id'] = $sensor['Sensor']['id'];
+											$data['BalanceUpdate']['delta'] = $kw_per_person*$user['User']['price'];
+											if ($kw_per_person*$user['User']['price'] > .001) {
+												echo $kw_per_person . " ";
+												echo $user['User']['price']  . " ";
+												echo $data['BalanceUpdate']['delta'] . "<br>";
+												$data['BalanceUpdate']['balance'] = $user['User']['balance'] - $kw_per_person*$user['User']['price'];
+												$data['BalanceUpdate']['user_id'] = $user['User']['id'];
+												$data['BalanceUpdate']['wh_delta'] = $watts_per_person;
+												$data['BalanceUpdate']['wh'] = $watts_per_person + $user['User']['wh'];
+												$data['BalanceUpdate']['room_id'] = $contract['Room']['id'];
+												$data['BalanceUpdate']['sensor_id'] = $sensor['Sensor']['id'];
 
-											$this->User->id = $user['User']['id'];
-											$this->User->saveField('balance', $data['BalanceUpdate']['balance']);
-											$this->User->saveField('wh', $data['BalanceUpdate']['wh']);
-											$this->BalanceUpdate->create();
-											$this->BalanceUpdate->save($data);
+												$this->User->id = $user['User']['id'];
+												$this->User->saveField('balance', $data['BalanceUpdate']['balance']);
+												$this->User->saveField('wh', $data['BalanceUpdate']['wh']);
+												$this->BalanceUpdate->create();
+												$this->BalanceUpdate->save($data);
+											}
 										}
 									}
 								}
 							}	
 						}
 						
-						echo "0";
+						// echo "0";
 					} else {
 						//failure
 						echo "1";
