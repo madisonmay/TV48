@@ -48,8 +48,6 @@ class AppController extends Controller {
 
 	function beforeFilter() {
 	    parent::__construct();
-	    // Your app-wide beforeFilter code, if any
-	    $this->Auth->allow(array('controller' => 'users', 'action' => 'login'));
 	}
 
 	public function isAuthorized($user) {
@@ -65,8 +63,7 @@ class AppController extends Controller {
 		$this->loadModel('Role');
 
 		//find user object
-		$opts = array('conditions' => array('id' => $user_id));
-		$user = $this->User->find('first', $opts);
+		$user = $this->User->findById($user_id);
 
 		//find all corresponding role objects
 		$opts = array('conditions' => array('name' => json_decode($user['User']['roles'])));

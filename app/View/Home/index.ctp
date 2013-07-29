@@ -207,7 +207,7 @@
         </div>
         <div class='centered motto'>
         <div id='placeholder' style='height: 50px; margin: 0; padding: 0'>
-        </div style='margin: 0; padding: 0; opacity: 1;'>
+        </div style='margin: 0; padding: 0;'>
 
             CORE: COOPkot
             <br>
@@ -226,7 +226,8 @@
         <div class="third">
             <div class='span_content'>
             <div class='offset' style='height: 45px;'></div>
-                <a href=''>Demo</a>
+                <a href='#'>Demo</a>
+                <p>Coming Soon</p>
             </div>
         </div>
         <div class="third">

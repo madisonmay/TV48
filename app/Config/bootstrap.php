@@ -107,5 +107,7 @@ CakeLog::config('error', array(
 	'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
 	'file' => 'error',
 ));
+
+//Remove before deployment
 CakePlugin::load('DebugKit');
 

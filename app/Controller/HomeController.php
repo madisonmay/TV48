@@ -6,7 +6,7 @@
 			$this->Auth->allow('index');
 		}
 
-		public function isAuthorized($user) {
+		function isAuthorized($user) {
 			if (!in_array('landlord', $this->Session->read('User.roles')) && $this->action == 'manage') {
 				return false;
 			} 
