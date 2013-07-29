@@ -1,4 +1,8 @@
 <script>
+    window.available = <?php echo json_encode($available); ?>
+</script>
+
+<script>
     $(document).ready(function() {
 
         $("select").selectpicker();
@@ -12,6 +16,18 @@
                 $('#thin-wrapper').css('display', 'block');   
             }
         });
+
+        //adds indicator to list items to indicate user availability
+        setTimeout(function() {
+            for (var i = 0; i < window.available.length; i++) {
+                list_item = $('button#RoomUsers').next().children("li[rel=" + (i+1) + "]");
+                if (window.available[i]) {
+                    list_item.css('border-left', '5px solid green');
+                } else {
+                    list_item.css('border-left', '5px solid orange');  
+                }   
+            }
+        }, 20);
     });
 </script>
 

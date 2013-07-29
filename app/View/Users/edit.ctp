@@ -1,4 +1,8 @@
 <script>
+    window.available = <?php echo json_encode($available); ?>
+</script>
+
+<script>
     $(function() {
         $(".date").blur(function() {
             var date = Date.parse($(this).val()).toString('MMMM d, yyyy')
@@ -16,6 +20,19 @@
 
         $("select").selectpicker();
         $("select").selectpicker('val', '<?php echo $primary_contract["room_id"]; ?>')
+
+
+        //adds indicator to list items to indicate room availability
+        setTimeout(function() {
+            for (var i = 0; i < window.available.length; i++) {
+                list_item = $('button#UserRooms').next().children("li[rel=" + (i+1) + "]");
+                if (window.available[i]) {
+                    list_item.css('border-left', '5px solid green');
+                } else {
+                    list_item.css('border-left', '5px solid orange');  
+                }   
+            }
+        }, 20);
     })
 </script>
 <? echo $this->Html->script('date'); ?>

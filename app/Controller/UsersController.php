@@ -441,6 +441,15 @@
             $landlords = $this->filterByRole($users, 'landlord');
             $this->set('price', $landlords[0]['User']['price']);
             $rooms = $this->User->Room->find('list', array('conditions' => array('type !=' => 'public')));
+            $available = array();
+            foreach ($rooms as $id => $name) {
+                if ($this->room_available($id)) {
+                    array_push($available, 1);
+                } else {
+                    array_push($available, 0);
+                }
+            }
+            $this->set('available', $available);
             $this->set('rooms', $rooms);
         }
 
@@ -504,6 +513,17 @@
                 //retrieve user data
                 $user_id = $this->request->query['Users'];
                 $user = $this->User->findById($user_id);
+
+                $available = array();
+                foreach ($rooms as $id => $name) {
+                    if ($this->room_available($id)) {
+                        array_push($available, 1);
+                    } else {
+                        array_push($available, 0);
+                    }
+                }
+                $this->set('available', $available);
+
                 $this->set('user', $user);
                 $this->set('primary_contract', $this->primaryContract($user_id));
                 $this->data = $user;

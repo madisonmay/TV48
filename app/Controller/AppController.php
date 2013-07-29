@@ -138,6 +138,7 @@ class AppController extends Controller {
 	public function room_available($room_id) {
 		//replace 'available' attribute in database
 		$this->loadModel('Contract');
+		$this->loadModel('Room');
 		$opts = array('conditions' => array('primary' => 1, 'room_id' => $room_id, 'deactivated' => 0));
 		$primary_contract = $this->Contract->find('first', $opts);
 		if ($primary_contract) {

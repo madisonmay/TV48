@@ -104,10 +104,17 @@
 
 				$user_list = array();
 
+				$available = array();
 				foreach ($users as $user) {
 					$user_list[$user['User']['id']] = $user['User']['full_name'];
+					if (!$this->has_room($user['User']['id'])) {
+                        array_push($available, 1);
+                    } else {
+                        array_push($available, 0);
+                    }
 				}
 
+                $this->set('available', $available);
 				$this->set('users', $user_list); 
 		    }
 
@@ -117,10 +124,33 @@
 			$this->set('title_for_layout', 'Edit a Room');
 			if ($this->request->is('get')) {
 				//get request
-				$this->set('users', $this->findByRole('tenant')); 
-
+				$users = $this->findByRole('tenant');
+				$this->set('users', $users); 
 				$room_id = $this->request->query['Rooms'];
-			    $this->data = $this->Room->find('first', array('conditions' => array('Room.id' => $room_id)));
+
+
+				$available = array();
+				foreach ($users as $id => $name) {
+					if (!$this->has_room($id)) {
+                        array_push($available, 1);
+                    } else {
+                        array_push($available, 0);
+                    }
+				}
+
+                $this->set('available', $available);
+			    $room = $this->Room->find('first', array('conditions' => array('Room.id' => $room_id)));
+			    foreach ($room['Contract'] as $contract) {
+			    	if ($contract['primary']) {
+			    		$user_id = $contract['user_id'];
+			    	}
+			    }
+			    if (!isset($user_id)) {
+			    	$user_id = 0;
+			    }
+
+			    $this->set('user_id', $user_id);
+			    $this->data = $room;
 				
 			} else {
 				//post request
