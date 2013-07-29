@@ -700,7 +700,7 @@ textarea {
   font-size: 14px;
 }
 a {
-  color: #16a085;
+  color: #46a546;
   text-decoration: none;
   -webkit-transition: 0.25s;
   -moz-transition: 0.25s;
@@ -709,7 +709,7 @@ a {
   -webkit-backface-visibility: hidden;
 }
 a:hover {
-  color: #1abc9c;
+  color: green;
   text-decoration: none;
 }
 h1,
@@ -4725,7 +4725,7 @@ input.search-query {
 .dropdown-menu li.selected > a,
 .dropdown-menu li.active > a.highlighted,
 .dropdown-menu li.selected > a.highlighted {
-  background: #1abc9c;
+  background: #46a546;
   color: #ffffff;
 }
 .dropdown-menu li.active > a:hover,
@@ -4736,7 +4736,7 @@ input.search-query {
 .dropdown-menu li.selected > a:focus,
 .dropdown-menu li.active > a.highlighted:focus,
 .dropdown-menu li.selected > a.highlighted:focus {
-  background: #16a085;
+  background: green;
   color: #ffffff;
 }
 .dropdown-menu li > a {
