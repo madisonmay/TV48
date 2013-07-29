@@ -162,7 +162,17 @@
             $users = $this->User->find('all');
             $users = $this->filterByRole($users, 'tenant');
             //for each user
+            $email_link = 'mailto:';
             for ($i = 0; $i < count($users); $i++) {
+
+                //form mailto link
+                $email_link = $email_link . $users[$i]['User']['email'];
+
+                //add comma in between addresses if current user is not the last user
+                if ($i != (count($users) - 1)) {
+                    $email_link = $email_link . ',';
+                }
+
                 $users[$i]['active'] = false;
                 //for each contract that the user (tenant) is part of 
                 for ($j = 0; $j < count($users[$i]['Contract']); $j++) {
@@ -199,6 +209,7 @@
                     }
                 }
             }
+            $this->set('email_link', $email_link);
             $this->set('users', $users);
             $this->set('title_for_layout', 'Tenants Overview');
         }
@@ -426,7 +437,11 @@
                 }
             }
 
-            $this->set('rooms', $this->findAvailableRooms());
+            $users = $this->User->find('all');
+            $landlords = $this->filterByRole($users, 'landlord');
+            $this->set('price', $landlords[0]['User']['price']);
+            $rooms = $this->User->Room->find('list', array('conditions' => array('type !=' => 'public')));
+            $this->set('rooms', $rooms);
         }
 
         public function reset_page() {

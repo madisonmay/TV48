@@ -23,7 +23,7 @@
     <fieldset>
         <legend><?php echo ('Edit room'); ?></legend>
         <?php 
-            $name = array('class' => 'span3', 'placeholder' => 'Name...', 'label' => '', 'required' => true);
+            $name = array('class' => 'span3', 'placeholder' => 'Dorm 1', 'label' => 'Name: ', 'required' => true);
             echo $this->Form->input('name', $name);
         ?>
         <div class="span3 select-wrapper">
@@ -35,7 +35,7 @@
                 ),
                 array(
                     'class' => 'span3 select',
-                    'label' => '',
+                    'label' => 'Room type: ',
                     'required' => true
                 )
             );
@@ -43,7 +43,7 @@
         </div>
         <?
             echo '<div id="thin-wrapper" class="span3 select-wrapper" required>';
-            echo $this->Form->select('Users', $users, array('class' => 'span3 select', 'label' => ''));
+            echo $this->Form->select('Users', $users, array('class' => 'span3 select', 'label' => 'Tenant: '));
             echo '</div>';
             echo $this->Form->input('id');
         ?>

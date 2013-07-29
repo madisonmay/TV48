@@ -107,7 +107,7 @@
     </div>
 <?php endif; ?>
 
-<?php if (!$this->Session->read('Auth.User') || !in_array('landlord', $this->Session->read('User.roles'))): ?>
+<?php if ($this->Session->read('Auth.User') && !in_array('landlord', $this->Session->read('User.roles'))): ?>
     <div class="row-fluid">
         <div class="span4">
             <a href='/sensors/lighting'><div class="border">
@@ -144,11 +144,106 @@
         </div>
     </div>
 <?php endif; ?>
+
+<?php if (!$this->Session->read('Auth.User')): ?>
+    <style>
+        body {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        html {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .cover-bg {
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+
+        .motto {
+            border-radius: 20px; 
+            height: 300px; 
+            width: 80%; 
+            background-color: #ddd; 
+            opacity: 1; 
+            color: #333; 
+            font-size: 90px; 
+            text-align: center;
+        }
+
+        .third {
+            display: inline-block;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 33%;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .span_content {
+            display: block;
+            position: relative;
+            left: 33.3333%;
+            margin-left: -50px;
+            width: 250px;
+            height: 150px;
+            background-color: #46a546;
+            border-radius: 10px;
+            color: #eee;
+            font-size: 50px;
+        }
+
+        .span_content a:hover {
+            color: #eee !important;
+        }
+    </style>
+    <div class='cover_bg' style='background-color: #46a546; height: 500px; width: 100%;'>
+        <div class='offset' style='height: 90px;'>
+        </div>
+        <div class='centered motto'>
+        <div id='placeholder' style='height: 50px; margin: 0; padding: 0'>
+        </div style='margin: 0; padding: 0; opacity: 1;'>
+
+            CORE: COOPkot
+            <br>
+            <div style='font-size: 50px;'>
+            Truly Sustainable Student Housing
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="third">
+            <div class='span_content'>
+            <div class='offset' style='height: 45px;'></div>
+                <a href='http://www.thinkcore.be/coopkot.php'>About</a>
+            </div>
+        </div>
+        <div class="third">
+            <div class='span_content'>
+            <div class='offset' style='height: 45px;'></div>
+                <a href=''>Demo</a>
+            </div>
+        </div>
+        <div class="third">
+            <div class='span_content'>
+            <div class='offset' style='height: 45px;'></div>
+                <a href='http://www.thinkcore.be/'>CORE</a>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
+
 <!-- <img src='images/left.png' style='width: 5%; float: left;'></img> -->
-<div id='chart' style='height: 350px; width: 85%; display: block; margin-right: auto; margin-left: auto; display: block; float: none;'>
+<!-- <div id='chart' style='height: 350px; width: 85%; display: block; margin-right: auto; margin-left: auto; display: block; float: none;'>
     <svg></svg>
 </div>
-
+ -->
 <?php if ($this->Session->read('Auth.User')): ?>
     <div id='footer-tab'>
     notepad

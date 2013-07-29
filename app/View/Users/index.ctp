@@ -11,7 +11,7 @@
         <legend><?php echo ('Manage Tenants'); ?></legend>
         <?
             echo '<div class="span3 select-wrapper">';
-            echo $this->Form->select('Users', $users, array('class' => 'span3 select', 'label' => ''));
+            echo $this->Form->select('Users', $users, array('class' => 'span3 select', 'label' => 'Tenant: '));
             echo '</div>';
             $end = array('label' => 'Edit','class' => 'btn btn-success');
         ?>

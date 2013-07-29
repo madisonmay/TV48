@@ -41,18 +41,18 @@
                 ),
                 array(
                     'class' => 'span3 select',
-                    'label' => '',
+                    'label' => 'Type: ',
                     'required' => true
                 )
             );
             echo '</div>';
             echo '<div class="span3 select-wrapper hidden lighting">';
-            echo $this->Form->select('Lighting', $lighting, array('class' => 'span3 select lighting', 'label' => ''));
+            echo $this->Form->select('Lighting', $lighting, array('class' => 'span3 select lighting', 'label' => 'Location: '));
             echo '</div>';
             echo '<div class="span3 select-wrapper hidden heating">';
-            echo $this->Form->select('Heating', $heating, array('class' => 'span3 select heating', 'label' => ''));
+            echo $this->Form->select('Heating', $heating, array('class' => 'span3 select heating', 'label' => 'Location: '));
             echo '<div class="span3 select-wrapper hidden electricity">';
-            echo $this->Form->select('Electricity', $electricity, array('class' => 'span3 select electricity', 'label' => ''));
+            echo $this->Form->select('Electricity', $electricity, array('class' => 'span3 select electricity', 'label' => 'Location: '));
             echo '</div>';
             $end = array('label' => 'Edit','class' => 'btn btn-success');
         ?>

@@ -4,8 +4,9 @@
     <fieldset>
         <legend><?php echo ('Sign up for an account'); ?></legend>
         <?php 
-        	$password = array('class' => 'span3', 'placeholder' => 'Password...', 'label' => '');
-            $confirm_password = array('class' => 'span3', 'type' => 'password', 'label' => '', 'placeholder' => 'Confirm password...', "oninput" => "checkPassword(this)");
+        	$password = array('class' => 'span3', 'placeholder' => '•••••••••••', 'label' => 'Password: ');
+            $confirm_password = array('class' => 'span3', 'type' => 'password', 'label' => 'Confirm password: ',
+                                      'placeholder' => '•••••••••••', "oninput" => "checkPassword(this)");
             echo $this->Form->input('password', $password);
             echo $this->Form->input('confirm_password', $confirm_password);
             echo $this->Form->input('id');

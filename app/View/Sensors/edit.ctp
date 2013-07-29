@@ -23,21 +23,21 @@
                 ),
                 array(
                     'class' => 'span3 select',
-                    'label' => '',
+                    'label' => 'Sensor type: ',
                     'required' => true
                 )
             );
             echo '</div>';
-            $name = array('class' => 'span3 t5', 'placeholder' => 'Sensor name...', 'label' => '', 'required' => true);
-            $channel = array('class' => 'span3', 'placeholder' => 'Arduino channel...', 'label' => '', 'type'=>'text');
-            $xively_id = array('class' => 'span3', 'placeholder' => 'Xively id...', 'label' => '', 'type' => 'text');
+            $name = array('class' => 'span3 t5', 'placeholder' => 'Kitchen Light', 'label' => 'Sensor name: ', 'required' => true);
+            $channel = array('class' => 'span3', 'placeholder' => '12', 'label' => 'Arduino channel: ', 'type'=>'text');
+            $xively_id = array('class' => 'span3', 'placeholder' => '27', 'label' => 'Xively id', 'type' => 'text');
             echo '<div class="span3 type select-wrapper">';
             echo $this->Form->input('name', $name);
             echo '</div>';
             echo $this->Form->input('channel', $channel);
             echo $this->Form->input('xively_id', $xively_id);
             echo '<div class="span3 select-wrapper">';
-            echo $this->Form->select('Rooms', $rooms, array('class' => 'span3 select', 'label' => ''));
+            echo $this->Form->select('Rooms', $rooms, array('class' => 'span3 select', 'label' => 'Room: '));
             echo '</div>';
             echo $this->Form->input('id');
             $end = array('label' => 'Save', 'class' => 'btn btn-success centered');

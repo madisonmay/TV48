@@ -1,4 +1,4 @@
-<div id='chart' style='height: 350px; width: 85%; display: block; margin-right: auto; margin-left: auto; display: block; float: none;'>
+<div id='chart' style='height: 80%; width: 85%; display: block; margin-right: auto; margin-left: auto; display: block; float: none;'>
     <svg></svg>
 </div>
 <div style='display:block; margin-right: auto; margin-left: auto; text-align: center; border: 2px black auto; width: 100%; font-size: 20px;'>

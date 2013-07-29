@@ -10,7 +10,12 @@
     <fieldset>
         <legend><?php echo ('Add a sensor'); ?></legend>
         <?php 
-            echo '</div>';
+            $name = array('class' => 'span3 t5', 'placeholder' => 'Kitchen Light', 'label' => 'Sensor name: ', 'required' => true);
+            $channel = array('class' => 'span3', 'placeholder' => '12', 'label' => 'Arduino channel: ', 'type'=>'text');
+            $xively_id = array('class' => 'span3', 'placeholder' => '27', 'label' => 'Xively id: ', 'type' => 'text');
+            echo $this->Form->input('name', $name);
+            echo $this->Form->input('channel', $channel);
+            echo $this->Form->input('xively_id', $xively_id);
             echo '<div class="span3 type select-wrapper" >';
             echo $this->Form->select('type', array(
                     'lighting' => 'Lighting',
@@ -19,19 +24,14 @@
                 ),
                 array(
                     'class' => 'span3 select',
-                    'label' => '',
+                    'label' => 'Sensor type: ',
                     'required' => true
                 )
             );
-            $name = array('class' => 'span3 t5', 'placeholder' => 'Sensor name...', 'label' => '', 'required' => true);
-            $channel = array('class' => 'span3', 'placeholder' => 'Arduino channel...', 'label' => '', 'type'=>'text');
-            $xively_id = array('class' => 'span3', 'placeholder' => 'Xively id...', 'label' => '', 'type' => 'text');
-            echo '<div class="span3 select-wrapper">';
-            echo $this->Form->select('Rooms', $rooms, array('class' => 'span3 select', 'label' => ''));
             echo '</div>';
-            echo $this->Form->input('name', $name);
-            echo $this->Form->input('channel', $channel);
-            echo $this->Form->input('xively_id', $xively_id);
+            echo '<div class="span3 select-wrapper">';
+            echo $this->Form->select('Rooms', $rooms, array('class' => 'span3 select', 'label' => 'Room: '));
+            echo '</div>';
             $end = array('label' => 'Add', 'class' => 'btn btn-success centered', 'style' => 'display: block;');
         ?>
     </fieldset>

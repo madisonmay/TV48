@@ -142,5 +142,8 @@
     </table>
   </div>
   <div id='table_paginate'>
+  </div>
 </div>
+<div style='text-align: center; width: 100%; margin-top: 10px;'>
+<?php echo '<a href="' . $email_link . '"><button class="btn btn-success">Send email</button></a>'; ?>
 </div>

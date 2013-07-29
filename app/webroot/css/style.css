@@ -116,8 +116,8 @@ body {
  
 .center {
     float: none;
-    margin-left: auto 0px;
-    margin-right: auto 0px; }
+    margin-left: auto;
+    margin-right: auto; }
  
  
 .center-pad {
@@ -272,7 +272,7 @@ body {
 
 .circular-icon {
     background-position: 50% 50%;
-    background-repeat: no-repeat; }
+    background-repeat: no-repeat;
 }
 
 
@@ -296,12 +296,29 @@ html {
     max-height: 475px; 
     overflow: hidden;
 }
- 
+
+label { 
+    float: left; 
+    width: 50%; 
+    margin-top: 10px;
+    font-size: 25px;
+    display: block; 
+    clear: left; 
+    text-align: right; 
+    cursor: hand; 
+} 
  
 .label-text {
     font-size: 50px;
     margin-top: 70px; }
  
+
+@media (min-width:979px) {
+    fieldset input {
+        margin-left: -50% !important;
+        margin-right: -300px !important;
+    }
+}
  
 .labels {
     font-size: 20px;
@@ -368,62 +385,11 @@ html {
     background-position: 50% 50%;
     background-repeat: no-repeat; }
 
-@media (max-width:979px) {
-    li a {
-        font-size: 25px !important;
-        margin-top: 5px !important;
-        margin-bottom: 5px !important;
-        padding: 5px !important;
+
+@media (max-width:500px) {
+    .nv-series circle, .nv-series text {
+        display: none;
     }
-
-    .pull-right li {
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-
-    body {
-        margin: 0;
-        padding: 0;
-        overflow-x: hidden;
-    }
-
-    html {
-        margin: 0;
-        padding: 0;
-    }
-
-    #register, #logout {
-        text-align: center;
-        width: 200px !important;
-        float: none;
-        display: block;
-        margin-right: auto;
-        margin-left: auto;
-        margin-top: -15px !important;
-        margin-bottom: -15px !important;
-    }
-
-    #login {
-        text-align: center;
-        width: 200px !important;
-        float: none;
-        display: block;
-        margin-right: auto;
-        margin-left: auto;
-        margin-top: 0px !important;
-        margin-bottom: -15px !important;
-    }
-
-    /*prevent input from expanding with small screen sizes*/
-    input {
-        /*a bit sketchy -- display should not be block for all inputs*/
-        font-family: Lato;
-        text-align: center; 
-        max-width: 300px;
-        display: block !important;
-        margin-left: auto !important;
-        margin-right: auto !important; }
-
 }
 
 .number-input {
@@ -532,7 +498,10 @@ select {
     font-family: Lato;
     text-align: center; }
  
- 
+.select {
+    opacity: 0;
+}
+
 #settings-block {
     color: #46a564;
     cursor: pointer;
@@ -693,9 +662,81 @@ textarea {
 .wrapper-plus {
     margin-left: 0px;
 }
+
+@media (max-width:979px) {
+    li a {
+        font-size: 25px !important;
+        margin-top: 5px !important;
+        margin-bottom: 5px !important;
+        padding: 5px !important;
+    }
+
+    .pull-right li {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    html {
+        margin: 0;
+        padding: 0;
+    }
+
+    #register, #logout {
+        text-align: center;
+        width: 200px !important;
+        float: none;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: -15px !important;
+        margin-bottom: -15px !important;
+    }
+
+    #login {
+        text-align: center;
+        width: 200px !important;
+        float: none;
+        display: block;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 0px !important;
+        margin-bottom: -15px !important;
+    }
+
+    /*prevent input from expanding with small screen sizes*/
+    label {
+        display: block !important;
+        margin-right: auto !important;
+        margin-left: auto !important;
+        text-align: center !important;
+        float: none !important;
+    }
+
+    input, .select {
+        /*a bit sketchy -- display should not be block for all inputs*/
+        float: none !important;
+        max-width: 300px;
+        text-align: center !important; 
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: block !important; }
+
+    select {
+        margin-left: 150px !important;
+    }
+}
+
 /**  {
  
 border:  2px black solid;
  
 }
+
+**/
  

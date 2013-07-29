@@ -68,7 +68,7 @@ function next_chart(svg_id) {
         .attr("y", 18)
         .attr("style", "font-size: 25px !important")
         .style("text-anchor", "middle")
-        .text("Power Consumption");
+        .text("Power Usage");
 
     d3.select(chart_id)
       .append("text")

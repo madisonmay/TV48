@@ -78,6 +78,8 @@
 
 		$(document).ready(function() {
 
+			$('.select').css('margin-left: 150px !important');
+
 			$('a').mouseover(function() {
 			  $(this).css("color", "#46a546");
 			});
@@ -125,6 +127,34 @@
 
 		</script>
 	<![endif]-->
+	<script>
+		$(document).ready(function() {
+
+			// not at all ideal, but I couldn't find a work around.  The select picker looks great,
+			// but it sure does cause a lot of trouble.
+			setTimeout(function() {
+				if ($('.select').attr('label') && $(window).width() >= 979) {
+					$('.select').css({'margin-left': '150px', 'margin-top': '-35px', 'margin-bottom': '15px'});
+					$('div.select').css('opacity', '1');
+					$('select.select').each(function(index, value) {
+						var new_label_start = '<label style="margin-bottom: 5px; margin-top: 5px;" for="' + $(value).attr('id') + '">';
+						var new_label_end = $(value).attr('label') + '</label>';
+						$(value).before(new_label_start + new_label_end);
+					})
+				} else if ($('.select').attr('label') && $(window).width() < 979) {
+					$('.select').css('margin-top', '-20px');
+					$('div.select').css('opacity', '1');
+					$('select.select').each(function(index, value) {
+						var new_label_start = '<label style="margin-bottom: 5px; margin-top: 5px;" for="' + $(value).attr('id') + '">';
+						var new_label_end = $(value).attr('label') + '</label>';
+						$(value).before(new_label_start + new_label_end);
+					})
+				} else {
+					$('.select').css('opacity', '1');
+				}
+			}, 10);
+		});
+	</script>
 
 
 </head>
@@ -143,12 +173,15 @@
 	      </a>
 	      <div class="nav-collapse collapse">
 	      	<ul class="nav">
-	            <li class="divider-vertical" style='margin-top: 18px;'></li>
-	            <li><a href='/sensors/lighting' style='color: #eeeeee; text-align: center;'>Light</a></li>
-	            <li><a href='/sensors/heating' style='color: #eeeeee; text-align: center;'>Heat</a></li>
-	            <li><a href='/sensors/electricity_select' style='color: #eeeeee; text-align: center;'>Power</a></li>
             	<?php 
             		if ($this->Session->read('Auth.User')) {
+            			echo "<li class='divider-vertical' style='margin-top: 18px;'></li>";
+            			echo "<li><a href='/sensors/lighting' style='color: #eeeeee; text-align: center;'>Light</a></li>";
+	            		echo "<li><a href='/sensors/heating' style='color: #eeeeee; text-align: center;'>Heat</a></li>";
+	            		echo "<li><a href='/sensors/electricity_select' style='color: #eeeeee; text-align: center;'>Power</a></li>";
+	            		if (in_array('landlord', $this->Session->read('User.roles'))) {
+	            			echo "<li><a href='/users/profiles' style='color: #eeeeee; text-align: center;'>Tenants</a></li>";
+	            		}
 	                	if (in_array('landlord', $this->Session->read('User.roles'))) {
 	                		echo "<li><a href='/home/manage' style='color: #eeeeee; text-align: center;'>Manage</a></li>";
 	                	}

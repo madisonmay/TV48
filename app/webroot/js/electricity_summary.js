@@ -125,6 +125,22 @@ $(document).ready(function() {
           .transition().duration(500)
           .call(chart);
 
+      // var w = parseFloat(d3.select('#chart svg').style("width"));
+      // var h = parseFloat(d3.select('#chart svg').style("height"));
+      // console.log(w, h);
+
+      // if (w > 979) {
+      //   d3.select("#chart svg")
+      //   .append("text")
+      //     .attr("x", w/2)
+      //     .attr("y", 18)
+      //     .attr("id", "chart-title")
+      //     .attr("style", "font-size: 25px !important")
+      //     .style("text-anchor", "middle")
+      //     .text("Energy Consumption");
+      // } else {
+      //   $('#chart-title').remove();
+      // }
 
       nv.utils.windowResize(chart.update);
 
