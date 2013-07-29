@@ -213,6 +213,16 @@
 		        			$this->Session->write('flashWarning', 1);
 		        			$this->Session->setFlash(__('An internal error occurred.  Please try again.'));	
 		        		}
+		        	} else {
+
+		        		//link to user removed
+		        		$contract = $this->primaryRoomContract($user_id);
+                        if ($contract) {
+                            $this->removeOldRoomContract($room_id);
+                            $this->removeRole($user_id, 'dorm_owner');
+                            $this->removeRole($user_id, 'studio_owner'); 
+                            $this->updateUserSecondaryContracts($contract['User']['id']);
+                        }
 		        	}
 
 		        	// *******************************************

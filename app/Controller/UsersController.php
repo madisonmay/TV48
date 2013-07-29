@@ -590,6 +590,14 @@
                             $this->Session->write('flashWarning', 1);
                             $this->Session->setFlash(__('An internal error occurred.  Please try again.')); 
                         }
+                    } else {
+                        $contract = $this->primaryContract($user_id);
+                        if ($contract) {
+                            $this->removeOldUserContract($user_id);
+                            $this->removeRole($user_id, 'dorm_owner');
+                            $this->removeRole($user_id, 'studio_owner'); 
+                            $this->updateUserSecondaryContracts($user_id);
+                        }
                     }
 
                     $this->Session->write('flashWarning', 0);

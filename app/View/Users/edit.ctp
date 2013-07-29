@@ -27,7 +27,7 @@
             for (var i = 0; i < window.available.length; i++) {
                 list_item = $('button#UserRooms').next().children("li[rel=" + (i+1) + "]");
                 if (window.available[i]) {
-                    list_item.css('border-left', '5px solid green');
+                    list_item.css('border-left', '5px solid #1ABC9C');
                 } else {
                     list_item.css('border-left', '5px solid orange');  
                 }   

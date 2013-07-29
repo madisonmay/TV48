@@ -280,6 +280,21 @@ class AppController extends Controller {
 		return false;
 	}
 
+	public function primaryRoomContract($room_id) {
+		$this->loadModel('Contract');
+		$this->loadModel('Room');
+
+		$room = $this->Room->findById($room_id);
+		foreach ($room['Contract'] as $contract) {
+			if ($contract['primary']) {
+				if (!$contract['deactivated']) {
+					return $contract;
+				}
+			}
+		}
+		return false;
+	}
+
 	public function updateUserSecondaryContracts($user_id) {
 
 		//load contract and user models
