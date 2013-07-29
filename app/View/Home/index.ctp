@@ -150,11 +150,13 @@
         body {
             margin: 0px;
             padding: 0px;
+            min-width: 900px !important;
         }
 
         html {
             margin: 0px;
             padding: 0px;
+            min-width: 900px !important;
         }
 
         .cover-bg {
@@ -201,7 +203,15 @@
         .span_content a:hover {
             color: #eee !important;
         }
+
+        .minh {
+        }
     </style>
+    <script>
+        if ($(window).innerWidth < 900) {
+            setTimeout(function() {$('.cover_bg').css('margin-top', '-75px');}, 10);
+        }
+    </script>
     <div class='cover_bg' style='background-color: #46a546; height: 500px; width: 100%;'>
         <div class='offset' style='height: 90px;'>
         </div>
@@ -221,19 +231,21 @@
             <div class='span_content'>
             <div class='offset' style='height: 45px;'></div>
                 <a href='http://www.thinkcore.be/coopkot.php'>About</a>
+                <p class='minh'>&nbsp</p>
             </div>
         </div>
         <div class="third">
             <div class='span_content'>
             <div class='offset' style='height: 45px;'></div>
                 <a href='#'>Demo</a>
-                <p>Coming Soon</p>
+                <p class='minh'>Coming Soon</p>
             </div>
         </div>
         <div class="third">
             <div class='span_content'>
             <div class='offset' style='height: 45px;'></div>
                 <a href='http://www.thinkcore.be/'>CORE</a>
+                <p class='minh'>&nbsp</p>
             </div>
         </div>
     </div>

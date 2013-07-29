@@ -4,7 +4,8 @@
 		public function isAuthorized($user) {
 			if (in_array('admin', $this->Session->read('User.roles'))) {
 				return true;
-			} elseif (in_array($this->action, array('lighting', 'heating', 'electricity', 'refresh', 'piechart', 'electricity_summary'))) {
+			} elseif (in_array($this->action, array('lighting', 'heating', 'electricity', 'refresh',
+												    'piechart', 'electricity_summary', 'electricity_select'))) {
 				return true;
 			}
 
