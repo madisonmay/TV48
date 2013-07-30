@@ -56,13 +56,17 @@
             echo $this->Form->input('first_name', $first_name);
             echo $this->Form->input('last_name', $last_name);
             echo $this->Form->input('email', $username);
-            echo $this->Form->input('start_date', $start_date);
-            echo $this->Form->input('end_date', $end_date);
-            echo $this->Form->input('balance', $balance);
+            if ($this->Session->read('Auth.User.id') != $user['User']['id']){
+                echo $this->Form->input('start_date', $start_date);
+                echo $this->Form->input('end_date', $end_date);
+                echo $this->Form->input('balance', $balance);
+            }
             echo $this->Form->input('price', $price);
-            echo '<div class="span3 select-wrapper">';
-            echo $this->Form->select('Rooms', $rooms, array('class' => 'span3 select', 'label' => 'Room: '));
-            echo '</div>';
+            if ($this->Session->read('Auth.User.id') != $user['User']['id']){
+                echo '<div class="span3 select-wrapper">';
+                echo $this->Form->select('Rooms', $rooms, array('class' => 'span3 select', 'label' => 'Room: '));
+                echo '</div>';
+            }
             echo $this->Form->input('id');
             $end = array('label' => 'Save', 'class' => 'btn btn-success');
         ?>

@@ -191,7 +191,11 @@
 	                	if (in_array('tenant', $this->Session->read('User.roles'))) {
 	                		echo "<li><a href='/users/profile?id=" . $this->Session->read('Auth.User.id');
 	                		echo "' style='color: #eeeeee; text-align: center;'>Profile</a></li>";
-	                	}                   	
+	                	}   
+	                	if (in_array('landlord', $this->Session->read('User.roles'))) {
+	                		echo "<li><a href='/users/edit?Users=" . $this->Session->read('Auth.User.id');
+	                		echo "' style='color: #eeeeee; text-align: center;'>Profile</a></li>";
+	                	}                           	
             		}
                 ?>
 	        </ul>
