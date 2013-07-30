@@ -384,8 +384,14 @@
 					$this->redirect(array('controller' => 'sensors', 'action' => 'add'));
 				} else {
 					$this->Session->write('flashWarning', 1);
-					$this->Session->setFlash(__('An internal error occurred.  Please try again.')); 
-					$this->redirect(array('controller' => 'sensors', 'action' => 'add'));
+					if ($this->Sensor->lastErrorMessage) {
+						$this->Session->setFlash(__($this->Sensor->lastErrorMessage));
+						$this->Sensor->lastErrorMessage = ''; 
+						$this->redirect($this->referer());
+					} else {
+						$this->Session->setFlash(__('An internal error occurred.  Please try again.'));
+						$this->redirect($this->referer()); 				
+					}
 				}
 			}
 		}
@@ -422,8 +428,14 @@
 					$this->redirect(array('controller' => 'sensors', 'action' => 'index'));
 				} else {
 					$this->Session->write('flashWarning', 1);
-					$this->Session->setFlash(__('An internal error occurred.  Please try again.')); 
-					$this->redirect(array('controller' => 'sensors', 'action' => 'index'));
+					if ($this->Sensor->lastErrorMessage) {
+						$this->Session->setFlash(__($this->Sensor->lastErrorMessage));
+						$this->Sensor->lastErrorMessage = ''; 
+						$this->redirect($this->referer());
+					} else {
+						$this->Session->setFlash(__('An internal error occurred.  Please try again.'));
+						$this->redirect($this->referer());
+					}
 				}
 			}
 		}

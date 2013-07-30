@@ -256,7 +256,14 @@
                     $this->redirect(array('controller' => 'home', 'action' => 'index'));
                 } else {
                     $this->Session->write('flashWarning', 1);
-                    $this->Session->setFlash(__('Errors occurred during registration.  Please try again.'));
+                    if ($this->User->lastErrorMessage) {
+                        $this->Session->setFlash(__($this->User->lastErrorMessage));
+                        $this->User->lastErrorMessage = ''; 
+                        $this->redirect($this->referer());
+                    } else {
+                        $this->Session->setFlash(__('An internal error occurred.  Please try again.'));
+                        $this->redirect($this->referer());
+                    }
                 }
             }
         }
@@ -433,7 +440,14 @@
                     $this->redirect(array('controller' => 'home', 'action' => 'manage'));
                 } else {
                     $this->Session->write('flashWarning', 1);
-                    $this->Session->setFlash(__('An internal error occurred.  Please try again.')); 
+                    if ($this->User->lastErrorMessage) {
+                        $this->Session->setFlash(__($this->User->lastErrorMessage));
+                        $this->User->lastErrorMessage = ''; 
+                        $this->redirect($this->referer());
+                    } else {
+                        $this->Session->setFlash(__('An internal error occurred.  Please try again.'));
+                        $this->redirect($this->referer());
+                    }
                 }
             }
 
@@ -604,10 +618,15 @@
                     $this->Session->setFlash(__('Tenant saved!'));
                     $this->redirect('/home/manage');
                 } else {
-                    // exit only during debugging test
-                    exit(0);
                     $this->Session->write('flashWarning', 1);
-                    $this->Session->setFlash(__('An internal error occurred.  Please try again.')); 
+                    if ($this->User->lastErrorMessage) {
+                        $this->Session->setFlash(__($this->User->lastErrorMessage));
+                        $this->User->lastErrorMessage = ''; 
+                        $this->redirect($this->referer());
+                    } else {
+                        $this->Session->setFlash(__('An internal error occurred.  Please try again.'));
+                        $this->redirect($this->referer());
+                    }
                 }
             }
 

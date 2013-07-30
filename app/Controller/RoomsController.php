@@ -94,7 +94,12 @@
 			    } else {
 			    	//something has gone horrible wrong
 		        	$this->Session->write('flashWarning', 1);
-		        	$this->Session->setFlash(__('An internal error occurred.  Please try again.'));	
+		        	if ($this->Room->lastErrorMessage) {
+		        		$this->Session->setFlash(__($this->Room->lastErrorMessage));
+		        		$this->Room->lastErrorMessage = '';	
+		        	} else {
+		        		$this->Session->setFlash(__('An internal error occurred.  Please try again.'));
+		        	}
 		        }		   
 		    } else {
 		    	//get request -- render input form
@@ -234,7 +239,14 @@
 				} else {
 					//something has gone horrible wrong
 					$this->Session->write('flashWarning', 1);
-					$this->Session->setFlash(__('An internal error occurred.  Please try again.'));	
+					if ($this->Room->lastErrorMessage) {
+						$this->Session->setFlash(__($this->Room->lastErrorMessage));
+						$this->Room->lastErrorMessage = '';
+						$this->redirect($this->referer());	
+					} else {
+						$this->Session->setFlash(__('An internal error occurred.  Please try again.'));
+						$this->redirect($this->referer());
+					}
 				}
 			}
 		}

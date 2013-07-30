@@ -51,6 +51,7 @@
             echo '</div>';
             echo '<div class="span3 select-wrapper hidden heating">';
             echo $this->Form->select('Heating', $heating, array('class' => 'span3 select heating', 'label' => 'Location: '));
+            echo '</div>';
             echo '<div class="span3 select-wrapper hidden electricity">';
             echo $this->Form->select('Electricity', $electricity, array('class' => 'span3 select electricity', 'label' => 'Location: '));
             echo '</div>';

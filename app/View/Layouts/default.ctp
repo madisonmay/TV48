@@ -221,7 +221,7 @@
 	<div style='margin-bottom: 75px;'></div>
 	<? if($this->Session->check('Message.flash')): ?>
 		<div style='text-align: center;'>
-			<button onclick='disappear(this);' class='btn alert <? if ($this->Session->read("flashWarning")) {echo 'btn-danger';} else {echo 'btn-success';} ?>' style='text-align: center; margin-bottom: 10px; padding: 10px;'>
+			<button onclick='disappear(this);' class='btn alert <? if ($this->Session->read("flashWarning")) {echo 'btn-danger';} else {echo 'btn-success';} ?>' style='text-align: center; color: #ffffff; margin-bottom: 10px; padding: 10px;'>
 				<?php echo $this->Session->flash(); ?>
 			</button>
 		</div>

@@ -50,6 +50,10 @@ class AppController extends Controller {
 	    parent::__construct();
 	}
 
+	public function backwards() {
+		$this->redirect(array('controller'=>'home','action' => 'index'));
+	}
+
 	public function isAuthorized($user) {
 	    return true;
 	}

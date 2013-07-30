@@ -33,6 +33,13 @@ App::uses('Model', 'Model');
  */
 class AppModel extends Model {
 
+	public $lastErrorMessage;
+
+	public function beforeSave() {
+	    $this->lastErrorMessage = null;
+	    return true;
+	}
+
 	function getLastQuery() {
 	    $dbo = $this->getDatasource();
 	    $logs = $dbo->getLog();
