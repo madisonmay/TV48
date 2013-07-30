@@ -12,7 +12,9 @@
 		public function index() {
 			$this->set('title_for_layout', 'Rooms');
 			$opts = array('fields' => array('id', 'name'));
-			$this->set('rooms', $this->Room->find('list', $opts)); 
+			$rooms = $this->Room->find('list', $opts);
+			asort($rooms); //sort by name
+			$this->set('rooms', $rooms); 
 		}
 
 		public function add() {
@@ -112,12 +114,17 @@
 				$available = array();
 				foreach ($users as $user) {
 					$user_list[$user['User']['id']] = $user['User']['full_name'];
-					if (!$this->has_room($user['User']['id'])) {
+				}
+
+				asort($user_list);
+
+				foreach ($user_list as $id => $full_name) {
+					if (!$this->has_room($id)) {
                         array_push($available, 1);
                     } else {
                         array_push($available, 0);
                     }
-				}
+                }
 
                 $this->set('available', $available);
 				$this->set('users', $user_list); 
@@ -130,9 +137,10 @@
 			if ($this->request->is('get')) {
 				//get request
 				$users = $this->findByRole('tenant');
+				asort($users);
 				$this->set('users', $users); 
+				
 				$room_id = $this->request->query['Rooms'];
-
 
 				$available = array();
 				foreach ($users as $id => $name) {
@@ -142,6 +150,7 @@
                         array_push($available, 0);
                     }
 				}
+
 
                 $this->set('available', $available);
 			    $room = $this->Room->find('first', array('conditions' => array('Room.id' => $room_id)));

@@ -361,18 +361,29 @@
 			$this->set('title_for_layout', 'Sensors');
 			$this->set('cssIncludes', array());
 			$this->set('jsIncludes', array());
+
 			$lighting = array("conditions" => array("Sensor.type" => "lighting"));
 			$heating = array("conditions" => array("Sensor.type" => "heating"));
 			$electricity = array("conditions" => array("Sensor.type" => "electricity"));
-			$this->set('lighting', $this->Sensor->find('list', $lighting)); 
-			$this->set('heating', $this->Sensor->find('list', $heating)); 
-			$this->set('electricity', $this->Sensor->find('list', $electricity)); 
+			$light_sensors = $this->Sensor->find('list', $lighting); 
+			$heat_sensors = $this->Sensor->find('list', $heating);
+			$electricity_sensors = $this->Sensor->find('list', $electricity);
+
+			//sort by name
+			asort($light_sensors);
+			asort($heat_sensors);
+			asort($electricity_sensors);
+
+			$this->set('lighting', $light_sensors);
+			$this->set('heating', $heat_sensors); 
+			$this->set('electricity', $electricity_sensors); 
 		}
 
 		public function add() {
 			$this->set('title_for_layout', 'Add a Sensor');
 			if ($this->request->is('get')) {
 				$rooms = $this->Sensor->Room->find('list');
+				asort($rooms);
 				$this->set('rooms', $rooms);
 			} else {
 				//post request
@@ -400,6 +411,7 @@
 			$this->set('title_for_layout', 'Edit a Sensor');
 			if ($this->request->is('get')) {
 				$rooms = $this->Sensor->Room->find('list');
+				asort($rooms);
 				$this->set('rooms', $rooms);
 				$lighting = $this->request->query['Lighting'];
 				$heating = $this->request->query['Heating'];

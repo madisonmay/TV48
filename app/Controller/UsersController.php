@@ -98,8 +98,11 @@
         }
 
         public function index() {
+
             $this->set('title_for_layout', 'Tenants');
-            $this->set('users', $this->findByRole('tenant')); 
+            $tenants = $this->findByRole('tenant'); 
+            asort($tenants);
+            $this->set('users', $tenants);
         }
 
         public function profile() {
@@ -161,6 +164,10 @@
             //filter the list of all users to get a list of all tenants
             $users = $this->User->find('all');
             $users = $this->filterByRole($users, 'tenant');
+            function cmp($a, $b) {
+                return $a['User']['full_name'] - $b['User']['full_name'];
+            }
+            usort($users, 'cmp');
             //for each user
             $email_link = 'mailto:';
             for ($i = 0; $i < count($users); $i++) {
@@ -455,6 +462,7 @@
             $landlords = $this->filterByRole($users, 'landlord');
             $this->set('price', $landlords[0]['User']['price']);
             $rooms = $this->User->Room->find('list', array('conditions' => array('type !=' => 'public')));
+            asort($rooms);
             $available = array();
             foreach ($rooms as $id => $name) {
                 if ($this->room_available($id)) {
@@ -522,6 +530,7 @@
 
                 //find all non-public rooms
                 $rooms = $this->User->Room->find('list', array('conditions' => array('type !=' => 'public')));
+                asort($rooms);
                 $this->set('rooms', $rooms);
 
                 //retrieve user data
