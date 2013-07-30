@@ -253,6 +253,11 @@ $('.unit-change').click(function() {
 $(document).ready(function() {
   // $('select').fadeTo(0, 0);
   //calculate difference between the time when the feed was created and the current time
+  setTimeout(function() {
+    $("#feed").html($("#feed option").sort(function (a, b) {
+      return a.text == b.text ? 0 : a.text < b.text ? -1 : 1
+    }));
+  }, 20);
   var date_created = new Date(created);
   var current_date = new Date();
 
