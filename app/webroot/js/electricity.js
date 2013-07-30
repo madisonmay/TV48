@@ -21,7 +21,25 @@ function update_values(svg_id, ratio) {
 }
 
 function next_chart(svg_id) {
+  var format_array = [[86400, "%H:%M"], [604800, '%a %H:%M'], [7776000, '%b %e']];
   update_values(svg_id, convert_cost[window.units]);
+
+  var units = $('#units').val();
+  var duration = $('#duration').val();
+  var duration_in_seconds = convert_time[units] * parseFloat(duration);
+  console.log(duration_in_seconds);
+
+  var format = false;
+  for (var i=0; i<format_array.length; i++) {
+    if (duration_in_seconds <= format_array[i][0]) {
+      format = format_array[i][1];
+      break;
+    }
+  }
+
+  if (!format) {
+    format = "%b %e, %Y";
+  }
 
   //nvd3 magic -- see nvd3 docs for details
   svg_id = svg_id.toString();
@@ -34,7 +52,7 @@ function next_chart(svg_id) {
     //chart formatting
     chart.xAxis
         .tickFormat(function(d) {
-          return d3.time.format("%H:%M")(new Date(d));
+          return d3.time.format(format)(new Date(d));
          })
 
     // // Add in this code if you want to switch to a format with zoom.
@@ -191,6 +209,7 @@ function update_graph() {
   var duration = $('#duration').val().toString() + $('#units').val().toString();
   //send jquery post request
   $.post('/sensors/refresh', {'streamId': streamId, 'duration': duration}, function(data) {
+    console.log(data);
     var data = JSON.parse(data);
     //data attached to window object to act as global vars
     window.times = data.times;

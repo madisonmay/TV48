@@ -236,8 +236,6 @@
 		    curl_setopt($curl, CURLOPT_URL, $request);
 		    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 		    $obj_resp = json_decode(curl_exec($curl));
-		    pr($obj_resp);
-		    exit(0);
 
 		    //push to arrays containing datapoints and time values
 		    foreach ($obj_resp->datapoints as $point) {

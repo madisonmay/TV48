@@ -22,6 +22,18 @@
             echo $this->Form->input('channel', $channel);
             echo $this->Form->input('xively_id', $xively_id);
             echo '<div class="span3 type select-wrapper">';
+            echo $this->Form->select('delta', array(
+                    '1' => 'True',
+                    '0' => 'False'
+                ),
+                array(
+                    'class' => 'span3 select',
+                    'label' => 'Partial: ',
+                    'required' => false
+                )
+            );
+            echo '</div>';
+            echo '<div class="span3 type select-wrapper">';
             echo $this->Form->select('type', array(
                     'lighting' => 'Lighting',
                     'heating' => 'Heating',
