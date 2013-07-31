@@ -1,11 +1,31 @@
 <?php echo '<script> window.room_id =' . json_encode($room_id) . ';</script>'; ?>
 
 <script>
+
+    function displaySelects() {
+        var type = $('#SensorType').val();
+        if (type == 'electricity') {
+            $('.delta').removeClass('hide-me');
+            $('.solar').removeClass('hide-me');
+        } else if (type == 'heating') {
+            $('.delta').removeClass("hide-me");
+            $('.solar').addClass("hide-me");
+        } else {
+            $('.delta').addClass('hide-me');
+            $('.solar').addClass('hide-me');
+        }
+    }
+    
     $(function() {
         console.log(window.room_id);
 
         $("select").selectpicker();
         $('#SensorRooms').selectpicker('val', window.room_id);
+
+        displaySelects();
+        $('.type').change(function() {
+            displaySelects();
+        })
     })
 </script>
 <? echo $this->Html->script('date'); ?>

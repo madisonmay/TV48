@@ -62,7 +62,7 @@
             $end = array('label' => 'Edit','class' => 'btn btn-success', 'style' => 'display: inline-block');
         ?>
     </fieldset>
-<a href='/sensors/add' style='display: inline-block;'><button class='btn btn-success'>Add</button></a>
+<a href='/sensors/add' style='display: inline-block;'><button type='button' class='btn btn-success'>Add</button></a>
 <?php echo $this->Form->end($end); ?>
 
 </div>

@@ -8,12 +8,14 @@
 
         public function beforeSave() {
             parent::beforeSave();
-            $room_name = $this->data['Room']['name'];
-            $room = $this->find('first', array('conditions' => array('name' => $room_name)));
-            if ($room && $room['Room']['id'] != $this->data['Room']['id']) {
-                $this->lastErrorMessage = 'A room named ' . $room_name . ' already exists.';
-                return false;
-            } 
+            if (isset($this->data['Room']['name'])) {
+                $room_name = $this->data['Room']['name'];
+                $room = $this->find('first', array('conditions' => array('name' => $room_name)));
+                if ($room && $room['Room']['id'] != $this->data['Room']['id']) {
+                    $this->lastErrorMessage = 'A room named ' . $room_name . ' already exists.';
+                    return false;
+                }  
+            }
             return true;
         }
 

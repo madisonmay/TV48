@@ -10,12 +10,14 @@
 
         public function beforeSave() {
             parent::beforeSave();
-            $xively_id = $this->data['Sensor']['xively_id'];
-            $sensor = $this->find('first', array('conditions' => array('xively_id' => $xively_id)));
-            if ($sensor && $sensor['Sensor']['id'] != $this->data['Sensor']['id']) {
-                $this->lastErrorMessage = 'A sensor with xively_id "' . $xively_id . '" already exists.';
-                return false;
-            } 
+            if (isset($this->data['Sensor']['xively_id'])) {
+                $xively_id = $this->data['Sensor']['xively_id'];
+                $sensor = $this->find('first', array('conditions' => array('xively_id' => $xively_id)));
+                if ($sensor && $sensor['Sensor']['id'] != $this->data['Sensor']['id']) {
+                    $this->lastErrorMessage = 'A sensor with xively_id "' . $xively_id . '" already exists.';
+                    return false;
+                } 
+            }
             return true;
         }
 
