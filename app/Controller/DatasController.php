@@ -33,7 +33,7 @@
 				}
 
 				//the real business
-				$sensors = $this->Sensor->find('all', array('conditions' => array('Sensor.type' => 'electricity')));
+				$sensors = $this->Sensor->find('all', array('conditions' => array('Sensor.type' => 'electricity', 'solar' => 0)));
 				foreach ($sensors as $sensor) {
 
 					//url components
