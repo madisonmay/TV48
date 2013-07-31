@@ -12,12 +12,14 @@
 
         public function beforeSave($options = array()) {
             parent::beforeSave();
-            $email = $this->data['User']['email'];
-            $user = $this->find('first', array('conditions' => array('email' => $email)));
-            if ($user && $user['User']['id'] != $this->data['User']['id']) {
-                $this->lastErrorMessage = 'A user with the email "' . $email . '" already exists.';
-                return false;
-            } 
+            if (isset($this->data['User']['email'])) {
+                $email = $this->data['User']['email'];
+                $user = $this->find('first', array('conditions' => array('email' => $email)));
+                if ($user && $user['User']['id'] != $this->data['User']['id']) {
+                    $this->lastErrorMessage = 'A user with the email "' . $email . '" already exists.';
+                    return false;
+                } 
+            }
             if (isset($this->data[$this->alias]['password'])) {
                 $this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['password']);
             }

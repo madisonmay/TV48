@@ -1,7 +1,7 @@
 <script>
 
 	function twoDecimals(value) {
-		return Math.round(value * 100) / 100
+		return parseFloat(Math.round(value * 100) / 100).toFixed(2);
 	}
 
 	$('input').keyup(function(e){
@@ -18,6 +18,7 @@
 			var balance = $(this).parent().children('div');
 			$(this).prev().val('');
 			$.post('/users/update_balance', {'delta': delta, 'id': user_id}, function(response) {
+				console.log(response);
 				var value = parseFloat(response);
 				balance.html('€' + twoDecimals(value));
 			})
@@ -25,7 +26,7 @@
 
 		$("input").keydown(function(event) {
 			// Allow only backspace and delete
-			if ( event.keyCode == 46 || event.keyCode == 8 || event.keyCode = 190) {
+			if ( event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 190) {
 				// let it happen, don't do anything
 			}
 			else {
