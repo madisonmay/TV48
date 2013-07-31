@@ -25,6 +25,10 @@
         display: none;
     }
 
+    .submit {
+        display: inline-block;
+    }
+
 </style>
 
 <div class="form text-center">
@@ -55,12 +59,10 @@
             echo '<div class="span3 select-wrapper hidden electricity">';
             echo $this->Form->select('Electricity', $electricity, array('class' => 'span3 select electricity', 'label' => 'Location: '));
             echo '</div>';
-            $end = array('label' => 'Edit','class' => 'btn btn-success');
+            $end = array('label' => 'Edit','class' => 'btn btn-success', 'style' => 'display: inline-block');
         ?>
     </fieldset>
+<a href='/sensors/add' style='display: inline-block;'><button class='btn btn-success'>Add</button></a>
 <?php echo $this->Form->end($end); ?>
 
 </div>
-
-<hr>
-<a href='/sensors/add' class='centered text-center'><button class='btn btn-success'>Add a new sensor</button></a>
