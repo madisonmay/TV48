@@ -29,6 +29,10 @@ border:   2px black solid;
 /*::-webkit-scrollbar-track-piece {
     -webkit-border-radius:0;
     background-color:#fff; }*/
+
+legend {
+    text-align: center !important;
+}
  
 a { text-decoration: none; }
 
