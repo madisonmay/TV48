@@ -18,6 +18,17 @@
                     return false;
                 } 
             }
+
+            if (isset($this->data['Sensor']['name']) && isset($this->data['Sensor']['type'])) {
+                $name = $this->data['Sensor']['name'];
+                $type = $this->data['Sensor']['type'];
+                $sensor = $this->find('first', array('conditions' => array('Sensor.name' => $name, 'Sensor.type'=>$type)));
+                if ($sensor && $sensor['Sensor']['id'] != $this->data['Sensor']['id']) {
+                    $this->lastErrorMessage = 'A sensor with name "' . $name . '" and type "' . $type . '" already exists.';
+                    return false;
+                } 
+            }
+
             return true;
         }
 
