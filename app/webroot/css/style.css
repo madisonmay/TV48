@@ -31,7 +31,19 @@ border:   2px black solid;
     background-color:#fff; }*/
  
 a { text-decoration: none; }
- 
+
+@media (min-width:979px) {
+
+    .input {
+        margin-left: -300px !important;
+    }
+
+    .select-wrapper {
+        position: relative;
+        left: -150px !important;
+    }
+    
+}
 
 .left-col {
     float: left; 

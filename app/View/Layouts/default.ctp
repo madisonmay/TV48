@@ -78,6 +78,12 @@
 
 		$(document).ready(function() {
 
+			if ($(window).innerWidth() <= 979) {
+				window.small = true;
+			} else {
+				window.small = false;
+			}
+
 			$('.select').css('margin-left: 150px !important');
 
 			$('a').mouseover(function() {
@@ -154,6 +160,30 @@
 				}
 			}, 10);
 		});
+
+		$(window).resize(function () {
+			if ($('.select').attr('label') && $(window).width() >= 979) {
+				$('.select').css({'margin-left': '150px', 'margin-top': '-35px', 'margin-bottom': '15px'});
+				$('div.select').css('opacity', '1');
+				$('select.select').each(function(index, value) {
+					$('[for="' + $(value).attr('id') + '"]').remove();
+					var new_label_start = '<label style="margin-bottom: 5px; margin-top: 5px;" for="' + $(value).attr('id') + '">';
+					var new_label_end = $(value).attr('label') + '</label>';
+					$(value).before(new_label_start + new_label_end);
+				})
+			} else if ($('.select').attr('label') && $(window).width() < 979) {
+				$('.select').css('margin-top', '-20px');
+				$('div.select').css('opacity', '1');
+				$('select.select').each(function(index, value) {
+					$('[for="' + $(value).attr('id') + '"]').remove();
+					var new_label_start = '<label style="margin-bottom: 5px; margin-top: 5px;" for="' + $(value).attr('id') + '">';
+					var new_label_end = $(value).attr('label') + '</label>';
+					$(value).before(new_label_start + new_label_end);
+				})
+			} else {
+				$('.select').css('opacity', '1');
+			}
+		})
 	</script>
 
 

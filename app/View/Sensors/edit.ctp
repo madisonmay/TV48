@@ -15,7 +15,7 @@
             $('.solar').addClass('hide-me');
         }
     }
-    
+
     $(function() {
         console.log(window.room_id);
 
@@ -42,6 +42,22 @@
             echo $this->Form->input('channel', $channel);
             echo $this->Form->input('xively_id', $xively_id);
             echo '<div class="span3 type select-wrapper">';
+            echo $this->Form->select('type', array(
+                    'lighting' => 'Lighting',
+                    'heating' => 'Heating',
+                    'electricity' => 'Electricity'
+                ),
+                array(
+                    'class' => 'span3 select',
+                    'label' => 'Type: ',
+                    'required' => true
+                )
+            );
+            echo '</div>';
+            echo '<div class="span3 select-wrapper">';
+            echo $this->Form->select('Rooms', $rooms, array('class' => 'span3 select', 'label' => 'Room: '));
+            echo '</div>';
+            echo '<div class="span3 type select-wrapper">';
             echo $this->Form->select('delta', array(
                     '1' => 'True',
                     '0' => 'False'
@@ -54,20 +70,16 @@
             );
             echo '</div>';
             echo '<div class="span3 type select-wrapper">';
-            echo $this->Form->select('type', array(
-                    'lighting' => 'Lighting',
-                    'heating' => 'Heating',
-                    'electricity' => 'Electricity'
+            echo $this->Form->select('solar', array(
+                    '1' => 'True',
+                    '0' => 'False'
                 ),
                 array(
                     'class' => 'span3 select',
-                    'label' => 'Sensor type: ',
-                    'required' => true
+                    'label' => 'Solar: ',
+                    'required' => false
                 )
             );
-            echo '</div>';
-            echo '<div class="span3 select-wrapper">';
-            echo $this->Form->select('Rooms', $rooms, array('class' => 'span3 select', 'label' => 'Room: '));
             echo '</div>';
             echo $this->Form->input('id');
             $end = array('label' => 'Save', 'class' => 'btn btn-success centered');

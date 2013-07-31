@@ -48,7 +48,7 @@
                 ),
                 array(
                     'class' => 'span3 select type',
-                    'label' => 'Sensor type: ',
+                    'label' => 'Type: ',
                     'required' => true
                 )
             );
@@ -76,7 +76,7 @@
                 ),
                 array(
                     'class' => 'span3 select',
-                    'label' => 'Solar Panel: ',
+                    'label' => 'Solar: ',
                     'style' => 'display: none;',
                     'required' => false
                 )
