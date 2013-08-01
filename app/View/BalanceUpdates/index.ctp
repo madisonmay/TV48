@@ -38,10 +38,18 @@
 	function selectAll() {
 		$('#all').toggleClass("btn-success");
 		$('#all').toggleClass('dark-text');
-		$('#studio').toggleClass("btn-success");
-		$('#studio').toggleClass('dark-text');
-		$('#dorm').toggleClass("btn-success");
-		$('#dorm').toggleClass('dark-text');
+		if ($('#all').hasClass('btn-success')) {
+			$('#studio').addClass("btn-success");
+			$('#studio').removeClass('dark-text');
+			$('#dorm').addClass("btn-success");
+			$('#dorm').removeClass('dark-text');
+		} else {
+			$('#studio').removeClass("btn-success");
+			$('#studio').addClass('dark-text');
+			$('#dorm').removeClass("btn-success");
+			$('#dorm').addClass('dark-text');
+		}
+
 		var trs = $('.activated');
 		for (var i = 0; i < trs.length; i++) {
 			var checkbox_tds = $(trs[i]).children('.checkbox_td');
@@ -247,7 +255,7 @@
 <div id='label-container'>
 	<span id='container-left'>
 		<div id='label-left'>
-			<div for='text' class='centered' style='font-size: 25px;'>Reason</div>
+			<div for='text' class='centered' style='font-size: 25px;'>Description</div>
 			<input type='text' id='text' class='centered'>
 		</div>
 	</span>

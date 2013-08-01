@@ -13,6 +13,7 @@ class BalanceUpdatesController extends AppController {
 	}
 
 	public function index() {
+		$this->set('title_for_layout', 'Add Expenses');
 		//divide users into categories in order to provide convenience functions
 		//for selecting users for billing
 		$this->loadModel('User');
@@ -78,6 +79,47 @@ class BalanceUpdatesController extends AppController {
 			echo '1';
 			exit(0);
 		} 
+	}
+
+	public function manage() {
+		$this->set('title_for_layout', 'Balance Updates');
+		$opts = array('conditions' => array('BalanceUpdate.room_id' => 0, 'BalanceUpdate.sensor_id' => 0,
+					  'BalanceUpdate.text !=' => '', 'BalanceUpdate.reimbursement' => 0),
+					  'order' => array('BalanceUpdate.created DESC', 'BalanceUpdate.text'));
+		$updates = $this->BalanceUpdate->find('all', $opts);
+		$filtered_updates = array();
+		foreach ($updates as $update) {
+			$opts = array('conditions' => array('BalanceUpdate.reimbursement' => $update['BalanceUpdate']['id']));
+			if (!$this->BalanceUpdate->find('first', $opts)) {
+				array_push($filtered_updates, $update);
+			}
+		}
+		$this->set('updates', $filtered_updates);
+	}
+
+	public function remove() {
+		$this->loadModel('User');
+		if ($this->request->is('post')) {
+			$id = $this->request->data['id'];
+			$update = $this->BalanceUpdate->findById($id);
+			$user = $this->User->findById($update['User']['id']);
+			$data = array('BalanceUpdate' => array());
+			$data['BalanceUpdate']['delta'] = $update['BalanceUpdate']['delta'];
+			$data['BalanceUpdate']['text'] = $update['BalanceUpdate']['text'] . ' reimbursed';
+			$data['BalanceUpdate']['user_id'] = $id;
+			$data['BalanceUpdate']['balance'] = $user['User']['balance'] + $update['BalanceUpdate']['delta'];
+			$data['BalanceUpdate']['reimbursement'] = $id;
+			$this->BalanceUpdate->create();
+			if ($this->BalanceUpdate->save($data)) {
+				$this->User->id = $update['User']['id'];
+				$this->User->saveField('balance', $data['BalanceUpdate']['balance']);
+				echo "1";
+				exit(0);
+			} else {
+				echo '0';
+				exit(0);
+			}
+		}
 	}
 }
 
