@@ -378,6 +378,11 @@ label {
     background-position: 50% 50%;
     background-repeat: no-repeat; }
 
+#finances {
+    background-image: url('/img/finances.png');
+    background-position: 50% 50%;
+    background-repeat: no-repeat; }
+
 #rooms {
     background-image: url('/img/rooms.png');
     background-position: 50% 50%;

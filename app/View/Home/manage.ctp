@@ -59,7 +59,7 @@
 </div>
 
 <div class="row-fluid">
-    <div class="span6">
+    <div class="span4">
         <a href='/users/profiles'><div class="border">
             <div id="tenants" class="circle">
                 <div class="opaque">
@@ -73,10 +73,25 @@
         	<a href='/users/tenant'><img class='img-link' src='/img/add-this.png' label-text='Add'></a>
         	<a href='/users'><img class='img-link' src='/img/edit-this.png' label-text='Edit'></a>
         	<a href='/users/profiles'><img class='img-link' src='/img/view-this.png' label-text='View'></a>
+        </div>
+    </div>
+    <div class="span4">
+        <a href='/balance_updates'><div class="border">
+            <div id="finances" class="circle">
+                <div class="opaque">
+                    <div class="label-text" label-text='Finance'>Finance</div>
+                </div>
+            </div>
+        </div></a>
+        <div class="description">
+        </div>
+        <div class='links'>
+            <a href='/balance_updates'><img class='img-link' src='/img/view-this.png' label-text='View'></a>
+            <a href='/balance_updates/manage'><img class='img-link' src='/img/edit-this.png' label-text='Edit'></a>
             <a href='/users/billing'><img class='img-link' src='/img/bill-this.png' label-text='Deposit'></a>
         </div>
     </div>
-    <div class="span6">
+    <div class="span4">
         <a href='/rooms'><div class="border">
             <div id="rooms" class="circle">
                 <div class="opaque">

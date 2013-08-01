@@ -136,6 +136,7 @@ class BalanceUpdatesController extends AppController {
 					  'order' => array('BalanceUpdate.created DESC', 'BalanceUpdate.text'));
 		$updates = $this->BalanceUpdate->find('all', $opts);
 		$filtered_updates = array();
+		
 		foreach ($updates as $update) {
 			$opts = array('conditions' => array('BalanceUpdate.reimbursement' => $update['BalanceUpdate']['id']));
 			if (!$this->BalanceUpdate->find('first', $opts)) {
