@@ -93,7 +93,7 @@
 
 <h2 class='centered-content'>
 	<?php echo $user['User']['full_name']; ?>
-	<a href='/balance_updates/status_report?id=<?php echo $user['User']['id']; ?>'>
+	<a href='/balance_updates/status_report.pdf?id=<?php echo $user['User']['id']; ?>'>
 		<img src='/img/money.png' style='display: inline-block; cursor: pointer;'>
 	</a>
 </h2>

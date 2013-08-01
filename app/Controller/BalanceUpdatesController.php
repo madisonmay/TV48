@@ -125,7 +125,62 @@ class BalanceUpdatesController extends AppController {
 	}
 
 	public function status_report() {
+		$this->loadModel('User');
+		$this->response->type('pdf');
+		$user = $this->User->findById($this->request->query('id'));
+		$this->set('user', $user);
 
+		$this->set('title_for_layout', 'Status Report' . $user['User']['full_name']);
+		$opts = array('conditions' => array('BalanceUpdate.room_id' => 0, 'BalanceUpdate.sensor_id' => 0,
+					  'BalanceUpdate.text !=' => '', 'BalanceUpdate.reimbursement' => 0),
+					  'order' => array('BalanceUpdate.created DESC', 'BalanceUpdate.text'));
+		$updates = $this->BalanceUpdate->find('all', $opts);
+		$filtered_updates = array();
+		foreach ($updates as $update) {
+			$opts = array('conditions' => array('BalanceUpdate.reimbursement' => $update['BalanceUpdate']['id']));
+			if (!$this->BalanceUpdate->find('first', $opts)) {
+				array_push($filtered_updates, $update);
+			}
+		}
+
+		$deposits = array();
+		foreach ($user['BalanceUpdate'] as $update) {
+		    $date = date('F j, Y', $update['created']);
+		    if ($update['room_id']) {
+		    	//no-op
+		    } else {
+		        array_push($deposits, $update);
+		    }
+		}
+
+		function cmp($a, $b) {
+			return strtotime($a[0]) > strtotime($b[0]);
+		}
+
+		date_default_timezone_set('Europe/Brussels');
+		$month_wh = array();
+		$mod_month_wh = array();
+		foreach ($user['BalanceUpdate'] as $update) {
+		    if ($update['room_id']) {
+		        $date = strftime('%B %Y', $update['created']);
+		        if (isset($month_wh[$date])) {
+		        	$month_wh[$date] += $update['delta'];
+		        } else {
+		        	$month_wh[$date] = $update['delta'];
+		        }
+		    }
+		}
+
+		foreach($month_wh as $date => $cost) {
+			array_push($mod_month_wh, array($date, $cost));
+		}
+
+		usort($mod_month_wh, 'cmp');
+		$this->set('deposits', $deposits);
+		$this->set('updates', $filtered_updates);
+		$this->set('month_wh', $mod_month_wh);
+
+		$this->render('/BalanceUpdates/pdf/status_report');
 	}
 }
 

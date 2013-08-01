@@ -139,7 +139,7 @@
           echo '<td>'  . '€' .  number_format($update['BalanceUpdate']['delta'], 2) . '</td>';
           echo '<td>';
           date_default_timezone_set('europe/brussels');
-          $date = strftime("%B %d, %Y", $update['BalanceUpdate']['delta']);
+          $date = strftime("%B %d, %Y", $update['BalanceUpdate']['created']);
           echo $date;
           echo '</td>';
           echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="btn-delete">x</a></td>';
