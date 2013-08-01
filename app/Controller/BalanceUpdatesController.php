@@ -2,6 +2,8 @@
 
 class BalanceUpdatesController extends AppController {
 
+	public $components = array('RequestHandler');
+
 	public function isAuthorized($user) {
 		if (in_array('landlord', $this->Session->read('User.roles'))) {
 			return true;
@@ -123,7 +125,7 @@ class BalanceUpdatesController extends AppController {
 	}
 
 	public function status_report() {
-		
+
 	}
 }
 
