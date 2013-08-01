@@ -261,12 +261,12 @@
 	</span>
 	<span id='container-right'>
 		<div id='label-right'>
-			<div for='delta' class='centered' style='font-size: 25px;'>Cost</div>
+			<div for='delta' class='centered' style='font-size: 25px;'>Total Cost</div>
 			<input type='text' id='delta' id='cost' pattern='[0-9\.]+' class='centered'>
 		</div>
 	</span>
 </div>
-<div class='table-container' style='position: absolute; margin-top: 100px;'>
+<div class='table-container' style='position: absolute; margin-left: -10px; margin-right: 15px; margin-top: 100px;'>
   <div id='invisible-wrapper'>
     <table class="table table-hover sortable" style='margin-top: 15px; table-layout: fixed;'>
       <thead>

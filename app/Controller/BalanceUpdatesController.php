@@ -121,6 +121,10 @@ class BalanceUpdatesController extends AppController {
 			}
 		}
 	}
+
+	public function status_report() {
+		
+	}
 }
 
 ?>
