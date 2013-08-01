@@ -295,7 +295,10 @@ body {
     display: none;
 }
  
- 
+ .dark-text {
+    color: black !important;
+ }
+
 .home-button {
     float: left;
     width: 50px; }
@@ -308,7 +311,7 @@ html {
 
 #invisible-wrapper {
     display: block; 
-    max-height: 475px; 
+    max-height: 395px; 
     overflow: hidden;
 }
 
@@ -548,7 +551,7 @@ select {
 }
 
 .table-container {
-    height: 525px; 
+    height: 425px; 
     background-color: white; 
     border: 2px solid #333; 
     border-radius: 10px !important; 

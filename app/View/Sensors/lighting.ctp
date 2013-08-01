@@ -10,6 +10,29 @@
         display: none;
     }
 
+    .update {
+    	width: 0px;
+    	border-width: 0px;
+    	padding: 0px;
+    	margin: 0px;
+    }
+
+    .switch {
+    	position: relative;
+    	z-index: 100000;
+    	cursor: pointer;
+    }
+
+    .off {
+    	left: 50px;
+    	top: 85px;
+    }
+
+    .on {
+    	left: 250px;
+    	top: 85px;
+    }
+
 </style>
 
 <div class='top_group'>

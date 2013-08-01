@@ -37,11 +37,21 @@ function render_page() {
         var room_name = App.lights[i]['location'];
         var streamId = App.lights[i]['streamId'];
 
+        var mobile_start = '';
+        var mobile_end = '';
+
+        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent) ) {
+          var mobile_start = '<img class="switch off" src="/img/off.png"></img>';
+          var mobile_end = '<img class="switch on" src="/img/on.png"></img>';
+        }
+
         //string for templating purposes
-        var room = '<div class="span' + 12/num_cols + '">' +
+        var room = '<div class="span' + 12/num_cols + '">' + 
+            mobile_start + mobile_end +
             '<img class="centered bulb-off" src="/img/bulb_off.png"></img>' +
-            '<img class="centered up bulb-on" src="/img/bulb_on.png"></img>' +
-            '<div modified=0 streamId="' + streamId + '" id="slider' + i + '" style="width: 200px; display: block; margin-left: auto; margin-right: auto; margin-top: 128px"></div>' +
+            '<img class="centered up bulb-on" src="/img/bulb_on.png"></img>' + 
+            '<div class="slider-widget" modified=0 streamId="' + streamId + '" id="slider' + i + 
+            '" style="width: 200px; display: block; margin-left: auto; margin-right: auto; margin-top: 128px"></div>' +
             '<div class="labels">' +
                 '<div>' + room_name + '</div>' +
                 '<div class="brightness">Brightness:</div>' +
@@ -62,6 +72,9 @@ function render_page() {
                 $(this).prev(".bulb-on").css({'opacity': ui.value/100.0});
                 $(this).prev(".bulb-off").css({'opacity': 1-ui.value/100.0});
                 $(this).attr("modified", 1);
+            },
+            stop: function( event, ui ) {
+              $('.update').click();
             }
         });
 
@@ -78,6 +91,25 @@ function render_page() {
 }
 
 $(document).ready(function() {
+
+  $('body').on('click', '.switch', function() {
+    if ($(this).hasClass('on')) {
+      var value = 100;
+    } else {
+      var value = 0;
+    }
+    var slide = $(this).parent().children('.slider-widget');
+    var slide_id = slide.attr('id');
+    var num = slide_id.match(/(\d)+/);
+    var i = parseInt(num[0]);
+    var slider = $('#slider' + i.toString());
+    slider.slider("value", value);
+    slider.attr('modified', 1);
+    slider.next('.labels').children(".amount").html(slider.slider( "value" ));
+    slider.prev(".bulb-on").css({'opacity': slider.slider( "value" )/100.0});
+    slider.prev(".bulb-off").css({'opacity': slider.slider( "value" )/100.0});
+    $('.update').click();
+  });
 
   App.lights.sortByProp('pwm');
   App.lights.reverse();
@@ -152,6 +184,7 @@ $(document).ready(function() {
   $('.update').click(function() {
       //only when update is clicked are the values sent to MySQL db
       var values = retrieve_all();
+      console.log(values);
       reset_modified();
       $.post('/sensors/edit_lights', {'values': values}, function(data) {
           console.log(data);

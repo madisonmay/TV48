@@ -136,6 +136,10 @@
 	<script>
 		$(document).ready(function() {
 
+			$(document).bind('touchstart', function(event) {
+			    $(event.target).trigger('click');
+			});
+
 			// not at all ideal, but I couldn't find a work around.  The select picker looks great,
 			// but it sure does cause a lot of trouble.
 			setTimeout(function() {
