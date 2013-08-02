@@ -415,6 +415,11 @@ label {
     }
 }
 
+
+.navbar-inner {
+    margin-left: 0 !important;
+}
+
 .number-input {
     width: 60px;
     text-align: center;
@@ -755,6 +760,11 @@ textarea {
     }
 }
 
+
+td {
+    white-space: nowrap;
+    overflow: hidden;
+}
 /**  {
  
 border:  2px black solid;

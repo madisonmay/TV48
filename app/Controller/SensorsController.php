@@ -67,8 +67,12 @@
 			$this->set('jsIncludes', array('http://cdnjs.cloudflare.com/ajax/libs/d3/2.10.0/d3.v2.min.js')); 
 		}
 
+		public function heating_select() {
+			$this->set('title_for_layout', 'Select Visualization');
+		}
+
 		public function electricity_select() {
-			
+			$this->set('title_for_layout', 'Select Visualization');
 		}
 
 		public function electricity_summary() {
