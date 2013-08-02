@@ -47,10 +47,8 @@
                     $Email->config('default');
                     $Email->from(array('core.tv48@gmail.com' => 'CORE TV48'));
 
-                    // Eventually the recipient should be the person signing up.
-                    // $Email->to($user['User']['email']);
+                    $Email->to($user['User']['email']);
 
-                    $Email->to('madison.may@students.olin.edu');
                     $Email->template('reset');
                     $Email->emailFormat('html');
                     $Email->subject('TV48 Password Reset');
