@@ -211,7 +211,7 @@
             		if ($this->Session->read('Auth.User')) {
             			echo "<li class='divider-vertical' style='margin-top: 18px;'></li>";
             			echo "<li><a href='/sensors/lighting' style='color: #eeeeee; text-align: center;'>Light</a></li>";
-	            		echo "<li><a href='/sensors/heating' style='color: #eeeeee; text-align: center;'>Heat</a></li>";
+	            		echo "<li><a href='/sensors/heating_select' style='color: #eeeeee; text-align: center;'>Heat</a></li>";
 	            		echo "<li><a href='/sensors/electricity_select' style='color: #eeeeee; text-align: center;'>Power</a></li>";
 	            		if (in_array('landlord', $this->Session->read('User.roles'))) {
 	            			echo "<li><a href='/users/profiles' style='color: #eeeeee; text-align: center;'>Tenants</a></li>";
