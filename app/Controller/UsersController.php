@@ -408,8 +408,6 @@
                     $Email->viewVars(array('activate_url' => $activate_url,'name' => $name));
                     $Email->send();
 
-                    //similar to SQL's lastInsertID();
-
                     if ($this->request->data['User']['Rooms']) {
 
                         //if room was submitted with user, update contract table
