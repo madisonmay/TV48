@@ -146,6 +146,7 @@
 		}
 
 		public function electricity_select() {
+			//bare bones HTML + CSS page for navigation
 			$this->set('title_for_layout', 'Select Visualization');
 		}
 
