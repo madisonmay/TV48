@@ -34,7 +34,7 @@ App::uses('CakeEmail', 'Network/Email');
  */
 class AppController extends Controller {
 	public $helpers = array('Html', 'Form', 'Session');
-	public $components = array('Session', 'DebugKit.Toolbar', 'Auth' => array(
+	public $components = array('Session', 'Cookie', 'DebugKit.Toolbar', 'Auth' => array(
         'loginRedirect' => array('controller' => 'home', 'action' => 'index'),
         'logoutRedirect' => array('controller' => 'users', 'action' => 'login'),
 		'authorize' => array('Controller'),
@@ -47,24 +47,24 @@ class AppController extends Controller {
 	);
 
 	function beforeFilter() {
-        // // set cookie options
-        // $this->Cookie->key = 'qSI232qs*&sXOw!adre@34SAv!@*(XSL#$%)asGb$@11~_+!@#HKis~#^';
-        // $this->Cookie->httpOnly = true;
-
-        // if (!$this->Auth->loggedIn() && $this->Cookie->read('remember_me_cookie')) {
-        //     $cookie = $this->Cookie->read('remember_me_cookie');
-
-        //     $user = $this->User->find('first', array(
-        //         'conditions' => array(
-        //             'User.username' => $cookie['username'],
-        //             'User.password' => $cookie['password']
-        //         )
-        //     ));
-
-        //     if ($user && !$this->Auth->login($user)) {
-        //         $this->redirect('/users/logout'); // destroy session & cookie
-        //     }
-        // }
+        // set cookie options
+        $this->Cookie->httpOnly = true;
+         
+        if (!$this->Auth->loggedIn() && $this->Cookie->read('rememberMe')) {
+            $cookie = $this->Cookie->read('rememberMe');
+     
+            $this->loadModel('User'); // If the User model is not loaded already
+            $user = $this->User->find('first', array(
+                    'conditions' => array(
+                        'User.username' => $cookie['username'],
+                        'User.password' => $cookie['password']
+                    )
+            ));
+         
+	        if ($user && !$this->Auth->login($user['User'])) {
+	            $this->redirect('/users/logout'); // destroy session & cookie
+	        }
+        }
 	}
 
 	public function backwards() {

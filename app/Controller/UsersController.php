@@ -298,6 +298,12 @@
             $this->set('title_for_layout', 'Login');
             if ($this->request->is('post')) {
                 if ($this->Auth->login()) {
+
+                    //persistent login
+                    $cookieTime = "12 months";
+                    $this->request->data['User']['password'] = $this->Auth->password($this->request->data['User']['password']);
+                    $this->Cookie->write('rememberMe', $this->request->data['User'], true, $cookieTime);
+
                     $user_id = $this->Auth->user('id');
                     $user = $this->User->findById($user_id);
                     if ($user['User']['confirmed']) {
@@ -337,6 +343,7 @@
 
         public function logout() {
             $this->Session->destroy();
+            $this->Cookie->delete('rememberMe');
             $this->redirect($this->Auth->logout());
         }
 
