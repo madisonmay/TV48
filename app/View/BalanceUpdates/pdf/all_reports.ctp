@@ -921,9 +921,9 @@
 	?>
 	  <thead>
 	    <tr>
-	      <th class='th'>Description</th>
 	      <th class='th'>Cost</th>
 	      <th class='th'>Date</th>
+	      <th class='th'>Description</th>
 	    </tr>
 	  </thead>
 	  <tbody>
@@ -968,9 +968,9 @@
 	  	</tr>
 	  	<?php
 			echo '<tr>';
-			echo '<td></td>';
 			echo '<td>' . number_format($user['User']['balance'], 2) . ' EUR </td>';
 			echo '<td>' . strftime("%B %d, %Y", time()) . '</td>';
+			echo '<td></td>';
 			echo '</tr>';
 	  	?>
 	  </tbody>

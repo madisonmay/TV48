@@ -11,6 +11,9 @@ class BalanceUpdatesController extends AppController {
 		if (in_array('admin', $this->Session->read('User.roles'))) {
 			return true;
 		} 
+		if (in_array($this->action, array('status_report'))) {
+			return true;
+		}
 		return false;
 	}
 
