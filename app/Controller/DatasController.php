@@ -14,7 +14,7 @@
 			$this->set('title_for_layout', 'Data Logger');
 			$midnight = strtotime('today midnight');
 			date_default_timezone_set('Europe/Brussels');
-			// if ($midnight - time() < 600) {
+			if ($midnight - time() < 3600) {
 				$this->loadModel('Sensor');
 				$this->loadModel('Contract');
 				$this->loadModel('User');
@@ -132,7 +132,7 @@
 						echo "1";
 					}
 				}
-			// }
+			}
 			exit(0);
 		}
 	}
