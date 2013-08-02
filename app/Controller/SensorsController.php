@@ -229,6 +229,7 @@
 			}
 
 			// need better default behavior
+			// _____ HIGH PRIORITY FIX _____
 			if (count($sensor_ids) < 1) {
 				array_push($sensor_ids, 'PTOTAL');
 			}
@@ -238,6 +239,10 @@
 		    // offset of 21600 to account for time zone -- there has to be a more elegant way of doing this.
 		    // xively requires some special formatting, handled in the format string below
 		    // 1/4 of a day = 6 hours
+
+		    // I need a way of getting the users timezone and using that to generate the correct time.
+		    // Xively should also offer a param that could be passed for timezone (similar to the functionality
+		    // they have for producing pngs)
 		    $past = date("Y-m-d\TH:i:sP", time() - .25 * SECONDS_PER_DAY - 21600);
 		    $now = date("Y-m-d\TH:i:sP", time());
 
@@ -247,8 +252,11 @@
 		    $request = $url . $key;
 
 		    //default duration is currently 6 hours
+		    //this could eventually be moved to a config database table or something similar
 		    $duration = '6hours';
 
+		    //maybe cakephp has a more elegant curl module? 
+		    //for right now this should work fine, however.
 		    $curl = curl_init();
 		    curl_setopt($curl, CURLOPT_URL, $request);
 		    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -260,11 +268,15 @@
 		    //pass date of creation to client side code
 		    echo "<script> var created = " . json_encode($obj_resp->created) . "</script>";
 
+		    //xively cannot be guaranteed to return valid json -- this should be checked 
+		    //and an error should be raised in the case that the API is down.
 		    $datastreams = $obj_resp->datastreams;
 
 		    $data_ids = array();
 		    $data_names = array();
 
+		    //Again, this kind of code should not exist -- should be abstracted to a config file
+		    //or should be a random choice from the list of datastreams
 		    $streamId = 'PTOTAL';
 
 		    $plot_data = '';
@@ -284,7 +296,7 @@
 		    	}
 		    }
 		    //used to satisfy the quirks of Xively API -- number of seconds maps to interval between points
-		    
+		    //not at all clean, but 100% necessary at the moment
 		    $intervals = array(21600 => 0, 43200 => 30, 86400 => 60, 432000 => 300, 1209600 => 900,
 		                       2678400 => 1800, 7776000 => 10800, 15552000 => 21600, 31536000 => 43200);
 
@@ -335,7 +347,8 @@
 		    $data_length = count($datapoints);
 
 		    //save in json format for use client side
-		    //not a huge fan of using the window object, but for right now it should be fine
+		    //I'm not a huge fan of using the window object (should really use a namespace for this kind of thing)
+		    //but for right now it should be fine
 		    $id = $plot_data->id;
 		    echo '<script> window.data = {}; window.data["' . $id . '"] = ' . json_encode($datapoints) . '</script>';
 		    echo '<script> window.times = {}; window.times["' . $id . '"] = ' . json_encode($times) . '</script>';
@@ -346,6 +359,7 @@
 		}
 
 		public function refresh() {
+			//reloads the energy line graph with updated data
 
 			//grab variables from Jquery post
 			$duration = $_POST['duration'];
@@ -389,9 +403,8 @@
 			$intervals = array(21600 => 0, 43200 => 30, 86400 => 60, 432000 => 300, 1209600 => 900, 2678400 => 1800,
 			                 2678400 => 3600, 7776000 => 10800, 15552000 => 21600, 31536000 => 43200, 31536000 => 86400);
 
-
+			//aliasing for simplicity
 			$data = $plot_data;
-
 
 			//convert time from human readable format to seconds
 			$seconds = strtotime($duration) - time();
@@ -446,10 +459,12 @@
 		}
 
 		public function index() {
+			//presentation details
 			$this->set('title_for_layout', 'Sensors');
 			$this->set('cssIncludes', array());
 			$this->set('jsIncludes', array());
 
+			//make an array of each sensor type
 			$lighting = array("conditions" => array("Sensor.type" => "lighting"));
 			$heating = array("conditions" => array("Sensor.type" => "heating"));
 			$electricity = array("conditions" => array("Sensor.type" => "electricity"));
@@ -462,6 +477,7 @@
 			asort($heat_sensors);
 			asort($electricity_sensors);
 
+			//pass to client
 			$this->set('lighting', $light_sensors);
 			$this->set('heating', $heat_sensors); 
 			$this->set('electricity', $electricity_sensors); 
