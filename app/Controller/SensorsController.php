@@ -6,7 +6,7 @@
 				return true;
 			} elseif (in_array($this->action, array('lighting', 'heating', 'electricity', 'refresh',
 												    'piechart', 'electricity_summary', 'electricity_select',
-												    'heating_summary', 'heating_piechart'))) {
+												    'heating_summary', 'heating_piechart', 'heating_select'))) {
 				return true;
 			}
 
