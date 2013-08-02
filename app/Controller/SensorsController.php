@@ -160,6 +160,9 @@
 			$sensors = $this->Sensor->find('all', $opts);
 			$sensors_values = array();
 			$count = 0;
+
+			//Yet again the array should be "pushed" to the client in one go instead of pushing to a 
+			//javascript array created via a php echo.
 			echo '<script> window.feeds = [];</script>';
 			foreach ($sensors as $sensor) {
 				if ($this->contractExists($sensor['Sensor']['room_id'], $this->Auth->user('id'))) {
@@ -170,6 +173,8 @@
 						array_push($sensor_values, $datum['value']);
 					}
 					$final = array('name' => $sensor['Sensor']['name'], 'values' => $sensor_values);
+
+					//this it the problematic piece of code.
 					echo '<script> window.feeds.push(' . json_encode($final) . ');</script>';
 				}
 			}
