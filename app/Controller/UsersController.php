@@ -110,6 +110,9 @@
         public function profile() {
             $this->loadModel('Room');
             //display a single users profile
+            //this routes compiles data from a wide variety of sources and 
+            //attaches all of it to a $user array
+
             $this->set('cssIncludes', array());
             $this->set('jsIncludes', array('http://cdnjs.cloudflare.com/ajax/libs/d3/2.10.0/d3.v2.min.js', 'nv.d3'));
             $user = $this->User->findById($this->request->query('id'));
@@ -221,14 +224,6 @@
             $this->set('email_link', $email_link);
             $this->set('users', $users);
             $this->set('title_for_layout', 'Tenants Overview');
-        }
-
-        public function view($id = null) {
-            $this->User->id = $id;
-            if (!$this->User->exists()) {
-                throw new NotFoundException(__('Invalid user'));
-            }
-            $this->set('user', $this->User->read(null, $id));
         }
 
         public function add() {
