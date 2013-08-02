@@ -374,7 +374,7 @@ function renderChart() {
     var chart = nv.models.pieChart()
         .x(function(d) { return d.label })
         .y(function(d) { return d.value })
-        .showLabels(true)
+        .showLabels(false)
         .labelThreshold(.05)
         .donut(true);
 
