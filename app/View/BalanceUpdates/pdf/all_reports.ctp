@@ -903,64 +903,76 @@
 	}
 </style>
 
-<div class='centered header text-center pad-bottom'>
-	<?php echo $user['User']['full_name']; ?>
-</div>
+<?php $count = 0; ?>
+<?php foreach ($users as $user) { ?>
+	<?php $count++; ?>
+	<div class='centered header text-center pad-bottom'>
+		<?php echo $user['User']['full_name']; ?>
+	</div>
+	<?php 
 
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th class='th'>Description</th>
-      <th class='th'>Cost</th>
-      <th class='th'>Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr class='td_header'>	
-      <td colspan='3'>Energy and Heating</td>
-    </tr>
-    <?php
-    	foreach ($month_wh as $array) {
-    		echo '<tr>';
-    		echo '<td>' . number_format($array[1], 2) . ' EUR </td>';
-    		echo '<td>' . $array[0] . '</td>';
-    		echo '<td><td>';
-    		echo '</tr>';
-    	}
-    ?>
-  	<tr class='td_header'>	
-  	  <td colspan='3'>Assorted Expenses</td>
-  	</tr>
-  	<?php
-  		foreach ($updates as $update) {
-  			echo '<tr>';
-  			echo '<td>' . number_format($update['BalanceUpdate']['delta'], 2) . ' EUR </td>';
-  			echo '<td>' . strftime("%B %d, %Y", $update['BalanceUpdate']['created']) . '</td>';
-  			echo '<td>' . $update['BalanceUpdate']['text'] . '</td>';
-  			echo '</tr>';
-  		}
-  	?>
-  	<tr class='td_header'>	
-  	  <td colspan='3'>Deposits</td>
-  	</tr>
-  	<?php
-  		foreach ($deposits as $deposit) {
-  			echo '<tr>';
-  			echo '<td>' . number_format($deposit['delta'], 2) . ' EUR </td>';
-  			echo '<td>' . strftime("%B %d, %Y", $deposit['created']) . '</td>';
-  			echo '<td></td>';
-  			echo '</tr>';
-  		}
-  	?>
-  	<tr class='td_header'>	
-  	  <td colspan='3'>Balance</td>
-  	</tr>
-  	<?php
-		echo '<tr>';
-		echo '<td>' . number_format($user['User']['balance'], 2) . ' EUR </td>';
-		echo '<td>' . strftime("%B %d, %Y", time()) . '</td>';
-		echo '<td></td>';
-		echo '</tr>';
-  	?>
-  </tbody>
-</table>
+	//no page break after final user
+	if ($count == count($users)) {
+		echo '<table class="table table-striped">';
+	} else {
+		echo '<table class="table table-striped break">';
+	}
+
+	?>
+	  <thead>
+	    <tr>
+	      <th class='th'>Description</th>
+	      <th class='th'>Cost</th>
+	      <th class='th'>Date</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr class='td_header'>	
+	      <td colspan='3'>Energy and Heating</td>
+	    </tr>
+	    <?php
+	    	foreach ($user['month_wh'] as $array) {
+	    		echo '<tr>';
+	    		echo '<td>' . number_format($array[1], 2) . ' EUR </td>';
+	    		echo '<td>' . $array[0] . '</td>';
+	    		echo '<td><td>';
+	    		echo '</tr>';
+	    	}
+	    ?>
+	  	<tr class='td_header'>	
+	  	  <td colspan='3'>Assorted Expenses</td>
+	  	</tr>
+	  	<?php
+	  		foreach ($user['updates'] as $update) {
+	  			echo '<tr>';
+	  			echo '<td>' . number_format($update['BalanceUpdate']['delta'], 2) . ' EUR </td>';
+	  			echo '<td>' . strftime("%B %d, %Y", $update['BalanceUpdate']['created']) . '</td>';
+	  			echo '<td>' . $update['BalanceUpdate']['text'] . '</td>';
+	  			echo '</tr>';
+	  		}
+	  	?>
+	  	<tr class='td_header'>	
+	  	  <td colspan='3'>Deposits</td>
+	  	</tr>
+	  	<?php
+	  		foreach ($user['deposits'] as $deposit) {
+	  			echo '<tr>';
+	  			echo '<td>' . number_format($deposit['delta'], 2) . ' EUR </td>';
+	  			echo '<td>' . strftime("%B %d, %Y", $deposit['created']) . '</td>';
+	  			echo '<td></td>';
+	  			echo '</tr>';
+	  		}
+	  	?>
+	  	<tr class='td_header'>	
+	  	  <td colspan='3'>Balance</td>
+	  	</tr>
+	  	<?php
+			echo '<tr>';
+			echo '<td>' . number_format($user['User']['balance'], 2) . ' EUR </td>';
+			echo '<td>' . strftime("%B %d, %Y", time()) . '</td>';
+			echo '<td></td>';
+			echo '</tr>';
+	  	?>
+	  </tbody>
+	</table>
+<?php }; ?>

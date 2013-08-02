@@ -146,4 +146,5 @@
 </div>
 <div style='text-align: center; width: 100%; margin-top: 10px;'>
 <?php echo '<a href="' . $email_link . '"><button class="btn btn-success">Send email</button></a>'; ?>
+<?php echo '<a href="/balance_updates/all_reports.pdf" style="margin-left: 10px;"><button class="btn btn-success">Status Reports</button></a>'; ?>
 </div>

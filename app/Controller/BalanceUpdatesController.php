@@ -136,7 +136,7 @@ class BalanceUpdatesController extends AppController {
 					  'order' => array('BalanceUpdate.created DESC', 'BalanceUpdate.text'));
 		$updates = $this->BalanceUpdate->find('all', $opts);
 		$filtered_updates = array();
-		
+
 		foreach ($updates as $update) {
 			$opts = array('conditions' => array('BalanceUpdate.reimbursement' => $update['BalanceUpdate']['id']));
 			if (!$this->BalanceUpdate->find('first', $opts)) {
@@ -181,7 +181,79 @@ class BalanceUpdatesController extends AppController {
 		$this->set('updates', $filtered_updates);
 		$this->set('month_wh', $mod_month_wh);
 
-		$this->render('/BalanceUpdates/pdf/status_report');
+		$this->render('/BalanceUpdates/pdf/status_reports');
+	}
+
+	public function all_reports() {
+		$this->loadModel('User');
+		$this->response->type('pdf');
+		$this->set('title_for_layout', 'Status Reports');
+
+		function cmp($a, $b) {
+			return strtotime($a[0]) > strtotime($b[0]);
+		}
+
+		$users = $this->User->find('all');
+		$users = $this->filterByRole($users, 'tenant');
+		$mod_users = array();
+		$final_users = array();
+
+		foreach ($users as $user) {
+			if ($this->has_room($user['User']['id'])) {
+				array_push($mod_users, $user);
+			}
+		}
+
+		foreach ($mod_users as $user) {
+			$opts = array('conditions' => array('BalanceUpdate.room_id' => 0, 'BalanceUpdate.sensor_id' => 0,
+						  'BalanceUpdate.text !=' => '', 'BalanceUpdate.reimbursement' => 0),
+						  'order' => array('BalanceUpdate.created DESC', 'BalanceUpdate.text'));
+			$updates = $this->BalanceUpdate->find('all', $opts);
+			$filtered_updates = array();
+
+			foreach ($updates as $update) {
+				$opts = array('conditions' => array('BalanceUpdate.reimbursement' => $update['BalanceUpdate']['id']));
+				if (!$this->BalanceUpdate->find('first', $opts)) {
+					array_push($filtered_updates, $update);
+				}
+			}
+
+			$deposits = array();
+			foreach ($user['BalanceUpdate'] as $update) {
+			    $date = date('F j, Y', $update['created']);
+			    if ($update['room_id']) {
+			    	//no-op
+			    } else {
+			        array_push($deposits, $update);
+			    }
+			}
+
+			date_default_timezone_set('Europe/Brussels');
+			$month_wh = array();
+			$mod_month_wh = array();
+			foreach ($user['BalanceUpdate'] as $update) {
+			    if ($update['room_id']) {
+			        $date = strftime('%B %Y', $update['created']);
+			        if (isset($month_wh[$date])) {
+			        	$month_wh[$date] += $update['delta'];
+			        } else {
+			        	$month_wh[$date] = $update['delta'];
+			        }
+			    }
+			}
+
+			foreach($month_wh as $date => $cost) {
+				array_push($mod_month_wh, array($date, $cost));
+			}
+
+			usort($mod_month_wh, 'cmp');
+			$user['deposits'] = $deposits;
+			$user['updates'] = $filtered_updates;
+			$user['month_wh'] = $mod_month_wh;
+			array_push($final_users, $user);
+		}
+		$this->set('users', $final_users);
+		$this->render('/BalanceUpdates/pdf/all_reports');
 	}
 }
 
