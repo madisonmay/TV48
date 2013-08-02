@@ -41,7 +41,7 @@
                     $this->Session->setFlash(__('Password reset email sent.  Check your inbox!'));
                     $this->redirect(array('controller' => 'home', 'action' => 'index'), null, false);
 
-                    $activate_url = "<a href=localhost/users/reset_page?code=".$user['User']['confirmation_code']."&email=".$email.">Password Reset</a>";
+                    $activate_url = "<a href='http://tv48.thinkcore.be/users/reset_page?code=".$user['User']['confirmation_code']."&email=".$email.">Password Reset</a>";
                     $name = $user['User']['first_name'];
                     $Email = new CakeEmail();
                     $Email->config('default');

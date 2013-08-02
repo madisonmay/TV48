@@ -957,9 +957,9 @@
   	</tr>
   	<?php
 		echo '<tr>';
+		echo '<td></td>';
 		echo '<td>' . number_format($user['User']['balance'], 2) . ' EUR </td>';
 		echo '<td>' . strftime("%B %d, %Y", time()) . '</td>';
-		echo '<td></td>';
 		echo '</tr>';
   	?>
   </tbody>
