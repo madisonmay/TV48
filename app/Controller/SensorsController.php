@@ -113,17 +113,23 @@
 		}
 
 		public function heating_piechart() {
+
+			//too similar to "piechart()" -- should somehow expand these endpoints to take a param
+			//and use the same function to handle both heating and electricity.
+			//define client side scripts to put in header and set title
 			$this->set('title_for_layout', 'Heating Piechart');
 			$this->set('cssIncludes', array());
 			$this->set('jsIncludes', array('http://cdnjs.cloudflare.com/ajax/libs/d3/2.10.0/d3.v2.min.js', 'nv.d3'));
 
 			$this->loadModel('Data');
+
+			//find all heating sensors the user can access
 			$opts = array('conditions' => array('Sensor.type' => 'heating'));
 			$sensors = $this->Sensor->find('all', $opts);
 			$sensors_values = array();
 			$count = 0;
 
-			//should create php object and then push all at once
+			//should create php object and then push all at once -- this method is sketch
 			echo '<script> window.feeds = [];</script>';
 			foreach ($sensors as $sensor) {
 				if ($this->contractExists($sensor['Sensor']['room_id'], $this->Auth->user('id'))) {
