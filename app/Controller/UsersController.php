@@ -245,10 +245,8 @@
                     $Email->config('default');
                     $Email->from(array('core.tv48@gmail.com' => 'CORE TV48'));
 
-                    // Eventually the recipient should be the person signing up.
-                    // $Email->to($this->request->data['User']['email']);
+                    $Email->to($this->request->data['User']['email']);
 
-                    $Email->to('madison.may@students.olin.edu');
                     $Email->template('confirm');
                     $Email->emailFormat('html');
                     $Email->subject('TV48 Email Confirmation');
