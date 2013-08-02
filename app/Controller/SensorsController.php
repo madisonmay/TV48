@@ -18,6 +18,8 @@
 			//compose js object
 			$lights = $this->Sensor->find('all', array("conditions" => array('Sensor.type' => 'lighting')));
 			$js_lights = array();
+
+			//find all lights the user has access to
 			foreach ($lights as $light) {
 				if ($this->contractExists($light['Sensor']['room_id'], $this->Auth->user('id'))) {
 					$js_light = array(
@@ -29,18 +31,23 @@
 				}
 			}
 
+			//send them to the client via a script
 			echo("<script> window.lights = " . json_encode($js_lights) . "</script>");
 
+			//and format the page nicely
 			$this->set('title_for_layout', 'Lighting');
 			$this->set('cssIncludes', array());
 			$this->set('jsIncludes', array('lighting')); 
 		}
 
 		public function edit_lights() {
+
+			//update the lights via the web
 			if ($this->request->is('post')) {
 				$js_lights = json_encode($this->request->data['values']);
 				$php_lights = json_decode($js_lights);
 
+				//iterate through list, check that the value is reasonable, and push to db
 				foreach ($php_lights as $light) {
 					$brightness = 500*$light->pwm;
 
@@ -63,12 +70,14 @@
 		}
 
 		public function heatmap() {
+			//not currently used -- might be interesting to implement in the future
 			$this->set('title_for_layout', 'Energy Use Heatmap');
 			$this->set('cssIncludes', array());
 			$this->set('jsIncludes', array('http://cdnjs.cloudflare.com/ajax/libs/d3/2.10.0/d3.v2.min.js')); 
 		}
 
 		public function heating_select() {
+			//bare bones css + html page for navigation
 			$this->set('title_for_layout', 'Select Visualization');
 		}
 
