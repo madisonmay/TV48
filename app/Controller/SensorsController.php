@@ -181,6 +181,8 @@
 		}
 
 		public function piechart() {
+
+			//a handy piechart layout for summarizing room energy consumption in a jiffy
 			$this->set('title_for_layout', 'Energy Use Piechart');
 			$this->set('cssIncludes', array());
 			$this->set('jsIncludes', array('http://cdnjs.cloudflare.com/ajax/libs/d3/2.10.0/d3.v2.min.js', 'nv.d3'));
@@ -202,6 +204,8 @@
 						array_push($sensor_values, $datum['value']);
 					}
 					$final = array('name' => $sensor['Sensor']['name'], 'values' => $sensor_values);
+
+					//problematic piece of code below -- compose in php and then push.
 					echo '<script> window.feeds.push(' . json_encode($final) . ');</script>';
 				}
 			}
