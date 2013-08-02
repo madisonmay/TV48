@@ -266,6 +266,7 @@ body {
     border: 2px solid #333; 
     border-top-right-radius: 10px; 
     border-top-left-radius: 10px; 
+    border-bottom-width: 0px;
     background-color: white; text-align: center; 
     color: #eee; 
     background-color: #333; 
@@ -746,7 +747,7 @@ textarea {
         float: none !important;
     }
 
-    input, .select {
+    .input input, .select {
         /*a bit sketchy -- display should not be block for all inputs*/
         float: none !important;
         max-width: 300px;
