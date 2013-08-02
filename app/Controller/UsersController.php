@@ -2,6 +2,10 @@
     // app/Controller/UsersController.php
     class UsersController extends AppController {
 
+        // _____ HIGH PRIORITY FIX _____
+        // add a method for deletion of a user
+        // at the moment, this functionality does not exist (and REALLY should)
+
         public function beforeFilter() {
             parent::beforeFilter();
             $this->Auth->allow('add', 'login', 'confirm', 'tenant_confirm', 'password_reset', 'reset_page');

@@ -1,6 +1,10 @@
 <?
 	class RoomsController extends AppController {
 
+		// _____ HIGH PRIORITY FIX _____
+		// add a method for deletion of a room
+		// at the moment, this functionality does not exist.
+
 		public function isAuthorized($user) {
 			if (in_array('landlord', $this->Session->read('User.roles'))) {
 				return true;
