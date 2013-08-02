@@ -181,7 +181,7 @@ class BalanceUpdatesController extends AppController {
 		$this->set('updates', $filtered_updates);
 		$this->set('month_wh', $mod_month_wh);
 
-		$this->render('/BalanceUpdates/pdf/status_reports');
+		$this->render('/BalanceUpdates/pdf/status_report');
 	}
 
 	public function all_reports() {
