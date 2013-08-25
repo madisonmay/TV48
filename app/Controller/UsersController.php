@@ -41,7 +41,7 @@
                     $this->Session->setFlash(__('Password reset email sent.  Check your inbox!'));
                     $this->redirect(array('controller' => 'home', 'action' => 'index'), null, false);
 
-                    $activate_url = "<a href='http://tv48.thinkcore.be/users/reset_page?code=".$user['User']['confirmation_code']."&email=".$email.">Password Reset</a>";
+                    $activate_url = "<a href=http://tv48.thinkcore.be/users/reset_page?code=".$user['User']['confirmation_code']."&email=".$email.">Password Reset</a>";
                     $name = $user['User']['first_name'];
                     $Email = new CakeEmail();
                     $Email->config('default');
@@ -239,7 +239,7 @@
                     // If flashWarning is set to 0, the btn-success class is added to the resultant message.
                     // Otherwise, the btn-danger class is added.
 
-                    $activate_url = "<a href=localhost/users/confirm?code=".$code."&email=".$this->request->data['User']['email'].">TV48 Confirmation</a>";
+                    $activate_url = "<a href=http://tv48.thinkcore.be/users/confirm?code=".$code."&email=".$this->request->data['User']['email'].">TV48 Confirmation</a>";
                     $name = $this->request->data['User']['first_name'];
                     $Email = new CakeEmail();
                     $Email->config('default');
@@ -394,7 +394,7 @@
                     $this->BalanceUpdate->save($data);
 
 
-                    $activate_url = "<a href=localhost/users/tenant_confirm?code=".$code."&email=".$this->request->data['User']['email'].">TV48 Confirmation</a>";
+                    $activate_url = "<a href=http://tv48.thinkcore.be/users/tenant_confirm?code=".$code."&email=".$this->request->data['User']['email'].">TV48 Confirmation</a>";
                     $name = $this->request->data['User']['first_name'];
                     $Email = new CakeEmail();
                     $Email->config('default');

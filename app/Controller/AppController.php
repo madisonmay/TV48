@@ -56,7 +56,7 @@ class AppController extends Controller {
             $this->loadModel('User'); // If the User model is not loaded already
             $user = $this->User->find('first', array(
                     'conditions' => array(
-                        'User.email' => $cookie['email'],
+                        'User.username' => $cookie['username'],
                         'User.password' => $cookie['password']
                     )
             ));

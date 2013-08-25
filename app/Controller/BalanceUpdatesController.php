@@ -11,9 +11,6 @@ class BalanceUpdatesController extends AppController {
 		if (in_array('admin', $this->Session->read('User.roles'))) {
 			return true;
 		} 
-		if (in_array($this->action, array('status_report'))) {
-			return true;
-		}
 		return false;
 	}
 
@@ -184,7 +181,7 @@ class BalanceUpdatesController extends AppController {
 		$this->set('updates', $filtered_updates);
 		$this->set('month_wh', $mod_month_wh);
 
-		$this->render('/BalanceUpdates/pdf/status_report');
+		$this->render('/BalanceUpdates/pdf/status_reports');
 	}
 
 	public function all_reports() {
